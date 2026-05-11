@@ -5,24 +5,16 @@ type CardLinkProps = {
   link: string
   children: React.ReactNode
   className?: string
-  appendRef?: boolean
-  analyticsAttributes: {
-    [key: string]: string | number | undefined
-  }
 }
 export const CardLink = ({
   link,
   children,
   className = '',
-  appendRef = true,
-  analyticsAttributes,
 }: CardLinkProps) => {
   return (
     <ClickableItem
       link={link}
-      className={'rowLink' + (className ? ` ${className}` : '')}
-      analyticsAttributes={analyticsAttributes}
-      appendRef={appendRef}>
+      className={'rowLink' + (className ? ` ${className}` : '')}>
       {children}
     </ClickableItem>
   )

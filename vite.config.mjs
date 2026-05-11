@@ -1,4 +1,3 @@
-import { sentryVitePlugin } from '@sentry/vite-plugin'
 import react from '@vitejs/plugin-react'
 import fs from 'fs'
 import path from 'path'
@@ -7,25 +6,27 @@ import { ViteEjsPlugin } from 'vite-plugin-ejs'
 import svgrPlugin from 'vite-plugin-svgr'
 import viteTsconfigPaths from 'vite-tsconfig-paths'
 
+// Plugin to strip crossorigin attributes from generated HTML.
+// Firefox extensions can fail to load module scripts when crossorigin is present.
+function stripCrossorigin() {
+  return {
+    name: 'strip-crossorigin',
+    enforce: 'post',
+    transformIndexHtml(html) {
+      return html.replace(/\scrossorigin/g, '')
+    },
+  }
+}
+
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
-  const isDev = mode === 'development'
   const buildTarget = env.VITE_BUILD_TARGET || 'web'
-  const buildPlatform = env.VITE_BUILD_PLATFORM
-  const manifestPath = path.resolve(__dirname, 'public', 'base.manifest.json')
+  const manifestPath = path.resolve(__dirname, 'public', 'manifest.json')
   const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf-8'))
   const appVersion = manifest.version || '0.0.0'
-  if (!env.VITE_API_URL) {
-    throw new Error('VITE_API_URL is not defined, create an .env file with this variable')
-  }
-
-  if (buildTarget == 'extension' && !buildPlatform) {
-    throw new Error(
-      'VITE_BUILD_PLATFORM is not defined, create an .env file with this variable with either "firefox" or "chrome"'
-    )
-  }
 
   return {
+    base: './',
     plugins: [
       ViteEjsPlugin((viteConfig) => {
         return {
@@ -35,26 +36,13 @@ export default defineConfig(({ mode }) => {
       react(),
       viteTsconfigPaths(),
       svgrPlugin(),
-      sentryVitePlugin({
-        org: 'hackertabdev',
-        project: 'hackertab',
-        authToken: env.VITE_SENTRY_TOKEN,
-        disable: isDev,
-        release: {
-          name: `${appVersion}-${buildTarget == 'extension' ? buildPlatform : buildTarget}`,
-        },
-        sourcemaps: !isDev
-          ? {
-              filesToDeleteAfterUpload: ['./dist/assets/*.map', './assets/*.map'],
-            }
-          : false,
-      }),
+      stripCrossorigin(),
     ],
     define: {
       'process.env': {},
     },
     build: {
-      sourcemap: true,
+      sourcemap: false,
       emptyOutDir: true,
       cssCodeSplit: false,
       rollupOptions: {
@@ -70,7 +58,6 @@ export default defineConfig(({ mode }) => {
               'zustand',
               '@tanstack/react-query',
               '@tanstack/react-query-persist-client',
-              'axios',
               'react-error-boundary',
             ],
             ui: [
@@ -90,7 +77,7 @@ export default defineConfig(({ mode }) => {
               '@szhsin/react-menu',
             ],
             utils: [
-              '@amplitude/analytics-browser',
+              'axios',
               'axios-cache-adapter',
               'country-emoji',
               'htmlparser2',
@@ -104,14 +91,6 @@ export default defineConfig(({ mode }) => {
     server: {
       open: true,
       sourcemap: false,
-      proxy: {
-        '/api': {
-          target: env.VITE_API_URL,
-          changeOrigin: true,
-          secure: false,
-          rewrite: (path) => path.replace(/^\/api/, ''),
-        },
-      },
     },
     resolve: {
       alias: {

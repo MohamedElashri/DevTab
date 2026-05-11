@@ -1,78 +1,47 @@
-[![Website hackertab.dev](https://img.shields.io/website-up-down-green-red/https/hackertab.dev.svg)](https://hackertab.dev/)
-[![Apache 2 license](https://img.shields.io/badge/license-Apache%202-blue.svg)](https://github.com/medyo/hackertab.dev/blob/master/LICENSE)
-[![Mozilla Add-on](https://img.shields.io/amo/v/hackertab-dev?style=plastic)](https://bit.ly/hackertab-ff)
-[![Chrome Web Store](https://img.shields.io/chrome-web-store/v/ocoipcahhaedjhnpoanfflhbdcpmalmp?style=plastic)](https://bit.ly/hackertab-ch)
-[![Chrome Web Store Rating](https://img.shields.io/chrome-web-store/stars/ocoipcahhaedjhnpoanfflhbdcpmalmp.svg?colorB=%234FC828&label=rating&style=flat)](https://chrome.google.com/webstore/detail/hackertabdev/ocoipcahhaedjhnpoanfflhbdcpmalmp/reviews)
+# Hackertab.dev — Personal Fork
 
-# Hackertab.dev — All Developer news in one tab!
+This is a **personal, privacy-focused fork** of [Hackertab.dev](https://github.com/medyo/hackertab.dev). It strips out all telemetry, advertisements, and external backend dependencies for fetching news, and focuses solely on Firefox as the target browser.
 
-**Hackertab makes it easy for you to stay up-to-date with the latest developer news, tools, jobs and events.**
+## Differences from upstream
 
-<img src="/demo/demo_hackertab.dev.jpeg" width="100%" alt="Hackertab.dev"/>
+- **No ads or telemetry**: Removed all Amplitude analytics, Sentry error tracking, Firebase authentication, ad banners, and donation prompts.
+- **No external news backend**: Fetches news directly from the original sources instead of proxying through a central server:
+  - GitHub (via public Search API)
+  - Hacker News (via Firebase API)
+  - Lobsters (via public JSON endpoint)
+  - Reddit (via public JSON endpoint)
+- **Sources reduced to four**: Only GitHub, Hacker News, Lobsters, and Reddit are supported. All other sources (DevTo, Medium, Product Hunt, Hashnode, FreeCodeCamp, IndieHackers, Hackernoon, conferences, RSS, AI feed) have been removed.
+- **No referral tracking**: Removed `ref=hackertab.dev` query parameters from all outgoing links.
+- **Firefox-only**: Build scripts and manifest are tailored for Firefox. Chrome support has been removed.
+- **Authentication disabled**: OAuth sign-in and user accounts are disabled.
+- **Static configuration**: Remote configuration for tags is bundled locally so the extension works fully offline after installation.
 
-As a developer, it can be difficult to stay on top of everything happening in the field. Hackertab makes it easy by allowing you to customize your default tab page to include news, tools and events from top sources such as GitHub Trendings, Hacker News, DevTo, Medium, and Product Hunt. No matter what type of developer you are, you'll find valuable and relevant information with Hackertab. Don't miss out - give it a try today!
+## Build
 
-#### Demo
+This project uses `yarn` and targets Node 18.
 
-👉 [now.hackertab.dev](https://now.hackertab.dev)
+```bash
+yarn install
+yarn build:firefox
+```
 
-## 👩‍💻 How to use it
-
-- Install the extension from the [Chrome store](https://bit.ly/hackertab-ch), or [Mozilla add-ons](https://bit.ly/hackertab-ff)
-- Open a new tab
-- The extension should now be running and visible
-- Select your preferred programming languages and sources.
-- Enjoy
-
-## 🔥 Features
-
-- 🆕 Daily updated content
-- 💻 Customizable by programming language, framework and topic.
-- 👍 Curated content from the best sources.
-- 🔖 Bookmark and read it later.
-- 🌙 Dark mode for when it gets late.
-- ✨ AI-powered recommendations exclusively tailored to your preferences.
-
-Even more features are going to come in the future!
-
-## Data sources
-
-- Github Trendings
-- Hackernews
-- DevTo
-- Hashnode
-- Lobsters
-- Confs.tech
-- Product Hunt
-- Reddit
-- Freecodecamp
-- Medium
-- Indiehackers
-- Hackernoon
-- Custom RSS Feed
-- **or create an issue to ask for a new data source**
-
-## Support
-
-Please do not hesitate to ask a question, report a bug or add a suggestion. or send an email to hello@hackertab.dev
+The built extension will be packaged as `firefox_extension.zip` in the project root.
 
 ## Development
 
-Please use the develop branch. Create an .env file with the necessary env variables
-
 ```bash
-$ git clone --branch develop git@github.com:medyo/hackertab.dev.git
-$ cd hackertab.dev
-$ yarn
-$ yarn start
-$ # Then visit http://localhost:3000
+yarn start
 ```
 
-## Maintainers
+Then visit the local dev server URL.
 
-- [medyo](https://github.com/medyo)
+## Data sources
 
-## Licencing
+- [GitHub Trending](https://github.com/trending) (approximated via Search API)
+- [Hacker News](https://news.ycombinator.com)
+- [Lobsters](https://lobste.rs)
+- [Reddit](https://reddit.com)
 
-Hackertab is licensed under the Apache License, Version 2.0.
-See [LICENSE](/LICENSE) for the full license text.
+## License
+
+Apache 2.0 — See [LICENSE](/LICENSE) for the full license text.

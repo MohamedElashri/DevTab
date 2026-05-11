@@ -2,7 +2,6 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Select, { SingleValue } from 'react-select'
 import { Button } from 'src/components/Elements'
-import { trackDNDEnable } from 'src/lib/analytics'
 import { useUserPreferences } from 'src/stores/preferences'
 import { diffBetweenTwoDatesInMinutes } from 'src/utils/DateUtils'
 
@@ -40,7 +39,6 @@ export const DNDSettings = () => {
       })
     }
 
-    trackDNDEnable(selectedDNDDuration)
     navigate('/')
   }
 

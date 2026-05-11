@@ -2,7 +2,6 @@ import { HiSparkles } from 'react-icons/hi'
 import { ChipsSet } from 'src/components/Elements'
 import { SettingsContentLayout } from 'src/components/Layout/SettingsContentLayout/SettingsContentLayout'
 import { AI_PROMPT_ENGINES } from 'src/config/SearchEngines'
-import { identifyUserSearchEngine, trackSearchEngineSelect } from 'src/lib/analytics'
 import { useUserPreferences } from 'src/stores/preferences'
 import { AddSearchEngine } from './AddSearchEngine'
 
@@ -42,9 +41,6 @@ export const SearchEngineSettings = () => {
           }}
           onChange={(changes) => {
             const value = changes.option
-
-            identifyUserSearchEngine(value.label)
-            trackSearchEngineSelect(value.label)
             setPromptEngine(value.label)
           }}
         />

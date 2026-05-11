@@ -6,41 +6,27 @@ import { Button, CardLink, CircleButton } from 'src/components/Elements'
 import { SettingsContentLayout } from 'src/components/Layout/SettingsContentLayout'
 import { SUPPORTED_CARDS } from 'src/config/supportedCards'
 import { BookmarkedPost } from 'src/features/bookmarks'
-import { Attributes, trackLinkUnBookmark } from 'src/lib/analytics'
 import { useBookmarks } from 'src/stores/bookmarks'
 import { useUserPreferences } from 'src/stores/preferences'
 import './bookmarkSettings.css'
 
 type BookmarkItemProps = {
   item: BookmarkedPost
-  appendRef?: boolean
 }
 
-export const BookmarkItem = ({ item, appendRef = false }: BookmarkItemProps) => {
+export const BookmarkItem = ({ item }: BookmarkItemProps) => {
   const { unbookmarkPost } = useBookmarks()
-  const { userCustomCards } = useUserPreferences()
 
-  const AVAILABLE_CARDS = [...SUPPORTED_CARDS, ...userCustomCards]
+  const AVAILABLE_CARDS = [...SUPPORTED_CARDS]
   const source = AVAILABLE_CARDS.find((card) => card.value === item.source)
 
-  const analyticsAttrs = {
-    [Attributes.TRIGERED_FROM]: 'bookmarks',
-    [Attributes.TITLE]: item.title,
-    [Attributes.LINK]: item.url,
-    [Attributes.SOURCE]: item.source,
-  }
   const unBookmark = () => {
     unbookmarkPost(item)
-    trackLinkUnBookmark(analyticsAttrs)
     toast('Link removed from the bookmarks', { theme: 'defaultToast' })
   }
   return (
     <div className="bookmarkItem">
-      <CardLink
-        className="body"
-        link={item.url}
-        appendRef={appendRef}
-        analyticsAttributes={analyticsAttrs}>
+      <CardLink className="body" link={item.url}>
         <div className="title">{item.title}</div>
         {source && (
           <div className="source">

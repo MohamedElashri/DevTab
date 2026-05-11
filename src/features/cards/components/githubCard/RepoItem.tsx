@@ -3,7 +3,6 @@ import { CardItemWithActions, CardLink } from 'src/components/Elements'
 import { VscRepoForked, VscStarFull } from 'react-icons/vsc'
 import { ColoredLanguagesBadge } from 'src/components/Elements'
 import { dateRanges } from 'src/config'
-import { Attributes } from 'src/lib/analytics'
 import { useUserPreferences } from 'src/stores/preferences'
 import { BaseItemPropsType, Repository } from 'src/types'
 
@@ -29,17 +28,7 @@ const RepoItem = ({
       }}
       cardItem={
         <>
-          <CardLink
-            className="githubTitle"
-            link={item.url}
-            analyticsAttributes={{
-              [Attributes.POINTS]: item.stars_count,
-              [Attributes.TRIGERED_FROM]: 'card',
-              [Attributes.TITLE]: item.name,
-              [Attributes.LINK]: item.url,
-              [Attributes.SOURCE]: analyticsTag,
-              [Attributes.LANGUAGE]: selectedTag?.value,
-            }}>
+          <CardLink className="githubTitle" link={item.url}>
             <img
               src={`https://github.com/${item.owner}.png?size=64`}
               className="rowTitleGithubIcon"

@@ -7,7 +7,6 @@ import Select, {
   SingleValueProps,
   components,
 } from 'react-select'
-import { identifyDisplayLayout, trackDisplayTypeChange } from 'src/lib/analytics'
 import { useUserPreferences } from 'src/stores/preferences'
 import { Layout } from 'src/types'
 
@@ -22,24 +21,27 @@ const Layouts: LayoutOption[] = [
   { value: 'cards', label: 'Cards', icon: <TfiLayoutColumn4Alt /> },
 ]
 
+const OptionComp = components.Option as React.FC<any>
+const SingleValueComp = components.SingleValue as React.FC<any>
+
 const IconOption = (props: OptionProps<LayoutOption, false, GroupBase<LayoutOption>>) => (
-  <components.Option {...props}>
+  <OptionComp {...props}>
     <div className="optionIcon">
       {props.data.icon}
       {props.data.label}
     </div>
-  </components.Option>
+  </OptionComp>
 )
 
 const SingleIconOption = (
   props: SingleValueProps<LayoutOption, false, GroupBase<LayoutOption>>
 ) => (
-  <components.SingleValue {...props}>
+  <SingleValueComp {...props}>
     <div className="optionIcon">
       {props.data.icon}
       {props.data.label}
     </div>
-  </components.SingleValue>
+  </SingleValueComp>
 )
 
 export const LayoutSettings = () => {
@@ -51,8 +53,6 @@ export const LayoutSettings = () => {
     }
 
     setLayout(selectedOption.value)
-    identifyDisplayLayout(selectedOption.value)
-    trackDisplayTypeChange(selectedOption.value)
   }
 
   const getDefaultValue = (): LayoutOption | undefined => {
@@ -67,7 +67,10 @@ export const LayoutSettings = () => {
           <div style={{ flex: 1 }}>
             <Select
               options={Layouts}
-              components={{ Option: IconOption, SingleValue: SingleIconOption }}
+              components={{
+                Option: IconOption as React.ComponentType<any>,
+                SingleValue: SingleIconOption as React.ComponentType<any>,
+              }}
               isMulti={false}
               isClearable={false}
               isSearchable={false}

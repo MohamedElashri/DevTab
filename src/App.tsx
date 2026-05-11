@@ -1,7 +1,6 @@
 import clsx from 'clsx'
 import { useEffect, useLayoutEffect } from 'react'
 import { DNDLayout } from 'src/components/Layout'
-import { setupAnalytics, setupIdentification, trackPageView } from 'src/lib/analytics'
 import { useUserPreferences } from 'src/stores/preferences'
 import { AppContentLayout } from './components/Layout'
 import { lazyImport } from './utils/lazyImport'
@@ -33,12 +32,9 @@ export const App = () => {
 
   useEffect(() => {
     document.body.classList.remove('preload')
-    setupAnalytics()
-    setupIdentification()
   }, [])
 
   useEffect(() => {
-    trackPageView('home', isDNDModeActive())
     if (!isDNDModeActive() && DNDDuration !== 'never') {
       setDNDDuration('never')
     }

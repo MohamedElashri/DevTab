@@ -4,7 +4,6 @@ import { HiSparkles } from 'react-icons/hi'
 import ReactMarkdown from 'react-markdown'
 import BeatLoader from 'react-spinners/BeatLoader'
 import ReactTooltip from 'react-tooltip'
-import { trackChangeLogOpen } from 'src/lib/analytics'
 import { getAppVersion } from 'src/utils/Os'
 import { format } from 'timeago.js'
 import { useGetVersions } from '../api/getVersions'
@@ -38,8 +37,6 @@ export const Changelog = () => {
   useEffect(() => {
     const currentVersion = getAppVersion()
     if (tooltipShown) {
-      trackChangeLogOpen()
-
       if (currentVersion) {
         markVersionAsRead(currentVersion)
       }

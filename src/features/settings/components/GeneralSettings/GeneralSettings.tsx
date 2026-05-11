@@ -1,19 +1,9 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Toggle from 'react-toggle'
 import 'react-toggle/style.css'
-import { Footer } from 'src/components/Layout'
 import { SettingsContentLayout } from 'src/components/Layout/SettingsContentLayout'
-import {
-  identifyUserLinksInNewTab,
-  identifyUserListingMode,
-  identifyUserTheme,
-  trackListingModeSelect,
-  trackTabTarget,
-  trackThemeSelect,
-} from 'src/lib/analytics'
 import { useUserPreferences } from 'src/stores/preferences'
-import { DeleteAccount } from '../UserSettings/DeleteAccount'
-import { UserInfo } from '../UserSettings/UserInfo'
+import { hasExtensionPermissions, requestExtensionPermissions } from 'src/utils/ensureExtensionPermissions'
 import { CardsNumberSettings } from './CardsNumberSettings'
 import { DNDSettings } from './DNDSettings'
 import './generalSettings.css'
@@ -33,29 +23,37 @@ export const GeneralSettings = () => {
     setShowReadPosts,
   } = useUserPreferences()
 
+  const [permsGranted, setPermsGranted] = useState<boolean | null>(null)
+
+  useEffect(() => {
+    hasExtensionPermissions().then(setPermsGranted)
+  }, [])
+
   const onOpenLinksNewTabChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const checked = e.target.checked
-    trackTabTarget(checked)
-    identifyUserLinksInNewTab(checked)
     setOpenLinksNewTab(checked)
   }
 
   const onlistingModeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.checked ? 'compact' : 'normal'
-    trackListingModeSelect(value)
-    identifyUserListingMode(value)
     setListingMode(value)
   }
 
   const onDarkModeChange = () => {
     const newTheme = theme === 'dark' ? 'light' : 'dark'
     setTheme(newTheme)
-    trackThemeSelect(newTheme)
-    identifyUserTheme(newTheme)
   }
 
   const onShowReadPostsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setShowReadPosts(e.target.checked)
+  }
+
+  const handleRequestPerms = async () => {
+    const granted = await requestExtensionPermissions()
+    setPermsGranted(granted)
+    if (granted) {
+      window.location.reload()
+    }
   }
 
   return (
@@ -65,7 +63,6 @@ export const GeneralSettings = () => {
         'Customize your experience by selecting the number of cards you want to see, the search engine you want to use and more.'
       }>
       <div>
-        <UserInfo />
         <LayoutSettings />
         <CardsNumberSettings />
 
@@ -103,9 +100,32 @@ export const GeneralSettings = () => {
 
         <DNDSettings />
 
-        <DeleteAccount />
+        {permsGranted === false && (
+          <div className="settingRow">
+            <p className="settingTitle">Site permissions</p>
+            <div className="settingContent">
+              <button
+                className="btn"
+                onClick={handleRequestPerms}
+                style={{ padding: '6px 12px', cursor: 'pointer' }}
+              >
+                Grant permissions
+              </button>
+              <p style={{ fontSize: '0.8rem', marginTop: 4, opacity: 0.7 }}>
+                Required for Lobsters &amp; Reddit cards to load.
+              </p>
+            </div>
+          </div>
+        )}
 
-        <Footer />
+        {permsGranted === true && (
+          <div className="settingRow">
+            <p className="settingTitle">Site permissions</p>
+            <div className="settingContent">
+              <span style={{ color: '#4caf50' }}>Granted</span>
+            </div>
+          </div>
+        )}
       </div>
     </SettingsContentLayout>
   )

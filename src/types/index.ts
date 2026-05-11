@@ -64,13 +64,6 @@ export type ArticleFeedItemData = FeedItem & {
   source: string
 }
 
-export type ProductHuntFeedItemData = FeedItem & {
-  type: 'producthunt'
-  tagline: string
-  votes_count: number
-  comments: number
-}
-
 export type GithubFeedItemData = FeedItem & {
   type: 'github'
   stars: number
@@ -80,16 +73,9 @@ export type GithubFeedItemData = FeedItem & {
   description?: string
 }
 
-export type AdFeedItemData = {
-  id: string
-  type: 'ad'
-}
-
 export type FeedItemData =
   | ArticleFeedItemData
   | GithubFeedItemData
-  | ProductHuntFeedItemData
-  | AdFeedItemData
 
 export type Repository = BaseEntry & {
   technology: string
@@ -125,7 +111,6 @@ export type SupportedCardType = {
 
 export type CardPropsType = {
   meta: Omit<SupportedCardType, 'component'>
-  withAds: boolean
   knob?: React.ReactNode
   className?: string
 }

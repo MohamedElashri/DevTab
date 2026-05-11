@@ -3,7 +3,6 @@ import { GoDotFill } from 'react-icons/go'
 import { MdAccessTime } from 'react-icons/md'
 import { VscTriangleUp } from 'react-icons/vsc'
 import { CardItemWithActions, CardLink, ClickableItem } from 'src/components/Elements'
-import { Attributes } from 'src/lib/analytics'
 import { useUserPreferences } from 'src/stores/preferences'
 import { Article, BaseItemPropsType } from 'src/types'
 import { format } from 'timeago.js'
@@ -18,15 +17,7 @@ const ArticleItem = ({ item, analyticsTag }: BaseItemPropsType<Article>) => {
       cardItem={
         <>
           <p className="rowTitle">
-            <CardLink
-              link={item.url}
-              analyticsAttributes={{
-                [Attributes.POINTS]: item.points_count,
-                [Attributes.TRIGERED_FROM]: 'card',
-                [Attributes.TITLE]: item.title,
-                [Attributes.LINK]: item.url,
-                [Attributes.SOURCE]: analyticsTag,
-              }}>
+            <CardLink link={item.url}>
               {listingMode === 'compact' && (
                 <div className="counterWrapper">
                   <VscTriangleUp />
@@ -47,14 +38,7 @@ const ArticleItem = ({ item, analyticsTag }: BaseItemPropsType<Article>) => {
               </span>
               <ClickableItem
                 link={item.canonical_url || item.url}
-                className="rowItem rowItemClickable"
-                analyticsAttributes={{
-                  [Attributes.POINTS]: item.points_count,
-                  [Attributes.TRIGERED_FROM]: 'card',
-                  [Attributes.TITLE]: `${item.title} comments`,
-                  [Attributes.LINK]: item.canonical_url,
-                  [Attributes.SOURCE]: analyticsTag,
-                }}>
+                className="rowItem rowItemClickable">
                 <BiCommentDetail className="rowItemIcon" /> {item.comments_count} comments
               </ClickableItem>
             </div>

@@ -3,8 +3,7 @@
 build() {
     echo 'Building Hackertab...'
     rm -rf dist
-    tsc
-    vite build "$@"
+    npx vite build "$@"
 }
 
 build "$@"

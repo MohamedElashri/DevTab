@@ -1,32 +1,17 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import 'react-contexify/dist/ReactContexify.css'
 import { Outlet } from 'react-router-dom'
 import { BeatLoader } from 'react-spinners'
 import 'src/assets/App.css'
-import { AdInitializer, StickyBanner } from 'src/features/adv'
 import { AuthModal, useAuth } from 'src/features/auth'
-import { usePostStreak } from 'src/features/hits'
-import { identifyUserStreak } from 'src/lib/analytics'
 import { AuthProvider } from 'src/providers/AuthProvider'
 import { Header } from './Header'
 
 export const AppLayout = () => {
-  const { isAuthModalOpen, setStreak, shouldIcrementStreak } = useAuth()
-  const postStreakMutation = usePostStreak()
-
-  useEffect(() => {
-    if (shouldIcrementStreak()) {
-      postStreakMutation.mutateAsync(undefined).then((data) => {
-        setStreak(data.streak)
-        identifyUserStreak(data.streak)
-      })
-    }
-  }, [])
+  const { isAuthModalOpen } = useAuth()
 
   return (
     <AuthProvider>
-      <StickyBanner />
-      <AdInitializer />
       <div className="App">
         <Header />
         <AuthModal showAuth={isAuthModalOpen} />

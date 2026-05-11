@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { FiChevronLeft, FiChevronRight } from 'react-icons/fi'
 import { maxCardsPerRow } from 'src/config'
-import { trackPageScroll } from 'src/lib/analytics'
 import { useUserPreferences } from 'src/stores/preferences'
 
 export const ScrollCardsNavigator = () => {
@@ -60,7 +59,6 @@ export const ScrollCardsNavigator = () => {
     if (!scrollBarContainer.current) {
       return
     }
-    trackPageScroll(direction)
     const { scrollLeft } = scrollBarContainer.current
     const { offsetWidth } = scrollBarContainer.current?.firstChild?.firstChild as HTMLElement
     const position = direction === 'left' ? scrollLeft - offsetWidth : scrollLeft + offsetWidth

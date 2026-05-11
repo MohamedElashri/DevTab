@@ -1,9 +1,7 @@
 import useInfiniteScroll from 'react-infinite-scroll-hook'
 import { PropagateLoader } from 'react-spinners'
 import { useGetFeed } from 'src/features/cards'
-import { trackFeedScroll } from 'src/lib/analytics'
 import { useUserPreferences } from 'src/stores/preferences'
-import { FeedItemData } from 'src/types'
 import './feed.css'
 import { FeedItem } from './feedItems/FeedItem'
 
@@ -20,28 +18,6 @@ export const Feed = () => {
     fetchNextPage,
   } = useGetFeed({
     tags: userSelectedTags.map((tag) => tag.label.toLocaleLowerCase()),
-    config: {
-      select: (data) => {
-        return {
-          ...data,
-          pages: data.pages.map((page, pageIndex) => {
-            const items = page.data
-            const result: FeedItemData[] = []
-            items.forEach((item, index) => {
-              if (pageIndex == 0 && index === 3) {
-                result.push({ type: 'ad', id: `ad-${pageIndex}-${index}` })
-              }
-              result.push(item)
-            })
-
-            return {
-              ...page,
-              data: result,
-            }
-          }),
-        }
-      },
-    },
   })
 
   const [infiniteRef, { rootRef }] = useInfiniteScroll({
@@ -49,7 +25,6 @@ export const Feed = () => {
     hasNextPage: Boolean(hasNextPage),
     onLoadMore: () => {
       fetchNextPage()
-      trackFeedScroll()
     },
     disabled: Boolean(error),
     rootMargin: '0px 0px 100% 0px',

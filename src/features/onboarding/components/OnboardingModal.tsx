@@ -1,12 +1,11 @@
 import { useEffect } from 'react'
 import ReactModal from 'react-modal'
-import { trackOnboardingStart } from 'src/lib/analytics'
 import { HelloTab } from './steps/HelloTab'
 import './steps/tabs.css'
 
 export const OnboardingModal = () => {
   useEffect(() => {
-    trackOnboardingStart()
+    // Onboarding started - no analytics
   }, [])
 
   return (

@@ -86,8 +86,8 @@ export const useUserPreferences = create(
       cards: [
         { id: 0, name: 'github', type: 'supported' },
         { id: 1, name: 'hackernews', type: 'supported' },
-        { id: 2, name: 'ai', type: 'supported' },
-        { id: 3, name: 'producthunt', type: 'supported' },
+        { id: 2, name: 'lobsters', type: 'supported' },
+        { id: 3, name: 'reddit', type: 'supported' },
       ],
       userCustomCards: [],
       DNDDuration: 'never',

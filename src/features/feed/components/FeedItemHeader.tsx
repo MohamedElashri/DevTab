@@ -1,5 +1,4 @@
 import { CardLink } from 'src/components/Elements'
-import { Attributes } from 'src/lib/analytics'
 import { FeedItemImage } from './FeedItemImage'
 
 type FeedItemHeaderProps = {
@@ -21,13 +20,7 @@ export const FeedItemHeader = ({
     <div className="rowTitle">
       <CardLink
         link={url}
-        className="titleWithCover"
-        analyticsAttributes={{
-          [Attributes.TRIGERED_FROM]: 'card',
-          [Attributes.TITLE]: title,
-          [Attributes.LINK]: url,
-          [Attributes.SOURCE]: source,
-        }}>
+        className="titleWithCover">
         <FeedItemImage imageUrl={image} fallbackImage={fallbackImage} />
         <span className="subTitle">{title}</span>
       </CardLink>

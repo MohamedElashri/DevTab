@@ -8,13 +8,13 @@ import { MobileCards } from './MobileCards'
 import { ScrollCardsNavigator } from './ScrollCardsNavigator'
 
 export const CardsLayout = () => {
-  const { cards, userCustomCards } = useUserPreferences()
+  const { cards } = useUserPreferences()
   const [selectedCard, setSelectedCard] = useState(cards[0])
   return (
     <>
       <ScrollCardsNavigator />
       <DesktopBreakpoint>
-        <DesktopCards cards={cards} userCustomCards={userCustomCards} />
+        <DesktopCards cards={cards} />
       </DesktopBreakpoint>
       <MobileBreakpoint>
         <div className="Cards HorizontalScroll">

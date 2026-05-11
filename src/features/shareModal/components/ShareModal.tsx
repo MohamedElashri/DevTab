@@ -18,8 +18,6 @@ import {
 } from 'react-share'
 import toast from 'react-simple-toasts'
 import { Button } from 'src/components/Elements'
-import { twitterHandle } from 'src/config'
-import { trackLinkCopy, trackLinkShare } from 'src/lib/analytics'
 import { ShareModalData } from '../types'
 import './share.css'
 
@@ -36,7 +34,7 @@ const sharingButtons = [
     component: TwitterShareButton,
     icon: TwitterIcon,
     name: 'twitter',
-    body: `via ${twitterHandle}`,
+    body: `via @hackertabdev`,
   },
   { component: RedditShareButton, icon: RedditIcon, name: 'reddit' },
   { component: LinkedinShareButton, icon: LinkedinIcon, name: 'linkedin' },
@@ -53,17 +51,12 @@ export const ShareModal = ({ showModal, closeModal, shareData }: ShareModalProps
 
   const onCopyClicked = () => {
     navigator.clipboard.writeText(shareData.link)
-    trackLinkCopy({
-      ...shareData,
-    })
     toast('Link copied to clipboard', { theme: 'defaultToast' })
   }
 
   const onSocialMediaClicked = (provider: string) => {
-    trackLinkShare({
-      ...shareData,
-      provider,
-    })
+    // Social sharing is handled by react-share; no tracking needed
+    console.log('Share via', provider)
   }
   return (
     <ReactModal

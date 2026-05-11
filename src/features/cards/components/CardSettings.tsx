@@ -8,7 +8,6 @@ import { IoTrashBinOutline } from 'react-icons/io5'
 import { LiaSortSolid } from 'react-icons/lia'
 import { MdDateRange } from 'react-icons/md'
 import { useMediaQuery } from 'react-responsive'
-import { ref } from 'src/config'
 import { useUserPreferences } from 'src/stores/preferences'
 import { useShallow } from 'zustand/shallow'
 import { MY_LANGUAGES_OPTION } from '../config'
@@ -68,8 +67,7 @@ const CardSettings = ({
 
   const onOpenSourceUrlClicked = useCallback(() => {
     if (!url) return
-    const link = `${url}?${ref}`
-    window.open(link, openLinksNewTab ? '_blank' : '_self')
+    window.open(url, openLinksNewTab ? '_blank' : '_self')
   }, [url, openLinksNewTab])
 
   const firstSpecialIndex = useMemo(

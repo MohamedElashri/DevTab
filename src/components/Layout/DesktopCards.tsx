@@ -18,8 +18,6 @@ import { CSS } from '@dnd-kit/utilities'
 import { clsx } from 'clsx'
 import { MdOutlineDragIndicator } from 'react-icons/md'
 import { SUPPORTED_CARDS } from 'src/config/supportedCards'
-import { CustomRssCard } from 'src/features/cards'
-import { trackPageDrag } from 'src/lib/analytics'
 import { DesktopBreakpoint } from 'src/providers/DesktopBreakpoint'
 import { useUserPreferences } from 'src/stores/preferences'
 import { SelectedCard, SupportedCardType } from 'src/types'
@@ -27,10 +25,9 @@ import { SelectedCard, SupportedCardType } from 'src/types'
 type SortableItemProps = {
   id: string
   card: SupportedCardType
-  withAds: boolean
 }
 
-const SortableItem = ({ id, card, withAds }: SortableItemProps) => {
+const SortableItem = ({ id, card }: SortableItemProps) => {
   const { attributes, listeners, setNodeRef, isDragging, transform, transition } = useSortable({
     id,
   })
@@ -40,14 +37,16 @@ const SortableItem = ({ id, card, withAds }: SortableItemProps) => {
     transition,
   }
 
-  const Component = card.component || CustomRssCard
+  const Component = card.component
+  if (!Component) {
+    return null
+  }
 
   return (
     <div ref={setNodeRef} style={style}>
       <Component
         meta={card}
         className={clsx(isDragging && 'draggedBlock')}
-        withAds={withAds}
         knob={
           <DesktopBreakpoint>
             <button className="blockHeaderDragButton" {...attributes} {...listeners}>
@@ -62,12 +61,10 @@ const SortableItem = ({ id, card, withAds }: SortableItemProps) => {
 
 export const DesktopCards = ({
   cards,
-  userCustomCards,
 }: {
   cards: SelectedCard[]
-  userCustomCards: SupportedCardType[]
 }) => {
-  const AVAILABLE_CARDS = [...SUPPORTED_CARDS, ...userCustomCards]
+  const AVAILABLE_CARDS = [...SUPPORTED_CARDS]
   const { updateCardOrder } = useUserPreferences()
   const cardsWrapperRef = useRef<HTMLDivElement>(null)
 
@@ -96,7 +93,6 @@ export const DesktopCards = ({
       const newIndex = newCard.id
 
       updateCardOrder(oldIndex, newIndex)
-      trackPageDrag()
     }
 
     cardsWrapperRef.current?.classList.remove('snapDisabled')
@@ -128,8 +124,8 @@ export const DesktopCards = ({
         <SortableContext
           items={memoCards.map(({ id }) => id)}
           strategy={horizontalListSortingStrategy}>
-          {memoCards.map(({ id, card }, index) => {
-            return <SortableItem key={id} id={id} card={card} withAds={index === 0} />
+          {memoCards.map(({ id, card }) => {
+            return <SortableItem key={id} id={id} card={card} />
           })}
         </SortableContext>
       </DndContext>

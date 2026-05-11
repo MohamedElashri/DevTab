@@ -24,7 +24,7 @@ export function RedditCard(props: CardPropsType) {
     source: meta.value,
     fallbackTag: GLOBAL_TAG,
   })
-  const { isLoading, data: results } = useGetSourceArticles({
+  const { isLoading, data: results, error } = useGetSourceArticles({
     source: 'reddit',
     tags: queryTags,
     config: {
@@ -71,6 +71,7 @@ export function RedditCard(props: CardPropsType) {
       <ListPostComponent
         sortBy={sortBy as keyof Article}
         items={results}
+        error={error}
         isLoading={isLoading}
         renderItem={renderItem}
       />

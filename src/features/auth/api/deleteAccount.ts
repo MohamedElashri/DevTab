@@ -1,23 +1,12 @@
 import { useMutation } from '@tanstack/react-query'
-import { axios } from 'src/lib/axios'
-import { MutationConfig } from 'src/lib/react-query'
 
-type DeleteAccountDTO = {
-  userId: string
-}
-const deleteAccount = ({ userId }: DeleteAccountDTO): Promise<{ authLink: string }> => {
-  return axios.delete(`/engine/user/${userId}`, {})
+const deleteAccount = async (): Promise<void> => {
+  // Auth is disabled in this fork
+  return Promise.resolve()
 }
 
-type QueryFnType = typeof deleteAccount
-
-type UseGetArticlesOptions = {
-  config?: MutationConfig<QueryFnType>
-}
-
-export const useDeleteAccount = ({ config }: UseGetArticlesOptions = {}) => {
+export const useDeleteAccount = () => {
   return useMutation({
-    ...config,
     mutationFn: deleteAccount,
   })
 }

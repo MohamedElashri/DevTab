@@ -1,5 +1,4 @@
 import { ChipsSet } from 'src/components/Elements'
-import { identifyUserMaxVisibleCards, trackMaxVisibleCardsChange } from 'src/lib/analytics'
 import { useUserPreferences } from 'src/stores/preferences'
 import { Option } from 'src/types'
 
@@ -10,8 +9,6 @@ export const CardsNumberSettings = () => {
     if (selectedChips.length) {
       const maxVisibleCards = parseInt(selectedChips[0].value)
       setMaxVisibleCards(maxVisibleCards)
-      identifyUserMaxVisibleCards(maxVisibleCards)
-      trackMaxVisibleCardsChange(maxVisibleCards)
     }
   }
 

@@ -3,12 +3,6 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { BiBookmarkMinus, BiBookmarkPlus, BiCheckDouble, BiShareAlt } from 'react-icons/bi'
 import { ShareModal } from 'src/features/shareModal'
 import { ShareModalData } from 'src/features/shareModal/types'
-import {
-  Attributes,
-  trackLinkBookmark,
-  trackLinkUnBookmark,
-  trackMarkAsRead,
-} from 'src/lib/analytics'
 import { useBookmarks } from 'src/stores/bookmarks'
 import { useReadPosts } from 'src/stores/readPosts'
 import { useShallow } from 'zustand/shallow'
@@ -57,17 +51,7 @@ export const CardItemWithActions = ({
     } else {
       markAsRead(item.id)
     }
-
-    if (isRead) {
-      const analyticsAttrs = {
-        [Attributes.TRIGERED_FROM]: 'card',
-        [Attributes.TITLE]: item.title,
-        [Attributes.LINK]: item.url,
-        [Attributes.SOURCE]: source,
-      }
-      trackMarkAsRead(analyticsAttrs)
-    }
-  }, [isRead, item.id])
+  }, [isRead, item.id, markAsRead, markAsUnread])
 
   const onBookmarkClicked = useCallback(() => {
     const itemToBookmark = {
@@ -82,17 +66,6 @@ export const CardItemWithActions = ({
       bookmarkPost(itemToBookmark)
     }
     setIsBookmarked(!isBookmarked)
-    const analyticsAttrs = {
-      [Attributes.TRIGERED_FROM]: 'card',
-      [Attributes.TITLE]: item.title,
-      [Attributes.LINK]: item.url,
-      [Attributes.SOURCE]: source,
-    }
-    if (isBookmarked) {
-      trackLinkUnBookmark(analyticsAttrs)
-    } else {
-      trackLinkBookmark(analyticsAttrs)
-    }
   }, [isBookmarked, item, source, sourceType, bookmarkPost, unbookmarkPost])
 
   useEffect(() => {

@@ -9,7 +9,6 @@ import { ChipsSet, SearchBar } from 'src/components/Elements'
 import { SettingsContentLayout } from 'src/components/Layout/SettingsContentLayout/SettingsContentLayout'
 import { repository } from 'src/config'
 import { Tag, useRemoteConfigStore } from 'src/features/remoteConfig'
-import { trackLanguageAdd, trackLanguageRemove } from 'src/lib/analytics'
 import { useUserPreferences } from 'src/stores/preferences'
 
 const CATEGORY_TO_ICON: Record<string, React.ReactNode> = {
@@ -78,10 +77,8 @@ export const TopicSettings = () => {
           onChange={(changes) => {
             if (changes.action == 'ADD') {
               followTag(changes.option as Tag)
-              trackLanguageAdd(changes.option.value)
             } else {
               unfollowTag(changes.option as Tag)
-              trackLanguageRemove(changes.option.value)
             }
           }}
         />
@@ -162,10 +159,8 @@ export const TopicSettings = () => {
                   onChange={(changes) => {
                     if (changes.action == 'ADD') {
                       followTag(changes.option as Tag)
-                      trackLanguageAdd(changes.option.value)
                     } else {
                       unfollowTag(changes.option as Tag)
-                      trackLanguageRemove(changes.option.value)
                     }
                   }}
                 />
