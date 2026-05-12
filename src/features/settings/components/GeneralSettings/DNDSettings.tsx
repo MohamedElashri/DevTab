@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router'
 import Select, { SingleValue } from 'react-select'
 import { Button } from 'src/components/Elements'
 import { useUserPreferences } from 'src/stores/preferences'

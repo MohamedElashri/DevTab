@@ -1,4 +1,4 @@
-import { HashRouter, Route, Routes } from 'react-router-dom'
+import { HashRouter, Route, Routes } from 'react-router'
 import { AppLayout } from 'src/components/Layout/AppLayout'
 import { SettingsLayout } from 'src/components/Layout/SettingsLayout'
 import { lazyImport } from 'src/utils/lazyImport'

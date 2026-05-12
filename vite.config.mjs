@@ -4,19 +4,6 @@ import path from 'path'
 import { defineConfig, loadEnv } from 'vite'
 import { ViteEjsPlugin } from 'vite-plugin-ejs'
 import svgrPlugin from 'vite-plugin-svgr'
-import viteTsconfigPaths from 'vite-tsconfig-paths'
-
-// Plugin to strip crossorigin attributes from generated HTML.
-// Firefox extensions can fail to load module scripts when crossorigin is present.
-function stripCrossorigin() {
-  return {
-    name: 'strip-crossorigin',
-    enforce: 'post',
-    transformIndexHtml(html) {
-      return html.replace(/\scrossorigin/g, '')
-    },
-  }
-}
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
@@ -32,12 +19,17 @@ export default defineConfig(({ mode }) => {
         }
       }),
       react(),
-      viteTsconfigPaths(),
       svgrPlugin(),
       stripCrossorigin(),
     ],
     define: {
       'process.env': {},
+    },
+    resolve: {
+      tsconfigPaths: true,
+      alias: {
+        src: path.resolve(__dirname, './src'),
+      },
     },
     build: {
       sourcemap: false,
@@ -48,33 +40,18 @@ export default defineConfig(({ mode }) => {
           entryFileNames: `assets/[name]-[hash].js`,
           chunkFileNames: `assets/[name]-[hash].js`,
           assetFileNames: `assets/[name]-[hash].[ext]`,
-          manualChunks: {
-            core: [
-              'react',
-              'react-dom',
-              'react-router-dom',
-              'zustand',
-              '@tanstack/react-query',
-              '@tanstack/react-query-persist-client',
-              'react-error-boundary',
-            ],
-            ui: [
-              'react-contexify',
-              'react-select',
-              'react-share',
-              'react-simple-toasts',
-              'react-responsive',
-              'react-toggle',
-              'react-icons',
-              'react-modal',
-              'react-infinite-scroll-hook',
-              '@dnd-kit/core',
-              '@dnd-kit/sortable',
-              '@szhsin/react-menu',
-            ],
-            utils: [
-              'timeago.js',
-            ],
+          manualChunks(id) {
+            if (id.includes('node_modules')) {
+              if (id.includes('react') || id.includes('zustand') || id.includes('@tanstack') || id.includes('react-error-boundary')) {
+                if (id.includes('react-contexify') || id.includes('react-select') || id.includes('react-share') || id.includes('react-simple-toasts') || id.includes('react-responsive') || id.includes('react-toggle') || id.includes('react-icons') || id.includes('react-modal') || id.includes('react-infinite-scroll-hook') || id.includes('@dnd-kit') || id.includes('@szhsin')) {
+                  return 'ui'
+                }
+                return 'core'
+              }
+              if (id.includes('timeago.js')) {
+                return 'utils'
+              }
+            }
           },
         },
       },
@@ -83,10 +60,17 @@ export default defineConfig(({ mode }) => {
       open: true,
       sourcemap: false,
     },
-    resolve: {
-      alias: {
-        src: path.resolve(__dirname, './src'),
-      },
-    },
   }
 })
+
+// Plugin to strip crossorigin attributes from generated HTML.
+// Firefox extensions can fail to load module scripts when crossorigin is present.
+function stripCrossorigin() {
+  return {
+    name: 'strip-crossorigin',
+    enforce: 'post',
+    transformIndexHtml(html) {
+      return html.replace(/\scrossorigin/g, '')
+    },
+  }
+}

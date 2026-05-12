@@ -7,16 +7,15 @@ import {
 } from '@tanstack/react-query'
 import { localStorageAdapter } from 'src/adapters/LocalStorageAdapter'
 import { isDevelopment } from 'src/utils/Environment'
-import { PromiseValue } from 'type-fest'
 
 const queryConfig: DefaultOptions = {
   queries: {
-    useErrorBoundary: false,
+    throwOnError: false,
     refetchOnWindowFocus: false,
     retry: false,
     // Disable cache on dev mode
     staleTime: isDevelopment() ? 0 : 900000, //15 minutes
-    cacheTime: isDevelopment() ? 0 : 3600000, // 1 hour
+    gcTime: isDevelopment() ? 0 : 3600000, // 1 hour
   },
 }
 
@@ -26,9 +25,7 @@ export const persister = createAsyncStoragePersister({
   storage: localStorageAdapter,
 })
 
-export type ExtractFnReturnType<FnType extends (...args: any) => any> = PromiseValue<
-  ReturnType<FnType>
->
+export type ExtractFnReturnType<FnType extends (...args: any) => any> = Awaited<ReturnType<FnType>>
 
 export type QueryConfig<QueryFnType extends (...args: any) => any> = Omit<
   UseQueryOptions<ExtractFnReturnType<QueryFnType>>,
@@ -37,5 +34,5 @@ export type QueryConfig<QueryFnType extends (...args: any) => any> = Omit<
 
 export type InfiniteQueryConfig<QueryFnType extends (...args: any) => any> = Omit<
   UseInfiniteQueryOptions<ExtractFnReturnType<QueryFnType>>,
-  'queryKey' | 'queryFn' | 'getNextPageParam'
+  'queryKey' | 'queryFn' | 'getNextPageParam' | 'initialPageParam'
 >

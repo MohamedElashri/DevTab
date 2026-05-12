@@ -90,15 +90,17 @@ release:
 		exit 1; \
 	fi
 	@echo "🏷️   Bumping version to $(VERSION)..."
-	$(NPX) json -I -f $(MANIFEST) -e "this.version='$(VERSION)'"
+	node -e "const fs=require('fs'); const p='$(MANIFEST)'; const j=JSON.parse(fs.readFileSync(p)); j.version='$(VERSION)'; fs.writeFileSync(p, JSON.stringify(j,null,2)+'\n')"
+	node -e "const fs=require('fs'); const p='package.json'; const j=JSON.parse(fs.readFileSync(p)); j.version='$(VERSION)'; fs.writeFileSync(p, JSON.stringify(j,null,2)+'\n')"
 	@echo "🔨  Building and packaging..."
 	$(MAKE) clean
 	$(MAKE) install
 	$(MAKE) typecheck
 	$(MAKE) build
 	$(MAKE) package
+	$(MAKE) source
 	@echo ""
-	@echo "✅  Release $(VERSION) ready: $(RELEASE_ZIP)"
+	@echo "✅  Release $(VERSION) ready: $(RELEASE_ZIP) and $(SOURCE_ZIP)"
 
 # ---------------------------------------------------------------------------
 # Source code zip (for Mozilla add-on review)

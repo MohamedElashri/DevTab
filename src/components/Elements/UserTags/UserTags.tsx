@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from 'react'
 import { FaGlobe } from 'react-icons/fa'
 import { TiPlus } from 'react-icons/ti'
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router'
 import { useUserPreferences } from 'src/stores/preferences'
 import { useShallow } from 'zustand/shallow'
 
