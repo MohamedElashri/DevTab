@@ -1,86 +1,68 @@
 import clsx from 'clsx'
-import { AiFillMobile, AiFillSecurityScan } from 'react-icons/ai'
 import { BsArrowRight, BsFillGearFill } from 'react-icons/bs'
-import { FaDatabase, FaPaintBrush, FaRobot, FaServer } from 'react-icons/fa'
-import { RiDeviceFill } from 'react-icons/ri'
-import { TbDots } from 'react-icons/tb'
+import { FaDatabase, FaMicrochip, FaRobot, FaServer } from 'react-icons/fa'
+import { RiShieldKeyholeFill } from 'react-icons/ri'
+import { TbDots, TbWorldWww } from 'react-icons/tb'
 import { Tag, useRemoteConfigStore } from 'src/features/remoteConfig'
 import { useUserPreferences } from 'src/stores/preferences'
 import { Occupation } from '../../types'
 
 const OCCUPATIONS: Occupation[] = [
   {
-    title: 'Front-End Engineer',
-    value: 'frontend',
-    icon: FaPaintBrush,
-    sources: ['github', 'hackernews', 'lobsters', 'reddit'],
-    tags: ['frontend', 'javascript', 'typescript', 'css', 'react', 'vue.js', 'angularjs'],
-  },
-  {
-    title: 'Back-End Engineer',
+    title: 'Backend Engineer',
     value: 'backend',
     icon: BsFillGearFill,
     sources: ['github', 'hackernews', 'lobsters', 'reddit'],
-    tags: ['backend', 'go', 'php', 'ruby', 'rust', 'r'],
+    tags: ['python', 'rust', 'golang', 'java', 'django', 'graphql'],
   },
   {
-    title: 'Full Stack Engineer',
-    icon: RiDeviceFill,
-    value: 'fullstack',
+    title: 'AI / ML Engineer',
+    value: 'ai',
+    icon: FaRobot,
     sources: ['github', 'hackernews', 'lobsters', 'reddit'],
-    tags: ['webdev', 'javascript', 'typescript', 'php', 'devops'],
+    tags: ['python', 'MachineLearning', 'artificial', 'LocalLLaMA', 'datascience'],
   },
   {
-    title: 'Mobile',
-    value: 'mobile',
-    icon: AiFillMobile,
+    title: 'Web Developer',
+    value: 'webdev',
+    icon: TbWorldWww,
     sources: ['github', 'hackernews', 'lobsters', 'reddit'],
-    tags: [
-      'mobile',
-      'android',
-      'kotlin',
-      'java',
-      'ios',
-      'swift',
-      'objectivec',
-      'react native',
-      'flutter',
-    ],
+    tags: ['javascript', 'typescript', 'reactjs', 'webdev', 'frontend', 'node'],
   },
   {
-    title: 'Devops Engineer',
+    title: 'DevOps Engineer',
     value: 'devops',
     icon: FaServer,
     sources: ['github', 'hackernews', 'lobsters', 'reddit'],
-    tags: ['devops', 'kubernetes', 'docker', 'bash'],
+    tags: ['golang', 'rust', 'docker', 'kubernetes', 'linux', 'devops'],
   },
   {
     title: 'Data Engineer',
     value: 'data',
     icon: FaDatabase,
     sources: ['github', 'hackernews', 'lobsters', 'reddit'],
-    tags: ['data science', 'python', 'artificial intelligence', 'machine learning'],
+    tags: ['python', 'PostgreSQL', 'mongodb', 'redis', 'datascience'],
+  },
+  {
+    title: 'Embedded / Electronics',
+    value: 'embedded',
+    icon: FaMicrochip,
+    sources: ['github', 'hackernews', 'lobsters', 'reddit'],
+    tags: ['embedded', 'electronics', 'rust', 'cpp', 'arduino', 'FPGA'],
   },
   {
     title: 'Security Engineer',
     value: 'security',
-    icon: AiFillSecurityScan,
+    icon: RiShieldKeyholeFill,
     sources: ['github', 'hackernews', 'lobsters', 'reddit'],
-    tags: ['security', 'cpp', 'bash', 'python'],
-  },
-  {
-    title: 'ML Engineer',
-    value: 'ai',
-    icon: FaRobot,
-    sources: ['github', 'hackernews', 'lobsters', 'reddit'],
-    tags: ['artificial intelligence', 'machine learning', 'python'],
+    tags: ['python', 'cpp', 'rust', 'cybersecurity', 'netsec', 'privacy'],
   },
   {
     title: 'Other',
     value: 'other',
     icon: TbDots,
     sources: ['github', 'hackernews', 'lobsters', 'reddit'],
-    tags: ['webdev', 'mobile'],
+    tags: ['programming', 'technology', 'compsci', 'opensource'],
   },
 ]
 
@@ -128,8 +110,8 @@ export const HelloTab = () => {
   return (
     <div>
       <div className="tabHeader">
-        <h1 className="tabTitle">👋 Let’s set up your DevTab</h1>
-        <p className="tabBody">Select your developer role 👨🏻‍💻 to personalize your DevTab.</p>
+        <h1 className="tabTitle">👋 Let's set up your DevTab</h1>
+        <p className="tabBody">Select your developer role to personalize your feed.</p>
       </div>
       <div className="occupations">
         {OCCUPATIONS.map((occ) => {
