@@ -6,7 +6,6 @@ import {
   UseMutationOptions,
   UseQueryOptions,
 } from '@tanstack/react-query'
-import { AxiosError } from 'axios'
 import { localStorageAdapter } from 'src/adapters/LocalStorageAdapter'
 import { isDevelopment } from 'src/utils/Environment'
 import { PromiseValue } from 'type-fest'
@@ -44,6 +43,6 @@ export type InfiniteQueryConfig<QueryFnType extends (...args: any) => any> = Omi
 
 export type MutationConfig<MutationFnType extends (...args: any) => any> = UseMutationOptions<
   ExtractFnReturnType<MutationFnType>,
-  AxiosError,
+  Error,
   Parameters<MutationFnType>[0]
 >

@@ -1,10 +1,13 @@
 import { useQuery } from '@tanstack/react-query'
-import { axios } from 'src/lib/axios'
 import { ExtractFnReturnType, QueryConfig } from 'src/lib/react-query'
 import { RemoteConfig } from '../types'
 
 const getRemoteConfig = async (): Promise<RemoteConfig> => {
-  return axios.get('/data/config.json')
+  const res = await fetch('/data/config.json')
+  if (!res.ok) {
+    throw new Error(`Failed to load config: ${res.status}`)
+  }
+  return res.json()
 }
 
 type QueryFnType = typeof getRemoteConfig

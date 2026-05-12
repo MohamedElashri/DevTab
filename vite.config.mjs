@@ -67,9 +67,7 @@ export default defineConfig(({ mode }) => {
               'react-simple-toasts',
               'react-responsive',
               'react-toggle',
-              'react-tooltip',
               'react-icons',
-              'react-markdown',
               'react-modal',
               'react-infinite-scroll-hook',
               '@dnd-kit/core',
@@ -77,8 +75,6 @@ export default defineConfig(({ mode }) => {
               '@szhsin/react-menu',
             ],
             utils: [
-              'axios',
-              'axios-cache-adapter',
               'country-emoji',
               'htmlparser2',
               'dompurify',
