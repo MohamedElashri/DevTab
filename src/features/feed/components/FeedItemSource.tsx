@@ -1,7 +1,7 @@
 import { memo, useState } from 'react'
 import { FaReddit } from 'react-icons/fa'
 import { GoDotFill } from 'react-icons/go'
-import { SiGithub, SiYcombinator } from 'react-icons/si'
+import { SiGithub, SiProducthunt, SiYcombinator } from 'react-icons/si'
 import LobstersIcon from 'src/assets/icon_lobsters.png'
 
 const SOURCE_MAP: Record<string, React.ReactNode> = {
@@ -23,6 +23,11 @@ const SOURCE_MAP: Record<string, React.ReactNode> = {
   lobsters: (
     <>
       <img alt="lobsters" className="feedItemSource" src={LobstersIcon} /> Lobsters
+    </>
+  ),
+  producthunt: (
+    <>
+      <SiProducthunt color="#D65736" /> Product Hunt
     </>
   ),
 }

@@ -11,6 +11,7 @@ const HOST_ORIGINS = [
   'https://api.github.com/*',
   'https://hacker-news.firebaseio.com/*',
   'https://lobste.rs/*',
+  'https://www.producthunt.com/*',
   'https://www.reddit.com/*',
 ]
 

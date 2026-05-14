@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "DevTab",
-  "description": "Developer news from GitHub, Hacker News, Lobsters, Reddit, and RSS feeds in your new tab. No tracking, no ads.",
-  "version": "1.1.2",
+  "description": "Developer news from GitHub, Hacker News, Lobsters, Product Hunt, Reddit, and RSS feeds in your new tab. No tracking, no ads.",
+  "version": "1.1.3",
   "author": "Mohamed Elashri",
   "homepage_url": "https://github.com/MohamedElashri/DevTab",
   "chrome_url_overrides": {
@@ -15,6 +15,7 @@
     "https://api.github.com/*",
     "https://hacker-news.firebaseio.com/*",
     "https://lobste.rs/*",
+    "https://www.producthunt.com/*",
     "https://www.reddit.com/*"
   ],
   "optional_host_permissions": [

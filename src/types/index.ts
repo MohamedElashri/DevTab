@@ -30,6 +30,21 @@ export type Article = {
   canonical_url?: string
 }
 
+export type Product = {
+  id: string
+  url: string
+  title: string
+  tags: Array<string>
+  comments_count: number
+  points_count: number
+  image_url: string
+  published_at: number
+  description?: string
+  tagline: string
+  votes_count: number
+  topics: Array<string>
+}
+
 export type Repository = {
   id: string
   url: string

@@ -1,11 +1,12 @@
 import { FaReddit } from 'react-icons/fa'
-import { SiGithub, SiYcombinator } from 'react-icons/si'
+import { SiGithub, SiProducthunt, SiYcombinator } from 'react-icons/si'
 import LobstersIcon from 'src/assets/icon_lobsters.png'
 import { SupportedCardType } from 'src/types'
 import { lazyImport } from 'src/utils/lazyImport'
 const { GithubCard } = lazyImport(() => import('src/features/cards'), 'GithubCard')
 const { HackernewsCard } = lazyImport(() => import('src/features/cards'), 'HackernewsCard')
 const { LobstersCard } = lazyImport(() => import('src/features/cards'), 'LobstersCard')
+const { ProductHuntCard } = lazyImport(() => import('src/features/cards'), 'ProductHuntCard')
 const { RedditCard } = lazyImport(() => import('src/features/cards'), 'RedditCard')
 
 export const SUPPORTED_CARDS: SupportedCardType[] = [
@@ -34,6 +35,15 @@ export const SUPPORTED_CARDS: SupportedCardType[] = [
     label: 'Reddit',
     component: RedditCard,
     link: 'https://reddit.com/',
+    type: 'supported',
+  },
+  {
+    value: 'producthunt',
+    icon: <SiProducthunt color="#D65736" />,
+    analyticsTag: 'producthunt',
+    label: 'Product Hunt',
+    component: ProductHuntCard,
+    link: 'https://producthunt.com/',
     type: 'supported',
   },
   {

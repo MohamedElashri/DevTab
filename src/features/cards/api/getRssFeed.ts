@@ -168,7 +168,7 @@ const parseAtomEntry = (entry: Element, feedUrl: string, index: number): Article
   }
 }
 
-const getArticles = async (feedUrl: string): Promise<Article[]> => {
+export const getRssArticles = async (feedUrl: string): Promise<Article[]> => {
   const doc = await getFeedDocument(feedUrl)
   const rssItems = Array.from(doc.querySelectorAll('channel > item'))
   const atomEntries = Array.from(doc.querySelectorAll('feed > entry'))
@@ -180,7 +180,7 @@ const getArticles = async (feedUrl: string): Promise<Article[]> => {
   return atomEntries.map((entry, index) => parseAtomEntry(entry, feedUrl, index))
 }
 
-type QueryFnType = typeof getArticles
+type QueryFnType = typeof getRssArticles
 
 type UseGetArticlesOptions = {
   config?: QueryConfig<QueryFnType>
@@ -191,6 +191,6 @@ export const useRssFeed = ({ feedUrl, config }: UseGetArticlesOptions) => {
   return useQuery<ExtractFnReturnType<QueryFnType>>({
     ...config,
     queryKey: ['rss', feedUrl],
-    queryFn: () => getArticles(feedUrl),
+    queryFn: () => getRssArticles(feedUrl),
   })
 }
