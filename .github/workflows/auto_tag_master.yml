@@ -45,7 +45,7 @@ jobs:
           jq --arg version "$new_version" '.version = $version' public/manifest.json > public/manifest.json.tmp && mv public/manifest.json.tmp public/manifest.json
 
       - name: Commit manifest changes
-        uses: stefanzweifel/git-auto-commit-action@v6
+        uses: stefanzweifel/git-auto-commit-action@v7
         with:
           commit_message: 'ci: Bump manifest version to ${{ steps.tag_version.outputs.new_tag }}'
           file_pattern: public/manifest.json
