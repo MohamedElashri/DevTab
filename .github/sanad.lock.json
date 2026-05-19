@@ -1,0 +1,84 @@
+{
+  "version": 1,
+  "generated_by": "sanad",
+  "entries": [
+    {
+      "file": ".github/workflows/auto_tag_master.yml",
+      "node": "jobs.auto-tag.steps[0].uses",
+      "owner": "actions",
+      "repo": "checkout",
+      "path": "",
+      "kind": "github-action",
+      "logical_ref": "v4",
+      "pinned_sha": "34e114876b0b11c390a56381ad16ebd13914f8d5",
+      "resolved_at": "2026-05-19T12:28:18Z",
+      "timestamp": "2025-11-13T23:20:02Z",
+      "timestamp_source": "commit"
+    },
+    {
+      "file": ".github/workflows/auto_tag_master.yml",
+      "node": "jobs.auto-tag.steps[2].uses",
+      "owner": "anothrNick",
+      "repo": "github-tag-action",
+      "path": "",
+      "kind": "github-action",
+      "logical_ref": "1.67.0",
+      "pinned_sha": "a2c70ae13a881faf2b4953baaa9e49731997ab36",
+      "resolved_at": "2026-05-19T12:28:18Z",
+      "timestamp": "2023-06-13T21:24:19Z",
+      "timestamp_source": "release"
+    },
+    {
+      "file": ".github/workflows/auto_tag_master.yml",
+      "node": "jobs.auto-tag.steps[4].uses",
+      "owner": "stefanzweifel",
+      "repo": "git-auto-commit-action",
+      "path": "",
+      "kind": "github-action",
+      "logical_ref": "v6",
+      "pinned_sha": "778341af668090896ca464160c2def5d1d1a3eb0",
+      "resolved_at": "2026-05-19T12:28:18Z",
+      "timestamp": "2025-06-11T11:26:39Z",
+      "timestamp_source": "commit"
+    },
+    {
+      "file": ".github/workflows/distribute.yml",
+      "node": "jobs.build-and-deploy.steps[0].uses",
+      "owner": "actions",
+      "repo": "checkout",
+      "path": "",
+      "kind": "github-action",
+      "logical_ref": "v6",
+      "pinned_sha": "de0fac2e4500dabe0009e67214ff5f5447ce83dd",
+      "resolved_at": "2026-05-19T12:28:18Z",
+      "timestamp": "2026-01-09T19:42:23Z",
+      "timestamp_source": "commit"
+    },
+    {
+      "file": ".github/workflows/distribute.yml",
+      "node": "jobs.build-and-deploy.steps[1].uses",
+      "owner": "actions",
+      "repo": "setup-node",
+      "path": "",
+      "kind": "github-action",
+      "logical_ref": "v4",
+      "pinned_sha": "49933ea5288caeca8642d1e84afbd3f7d6820020",
+      "resolved_at": "2026-05-19T12:28:18Z",
+      "timestamp": "2025-04-02T19:20:51Z",
+      "timestamp_source": "commit"
+    },
+    {
+      "file": ".github/workflows/distribute.yml",
+      "node": "jobs.build-and-deploy.steps[4].uses",
+      "owner": "wdzeng",
+      "repo": "firefox-addon",
+      "path": "",
+      "kind": "github-action",
+      "logical_ref": "v1",
+      "pinned_sha": "b78a4d0148897b072ef18aff65a6bd793e8109be",
+      "resolved_at": "2026-05-19T12:28:18Z",
+      "timestamp": "2025-03-27T16:51:34Z",
+      "timestamp_source": "commit"
+    }
+  ]
+}

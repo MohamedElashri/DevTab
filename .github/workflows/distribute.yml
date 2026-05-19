@@ -28,12 +28,12 @@ jobs:
         browser: [firefox]
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # sanad: ref=v6
         with:
           fetch-depth: 0
           ref: ${{ github.ref_name }}
 
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # sanad: ref=v4
         with:
           node-version: 18
           cache: 'yarn'
@@ -46,7 +46,7 @@ jobs:
 
       - name: '⬆️ Upload to Firefox Add-on Store'
         if: ${{ github.event.inputs.target == 'firefox' && matrix.browser == 'firefox' && github.event.inputs.dryrun == 'false' }}
-        uses: wdzeng/firefox-addon@v1
+        uses: wdzeng/firefox-addon@b78a4d0148897b072ef18aff65a6bd793e8109be # sanad: ref=v1
         with:
           jwt-issuer: ${{ secrets.WEB_EXT_API_KEY }}
           jwt-secret: ${{ secrets.WEB_EXT_API_SECRET }}
