@@ -1,7 +1,7 @@
 # DevTab — Makefile
-# Targets for testing, building, and releasing the Firefox extension.
+# Targets for testing, updating, building, and releasing the Firefox extension.
 
-.PHONY: all install dev typecheck build package release clean help
+.PHONY: all install ci update dev test lint typecheck build package source release clean help
 
 # ---------------------------------------------------------------------------
 # Configuration
@@ -16,7 +16,7 @@ NPX            := npx
 # ---------------------------------------------------------------------------
 # Default target
 # ---------------------------------------------------------------------------
-all: clean install typecheck build package
+all: clean install test build package
 	@echo ""
 	@echo "✅  All done. Extension ready at: $(RELEASE_ZIP)"
 
@@ -26,14 +26,18 @@ all: clean install typecheck build package
 help:
 	@echo "DevTab — Makefile targets"
 	@echo ""
-	@echo "  make install        Install dependencies"
-	@echo "  make dev            Start the Vite dev server"
-	@echo "  make typecheck      Run TypeScript type checker (no emit)"
-	@echo "  make build          Build the extension for production"
-	@echo "  make package        Create $(RELEASE_ZIP) from $(DIST_DIR)"
-	@echo "  make release        Bump version, build, and package"
-	@echo "  make clean          Remove $(DIST_DIR), *.zip, and build artifacts"
-	@echo "  make all            Run: clean → install → typecheck → build → package"
+	@echo "  make install      Install dependencies (npm ci)"
+	@echo "  make update       Update dependencies within their ranges (npm update)"
+	@echo "  make dev          Start the Vite dev server"
+	@echo "  make test         Run quality checks: lint + typecheck"
+	@echo "  make lint         Run ESLint"
+	@echo "  make typecheck    Run TypeScript type checker (no emit)"
+	@echo "  make build        Build the extension for production"
+	@echo "  make package      Create $(RELEASE_ZIP) from $(DIST_DIR)"
+	@echo "  make source       Create $(SOURCE_ZIP) for the AMO review"
+	@echo "  make release      Bump version, test, build, and package"
+	@echo "  make clean        Remove $(DIST_DIR), *.zip, and build artifacts"
+	@echo "  make all          Run: clean → install → test → build → package"
 	@echo ""
 	@echo "Version bump example:"
 	@echo "  VERSION=1.2.0 make release"
@@ -43,7 +47,12 @@ help:
 # ---------------------------------------------------------------------------
 install:
 	@echo "📦  Installing dependencies..."
-	$(NPM) install --legacy-peer-deps
+	$(NPM) ci
+
+update:
+	@echo "🚀  Checking for dependency updates within ranges..."
+	$(NPM) update
+	@echo "✅  Dependencies updated."
 
 # ---------------------------------------------------------------------------
 # Development
@@ -55,9 +64,16 @@ dev:
 # ---------------------------------------------------------------------------
 # Testing / Quality
 # ---------------------------------------------------------------------------
+test: lint typecheck
+	@echo "✅  All checks passed."
+
+lint:
+	@echo "🔍  Running ESLint..."
+	$(NPM) run lint
+
 typecheck:
 	@echo "🔍  Running TypeScript type check..."
-	$(NPX) tsc --noEmit
+	$(NPM) run typecheck
 
 # ---------------------------------------------------------------------------
 # Building
@@ -82,27 +98,6 @@ package: build
 	@echo "✅  Packaged: $(RELEASE_ZIP)"
 
 # ---------------------------------------------------------------------------
-# Release
-# ---------------------------------------------------------------------------
-release:
-	@if [ -z "$(VERSION)" ]; then \
-		echo "❌  VERSION is not set. Example: VERSION=1.2.0 make release"; \
-		exit 1; \
-	fi
-	@echo "🏷️   Bumping version to $(VERSION)..."
-	node -e "const fs=require('fs'); const p='$(MANIFEST)'; const j=JSON.parse(fs.readFileSync(p)); j.version='$(VERSION)'; fs.writeFileSync(p, JSON.stringify(j,null,2)+'\n')"
-	node -e "const fs=require('fs'); const p='package.json'; const j=JSON.parse(fs.readFileSync(p)); j.version='$(VERSION)'; fs.writeFileSync(p, JSON.stringify(j,null,2)+'\n')"
-	@echo "🔨  Building and packaging..."
-	$(MAKE) clean
-	$(MAKE) install
-	$(MAKE) typecheck
-	$(MAKE) build
-	$(MAKE) package
-	$(MAKE) source
-	@echo ""
-	@echo "✅  Release $(VERSION) ready: $(RELEASE_ZIP) and $(SOURCE_ZIP)"
-
-# ---------------------------------------------------------------------------
 # Source code zip (for Mozilla add-on review)
 # ---------------------------------------------------------------------------
 source:
@@ -116,6 +111,27 @@ source:
 		Makefile \
 		-x "*.DS_Store" -x "*/node_modules/*"
 	@echo "✅  Source archive: $(SOURCE_ZIP)"
+
+# ---------------------------------------------------------------------------
+# Release
+# ---------------------------------------------------------------------------
+release:
+	@if [ -z "$(VERSION)" ]; then \
+		echo "❌  VERSION is not set. Example: VERSION=1.2.0 make release"; \
+		exit 1; \
+	fi
+	@echo "🏷️   Bumping version to $(VERSION)..."
+	node -e "const fs=require('fs'); const p='$(MANIFEST)'; const j=JSON.parse(fs.readFileSync(p)); j.version='$(VERSION)'; fs.writeFileSync(p, JSON.stringify(j,null,2)+'\n')"
+	node -e "const fs=require('fs'); const p='package.json'; const j=JSON.parse(fs.readFileSync(p)); j.version='$(VERSION)'; fs.writeFileSync(p, JSON.stringify(j,null,2)+'\n')"
+	@echo "🧹  Cleaning and reinstalling..."
+	$(MAKE) clean
+	$(MAKE) install
+	$(MAKE) test
+	$(MAKE) build
+	$(MAKE) package
+	$(MAKE) source
+	@echo ""
+	@echo "✅  Release $(VERSION) ready: $(RELEASE_ZIP) and $(SOURCE_ZIP)"
 
 # ---------------------------------------------------------------------------
 # Cleanup
