@@ -52,11 +52,12 @@ const CardSettings = ({
     )
 
   const userTagsMemo = useMemo(() => {
-    const tags = [...userSelectedTags]
-      .sort((a, b) => a.label.localeCompare(b.label))
-      .concat(globalTag ? [globalTag] : [])
-      .concat(MY_LANGUAGES_OPTION)
-    return tags
+    const sortedTags = [...userSelectedTags].sort((a, b) => a.label.localeCompare(b.label))
+    return [
+      MY_LANGUAGES_OPTION,
+      ...(globalTag ? [globalTag] : []),
+      ...sortedTags,
+    ]
   }, [userSelectedTags, globalTag])
 
   const resolvedSortOptions = useMemo(() => {
@@ -70,8 +71,8 @@ const CardSettings = ({
     window.open(url, openLinksNewTab ? '_blank' : '_self')
   }, [url, openLinksNewTab])
 
-  const firstSpecialIndex = useMemo(
-    () => userTagsMemo.findIndex((tag) => SPECIAL_LABELS.includes(tag.label.toLowerCase())),
+  const firstFollowedIndex = useMemo(
+    () => userTagsMemo.findIndex((tag) => !SPECIAL_LABELS.includes(tag.label.toLowerCase())),
     [userTagsMemo]
   )
 
@@ -92,12 +93,12 @@ const CardSettings = ({
         <SubMenu
           label={
             <span className={`menuItem`}>
-              <AiOutlineCode /> Language
+              <AiOutlineCode /> Topic
             </span>
           }>
           {userTagsMemo.map((tag, i) => (
             <>
-              {i === firstSpecialIndex && <MenuDivider />}
+              {i === firstFollowedIndex && <MenuDivider />}
               <MenuItem
                 className={`menuItem`}
                 type="radio"
