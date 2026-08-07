@@ -122,6 +122,16 @@ a {
   fill: var(--app-name-text-color);
 }
 
+.devtab-cursor {
+  animation: devtab-blink 1.1s steps(2, start) infinite;
+}
+
+@keyframes devtab-blink {
+  to {
+    visibility: hidden;
+  }
+}
+
 .block {
   background-color: var(--card-background-color);
   border: 1px solid var(--card-border-color);

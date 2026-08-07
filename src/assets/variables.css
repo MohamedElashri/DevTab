@@ -19,6 +19,7 @@ html {
 
 html.dark {
   --app-name-text-color: #fff;
+  --neon-accent: #22d3ee;
   --background-color: #0d1116;
   --primary-text-color: #fff;
   --primary-hover-text-color: #b1b1b1;
@@ -108,6 +109,7 @@ html.dark {
 
 html.light {
   --app-name-text-color: #253b53;
+  --neon-accent: #0891b2;
   --background-color: #eff6fe;
   --primary-text-color: #2d3b4a;
   --secondary-text-color: #656d76;

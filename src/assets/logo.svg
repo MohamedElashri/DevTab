@@ -1,6 +1,15 @@
-<svg viewBox="0 0 130 22" xmlns="http://www.w3.org/2000/svg">
+<svg viewBox="0 0 106 22" xmlns="http://www.w3.org/2000/svg">
   <text
     x="0"
+    y="17"
+    fill="var(--neon-accent)"
+    font-family="'SF Mono', 'Fira Code', 'JetBrains Mono', 'Cascadia Code', 'Source Code Pro', Menlo, Monaco, Consolas, monospace"
+    font-size="17"
+    font-weight="700">
+    &gt;
+  </text>
+  <text
+    x="12"
     y="17"
     font-family="'SF Mono', 'Fira Code', 'JetBrains Mono', 'Cascadia Code', 'Source Code Pro', Menlo, Monaco, Consolas, monospace"
     font-size="17"
@@ -8,4 +17,12 @@
     letter-spacing="1.5">
     DEVTAB
   </text>
+  <rect
+    x="82"
+    y="4"
+    width="8"
+    height="14"
+    fill="var(--neon-accent)"
+    class="devtab-cursor"
+  />
 </svg>
