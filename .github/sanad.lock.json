@@ -11,7 +11,7 @@
       "kind": "github-action",
       "logical_ref": "v7.0.1",
       "pinned_sha": "3d3c42e5aac5ba805825da76410c181273ba90b1",
-      "resolved_at": "2026-08-01T01:15:46Z",
+      "resolved_at": "2026-08-07T10:34:41Z",
       "timestamp": "2026-07-20T15:10:05Z",
       "timestamp_source": "release"
     },
@@ -24,7 +24,7 @@
       "kind": "github-action",
       "logical_ref": "1.75.0",
       "pinned_sha": "4ed44965e0db8dab2b466a16da04aec3cc312fd8",
-      "resolved_at": "2026-08-01T01:15:46Z",
+      "resolved_at": "2026-08-07T10:34:41Z",
       "timestamp": "2025-08-22T17:33:24Z",
       "timestamp_source": "release"
     },
@@ -37,7 +37,7 @@
       "kind": "github-action",
       "logical_ref": "v7.2.0",
       "pinned_sha": "4a55954c782fc1ea30b9056cd3e7a2b40ca8887d",
-      "resolved_at": "2026-08-01T01:15:46Z",
+      "resolved_at": "2026-08-07T10:34:41Z",
       "timestamp": "2026-06-28T09:32:56Z",
       "timestamp_source": "release"
     },
@@ -50,7 +50,7 @@
       "kind": "github-action",
       "logical_ref": "v7.0.1",
       "pinned_sha": "3d3c42e5aac5ba805825da76410c181273ba90b1",
-      "resolved_at": "2026-08-01T01:15:46Z",
+      "resolved_at": "2026-08-07T10:34:41Z",
       "timestamp": "2026-07-20T15:10:05Z",
       "timestamp_source": "release"
     },
@@ -63,7 +63,7 @@
       "kind": "github-action",
       "logical_ref": "v7.0.0",
       "pinned_sha": "820762786026740c76f36085b0efc47a31fe5020",
-      "resolved_at": "2026-08-01T01:15:46Z",
+      "resolved_at": "2026-08-07T10:34:41Z",
       "timestamp": "2026-07-14T02:46:05Z",
       "timestamp_source": "release"
     },
@@ -76,7 +76,9 @@
       "kind": "github-action",
       "logical_ref": "v1",
       "pinned_sha": "3184ee491b500e080885e046051366a4228c6e5d",
-      "resolved_at": "2026-08-01T01:15:46Z"
+      "resolved_at": "2026-08-07T10:34:41Z",
+      "timestamp": "2026-06-07T07:57:21Z",
+      "timestamp_source": "commit"
     }
   ]
 }
