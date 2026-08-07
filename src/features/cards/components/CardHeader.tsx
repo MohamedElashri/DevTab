@@ -14,15 +14,15 @@ type HeaderTitleProps = {
   children?: React.ReactNode
 }
 const CardHeader = ({ label, fallbackTag, selectedTag, children }: HeaderTitleProps) => {
-  if (children) {
-    return <>{children}</>
-  }
-
   const highlightLabel = useMemo(() => {
     if (!selectedTag || selectedTag.value === fallbackTag.value) return null
     if (selectedTag.value === MY_LANGUAGES_OPTION.value) return MY_LANGUAGES_OPTION.label
     return selectedTag.label
   }, [selectedTag, fallbackTag])
+
+  if (children) {
+    return <>{children}</>
+  }
 
   return (
     <>

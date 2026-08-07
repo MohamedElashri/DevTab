@@ -25,14 +25,16 @@ export const persister = createAsyncStoragePersister({
   storage: localStorageAdapter,
 })
 
-export type ExtractFnReturnType<FnType extends (...args: any) => any> = Awaited<ReturnType<FnType>>
+export type ExtractFnReturnType<FnType extends (...args: never[]) => unknown> = Awaited<
+  ReturnType<FnType>
+>
 
-export type QueryConfig<QueryFnType extends (...args: any) => any> = Omit<
+export type QueryConfig<QueryFnType extends (...args: never[]) => unknown> = Omit<
   UseQueryOptions<ExtractFnReturnType<QueryFnType>>,
   'queryKey' | 'queryFn'
 >
 
-export type InfiniteQueryConfig<QueryFnType extends (...args: any) => any> = Omit<
+export type InfiniteQueryConfig<QueryFnType extends (...args: never[]) => unknown> = Omit<
   UseInfiniteQueryOptions<ExtractFnReturnType<QueryFnType>>,
   'queryKey' | 'queryFn' | 'getNextPageParam' | 'initialPageParam'
 >

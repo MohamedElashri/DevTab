@@ -34,24 +34,38 @@ const getRepos = async ({
     throw new Error(`GitHub API error: ${res.status}`)
   }
   const data = await res.json()
-  return (data.items || []).map((item: any) => ({
-    id: String(item.id),
-    url: item.html_url,
-    title: item.full_name,
-    tags: [item.language || 'unknown'],
-    comments_count: item.open_issues_count || 0,
-    points_count: item.stargazers_count || 0,
-    image_url: '',
-    published_at: new Date(item.created_at).getTime(),
-    description: item.description || '',
-    technology: item.language || 'unknown',
-    stars_count: item.stargazers_count || 0,
-    source: 'github',
-    owner: item.owner?.login || '',
-    forks_count: item.forks_count || 0,
-    stars_in_range: item.stargazers_count || 0,
-    name: item.name || '',
-  }))
+  return (data.items || []).map(
+    (item: {
+      id: number
+      html_url: string
+      full_name: string
+      language: string | null
+      open_issues_count: number
+      stargazers_count: number
+      created_at: string
+      description: string | null
+      owner?: { login: string }
+      forks_count: number
+      name: string
+    }) => ({
+      id: String(item.id),
+      url: item.html_url,
+      title: item.full_name,
+      tags: [item.language || 'unknown'],
+      comments_count: item.open_issues_count || 0,
+      points_count: item.stargazers_count || 0,
+      image_url: '',
+      published_at: new Date(item.created_at).getTime(),
+      description: item.description || '',
+      technology: item.language || 'unknown',
+      stars_count: item.stargazers_count || 0,
+      source: 'github',
+      owner: item.owner?.login || '',
+      forks_count: item.forks_count || 0,
+      stars_in_range: item.stargazers_count || 0,
+      name: item.name || '',
+    })
+  )
 }
 
 type QueryFnType = typeof getRepos

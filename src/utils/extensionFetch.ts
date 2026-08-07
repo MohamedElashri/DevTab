@@ -7,9 +7,21 @@
  * to host_permissions, so we proxy the request when needed.
  */
 
+interface Runtime {
+  id?: string
+  sendMessage?: (message: unknown) => Promise<ProxyFetchResponse>
+}
+
+interface ProxyFetchResponse {
+  ok?: boolean
+  data?: unknown
+  error?: string
+  status?: number
+}
+
 const isExtensionContext = (): boolean => {
   if (typeof window === 'undefined') return false
-  const w = window as any
+  const w = window as unknown as { chrome?: { runtime?: Runtime }; browser?: { runtime?: Runtime } }
   return Boolean(w.chrome?.runtime?.id || w.browser?.runtime?.id)
 }
 
@@ -19,7 +31,7 @@ export async function extensionFetch(url: string, init?: RequestInit): Promise<R
     return fetch(url, init)
   }
 
-  const w = window as any
+  const w = window as unknown as { chrome?: { runtime?: Runtime }; browser?: { runtime?: Runtime } }
   const runtime = w.chrome?.runtime || w.browser?.runtime
   if (!runtime?.sendMessage) {
     throw new Error('Extension runtime API not available')
@@ -35,8 +47,6 @@ export async function extensionFetch(url: string, init?: RequestInit): Promise<R
       })
     } else if (Array.isArray(init.headers)) {
       headers = Object.fromEntries(init.headers)
-    } else {
-      headers = init.headers as Record<string, string>
     }
   }
 

@@ -31,7 +31,7 @@ export const UserTags = () => {
         })
       })
     },
-    [cards, cardsSettings, setCardSettings]
+    [cards, cardsSettings, setCardSettings, clearCardSettingsLanguages]
   )
 
   const tagsList = useMemo(() => {

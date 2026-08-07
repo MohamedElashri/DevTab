@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import Toggle from 'react-toggle'
-import 'react-toggle/style.css'
+import { Switch } from 'src/components/Elements'
 import { SettingsContentLayout } from 'src/components/Layout/SettingsContentLayout'
 import { useUserPreferences } from 'src/stores/preferences'
 import { hasExtensionPermissions, requestExtensionPermissions } from 'src/utils/ensureExtensionPermissions'
@@ -67,32 +66,28 @@ export const GeneralSettings = () => {
         <div className="settingRow">
           <p className="settingTitle">Dark Mode</p>
           <div className="settingContent">
-            <Toggle checked={theme === 'dark'} icons={false} onChange={onDarkModeChange} />
+            <Switch checked={theme === 'dark'} onChange={onDarkModeChange} />
           </div>
         </div>
 
         <div className="settingRow">
           <p className="settingTitle">Open links in a new tab</p>
           <div className="settingContent">
-            <Toggle checked={openLinksNewTab} icons={false} onChange={onOpenLinksNewTabChange} />
+            <Switch checked={openLinksNewTab} onChange={onOpenLinksNewTabChange} />
           </div>
         </div>
 
         <div className="settingRow">
           <p className="settingTitle">Display read posts</p>
           <div className="settingContent">
-            <Toggle checked={showReadPosts} icons={false} onChange={onShowReadPostsChange} />
+            <Switch checked={showReadPosts} onChange={onShowReadPostsChange} />
           </div>
         </div>
 
         <div className="settingRow">
           <p className="settingTitle">Compact mode</p>
           <div className="settingContent">
-            <Toggle
-              checked={listingMode === 'compact'}
-              icons={false}
-              onChange={onlistingModeChange}
-            />
+            <Switch checked={listingMode === 'compact'} onChange={onlistingModeChange} />
           </div>
         </div>
 

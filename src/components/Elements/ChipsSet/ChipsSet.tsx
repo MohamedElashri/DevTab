@@ -59,7 +59,7 @@ export const ChipsSet = ({
       }
       const newVal = selectedChips?.filter((chipValue) => chipValue !== option.value)
       setSelectedChips(newVal)
-      onChange &&
+      if (onChange) {
         onChange(
           {
             option,
@@ -67,6 +67,7 @@ export const ChipsSet = ({
           },
           options.filter((opt) => newVal.some((selectedVal) => selectedVal === opt.value))
         )
+      }
     } else {
       let newVal: string[] = []
       if (canSelectMultiple) {
@@ -76,7 +77,7 @@ export const ChipsSet = ({
       }
 
       setSelectedChips(newVal)
-      onChange &&
+      if (onChange) {
         onChange(
           {
             option,
@@ -84,6 +85,7 @@ export const ChipsSet = ({
           },
           options.filter((opt) => newVal.some((selectedVal) => selectedVal === opt.value))
         )
+      }
     }
   }
 

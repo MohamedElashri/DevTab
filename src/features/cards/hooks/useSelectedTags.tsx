@@ -29,14 +29,14 @@ export const useSelectedTags = ({ source, fallbackTag }: useSelectedTagsProps) =
       return userSelectedTags
     }
     return [userSelectedTags.find((lang) => lang.value === language) || fallbackTag]
-  }, [userSelectedTags, language])
+  }, [userSelectedTags, language, fallbackTag])
 
   const selectedTag = useMemo(() => {
     return language
       ? [MY_LANGUAGES_OPTION, ...userSelectedTags].find((lang) => lang.value === language) ||
           fallbackTag
       : fallbackTag
-  }, [language, userSelectedTags])
+  }, [language, userSelectedTags, fallbackTag])
 
   const queryTags = useMemo(() => {
     return selectedTags.map((tag) => tag.value)

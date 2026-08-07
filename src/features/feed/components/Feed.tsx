@@ -1,12 +1,10 @@
 import useInfiniteScroll from 'react-infinite-scroll-hook'
 import { PropagateLoader } from 'react-spinners'
 import { useGetFeed } from 'src/features/cards'
-import { useUserPreferences } from 'src/stores/preferences'
 import './feed.css'
 import { FeedItem } from './feedItems/FeedItem'
 
 export const Feed = () => {
-  const { userSelectedTags } = useUserPreferences()
   const {
     data: feed,
     isLoading,
@@ -14,11 +12,8 @@ export const Feed = () => {
     hasNextPage,
     isError,
     error,
-    isFetchingNextPage,
     fetchNextPage,
-  } = useGetFeed({
-    tags: userSelectedTags.map((tag) => tag.label.toLocaleLowerCase()),
-  })
+  } = useGetFeed()
 
   const [infiniteRef, { rootRef }] = useInfiniteScroll({
     loading: isLoading,
@@ -48,7 +43,7 @@ export const Feed = () => {
 
   return (
     <div ref={rootRef} className="feed scrollable" style={{ overflow: 'auto', maxHeight: '100%' }}>
-      {(feed?.pages.flatMap((page) => page.data) || []).map((article, index) => {
+      {(feed?.pages.flatMap((page) => page.data) || []).map((article) => {
         return (
           <FeedItem item={article} key={article.id} analyticsTag={'feed'} className="feedItem" />
         )

@@ -18,7 +18,7 @@ const Placeholders = memo<PlaceholdersProps>(({ placeholder }) => {
   )
 })
 
-export type ListComponentPropsType<T extends unknown> = {
+export type ListComponentPropsType<T> = {
   items?: T[]
   sortBy?: keyof T
   sortFn?: (a: T, b: T) => number
@@ -26,11 +26,11 @@ export type ListComponentPropsType<T extends unknown> = {
   renderItem: (item: T, index: number) => React.ReactNode
   placeholder?: React.ReactNode
   header?: React.ReactNode
-  error?: any
+  error?: Error | null | undefined
   limit?: number
 }
 
-export function ListComponent<T extends any>(props: ListComponentPropsType<T>) {
+export function ListComponent<T>(props: ListComponentPropsType<T>) {
   const {
     items,
     sortBy,
@@ -55,7 +55,10 @@ export function ListComponent<T extends any>(props: ListComponentPropsType<T>) {
       return items
     }
 
-    return items.filter((item: any) => !readPostIdSet.has(item.id))
+    const hasId = (item: T): item is T & { id: string } =>
+  typeof (item as { id?: unknown }).id === 'string'
+
+    return items.filter((item: T) => !hasId(item) || readPostIdSet.has(item.id))
   }, [items, readPostIdSet, showReadPosts])
 
   const sortedData = useMemo(() => {
@@ -82,14 +85,14 @@ export function ListComponent<T extends any>(props: ListComponentPropsType<T>) {
 
     try {
       return sortedData.slice(0, limit).map((item, index) => {
-        let content: ReactNode[] = [renderItem(item, index)]
+        const content: ReactNode[] = [renderItem(item, index)]
         if (header && index === 0) {
           content.unshift(header)
         }
 
         return content
       })
-    } catch (e) {
+    } catch {
       return []
     }
   }, [sortedData, header, renderItem, limit])
@@ -98,7 +101,7 @@ export function ListComponent<T extends any>(props: ListComponentPropsType<T>) {
     return <Placeholders placeholder={placeholder} />
   }
   if (error) {
-    return <p className="errorMsg">{error?.message || error}</p>
+    return <p className="errorMsg">{error?.message}</p>
   }
 
   if (items && items.length == 0) {

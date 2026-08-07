@@ -12,7 +12,6 @@ function numberWithCommas(x: number | string) {
 
 const RepoItem = ({
   item,
-  selectedTag,
   dateRange = '',
   analyticsTag,
 }: BaseItemPropsType<Repository>) => {

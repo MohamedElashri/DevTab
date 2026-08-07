@@ -7,7 +7,6 @@ import { SettingsContentLayout } from 'src/components/Layout/SettingsContentLayo
 import { SUPPORTED_CARDS } from 'src/config/supportedCards'
 import { BookmarkedPost } from 'src/features/bookmarks'
 import { useBookmarks } from 'src/stores/bookmarks'
-import { useUserPreferences } from 'src/stores/preferences'
 import './bookmarkSettings.css'
 
 type BookmarkItemProps = {
@@ -67,7 +66,7 @@ export const BookmarkSettings = () => {
     link.click()
   }
 
-  const handleFileChange = (event: any) => {
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
     if (file) {
       const reader = new FileReader()

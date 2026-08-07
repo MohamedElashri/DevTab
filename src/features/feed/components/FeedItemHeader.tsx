@@ -12,7 +12,6 @@ type FeedItemHeaderProps = {
 export const FeedItemHeader = ({
   title,
   url,
-  source,
   image,
   fallbackImage,
 }: FeedItemHeaderProps) => {

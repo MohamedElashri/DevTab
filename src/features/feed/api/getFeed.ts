@@ -17,11 +17,7 @@ const getFeed = async (): Promise<Response> => {
   }
 }
 
-type UseGetArticlesOptions = {
-  tags: string[]
-}
-
-export const useGetFeed = ({ }: UseGetArticlesOptions) => {
+export const useGetFeed = () => {
   return useInfiniteQuery({
     queryKey: ['feed', 'v2'],
     queryFn: () => getFeed(),

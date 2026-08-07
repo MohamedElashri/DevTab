@@ -41,8 +41,8 @@ export const App = () => {
   }, [DNDDuration, isDNDModeActive, setDNDDuration])
 
   useLayoutEffect(() => {
-    let dndContent = document.querySelector('.DNDContent')
-    let observer = new IntersectionObserver(intersectionCallback, {
+    const dndContent = document.querySelector('.DNDContent')
+    const observer = new IntersectionObserver(intersectionCallback, {
       threshold: 0.1,
     })
 

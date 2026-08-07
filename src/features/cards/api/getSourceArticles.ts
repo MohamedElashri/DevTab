@@ -3,6 +3,30 @@ import { ExtractFnReturnType, QueryConfig } from 'src/lib/react-query'
 import { Article } from 'src/types'
 import { extensionFetch } from 'src/utils/extensionFetch'
 
+type LobstersStory = {
+  short_id: string
+  url: string
+  title: string
+  tags: string[]
+  comment_count: number
+  score: number
+  created_at: string
+}
+
+type RedditPost = {
+  data: {
+    id: string
+    url: string
+    permalink: string
+    title: string
+    subreddit: string
+    num_comments: number
+    score: number
+    thumbnail: string
+    created_utc: number
+  }
+}
+
 const getArticles = async ({
   source,
   tags,
@@ -40,7 +64,7 @@ const getArticles = async ({
   if (source === 'lobsters') {
     const res = await extensionFetch('https://lobste.rs/hottest.json')
     const stories = await res.json()
-    return (stories || []).map((s: any) => ({
+    return (stories || []).map((s: LobstersStory) => ({
       id: String(s.short_id),
       url: s.url || `https://lobste.rs/s/${s.short_id}`,
       title: s.title,
@@ -77,18 +101,18 @@ const getArticles = async ({
     )
 
     const posts = results
-      .filter((r): r is PromiseFulfilledResult<any[]> => r.status === 'fulfilled')
+      .filter((r): r is PromiseFulfilledResult<RedditPost[]> => r.status === 'fulfilled')
       .flatMap((r) => r.value)
 
     const seen = new Set<string>()
-    const uniquePosts = posts.filter((p: any) => {
+    const uniquePosts = posts.filter((p: RedditPost) => {
       if (seen.has(p.data.id)) return false
       seen.add(p.data.id)
       return true
     })
 
     const sorted = uniquePosts
-      .map((p: any) => ({
+      .map((p: RedditPost) => ({
         data: p.data,
         score: p.data.score || 0,
       }))

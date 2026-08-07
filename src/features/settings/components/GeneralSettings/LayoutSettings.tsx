@@ -21,27 +21,24 @@ const Layouts: LayoutOption[] = [
   { value: 'cards', label: 'Cards', icon: <TfiLayoutColumn4Alt /> },
 ]
 
-const OptionComp = components.Option as React.FC<any>
-const SingleValueComp = components.SingleValue as React.FC<any>
-
 const IconOption = (props: OptionProps<LayoutOption, false, GroupBase<LayoutOption>>) => (
-  <OptionComp {...props}>
+  <components.Option {...props}>
     <div className="optionIcon">
       {props.data.icon}
       {props.data.label}
     </div>
-  </OptionComp>
+  </components.Option>
 )
 
 const SingleIconOption = (
   props: SingleValueProps<LayoutOption, false, GroupBase<LayoutOption>>
 ) => (
-  <SingleValueComp {...props}>
+  <components.SingleValue {...props}>
     <div className="optionIcon">
       {props.data.icon}
       {props.data.label}
     </div>
-  </SingleValueComp>
+  </components.SingleValue>
 )
 
 export const LayoutSettings = () => {
@@ -68,8 +65,8 @@ export const LayoutSettings = () => {
             <Select
               options={Layouts}
               components={{
-                Option: IconOption as React.ComponentType<any>,
-                SingleValue: SingleIconOption as React.ComponentType<any>,
+                Option: IconOption,
+                SingleValue: SingleIconOption,
               }}
               isMulti={false}
               isClearable={false}

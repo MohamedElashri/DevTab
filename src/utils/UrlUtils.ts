@@ -1,5 +1,5 @@
 export const isValidURL = (str: string): boolean => {
-  var pattern = new RegExp(
+  const pattern = new RegExp(
     '^(https?:\\/\\/)?' + // protocol
       '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,})' + // domain name
       '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path

@@ -8,7 +8,7 @@ const localStateStore: StateStorage = {
   setItem: (name: string, value: string) => {
     try {
       window.localStorage.setItem(name, value)
-    } catch (e) {
+    } catch {
       window.localStorage.setItem(name, '')
     }
   },

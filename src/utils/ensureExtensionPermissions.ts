@@ -17,15 +17,36 @@ const HOST_ORIGINS = [
 
 const getOriginPattern = (url: string) => `${new URL(url).origin}/*`
 
+interface PermissionsApi {
+  contains(details: unknown, callback: (result: boolean) => void): void
+  request(details: unknown, callback: (result: boolean) => void): void
+}
+
+interface Runtime {
+  id?: string
+  lastError?: { message: string }
+}
+
+interface BrowserApi {
+  chrome?: {
+    permissions?: PermissionsApi
+    runtime?: Runtime
+  }
+  browser?: {
+    permissions?: PermissionsApi
+    runtime?: Runtime
+  }
+}
+
 function getPermissionsApi() {
   if (typeof window === 'undefined') return null
-  const w = window as any
+  const w = window as unknown as BrowserApi
   return w.chrome?.permissions || w.browser?.permissions || null
 }
 
 function getRuntime() {
   if (typeof window === 'undefined') return null
-  const w = window as any
+  const w = window as unknown as BrowserApi
   return w.chrome?.runtime || w.browser?.runtime || null
 }
 
