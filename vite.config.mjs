@@ -7,7 +7,7 @@ import svgrPlugin from 'vite-plugin-svgr'
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
-  const manifestPath = path.resolve(__dirname, 'public', 'manifest.json')
+  const manifestPath = path.resolve(import.meta.dirname, 'public', 'manifest.json')
   const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf-8'))
 
   return {
@@ -28,7 +28,7 @@ export default defineConfig(({ mode }) => {
     resolve: {
       tsconfigPaths: true,
       alias: {
-        src: path.resolve(__dirname, './src'),
+        src: path.resolve(import.meta.dirname, './src'),
       },
     },
     build: {
