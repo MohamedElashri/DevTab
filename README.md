@@ -22,10 +22,11 @@
 
 ## Build
 
-Uses `npm` and targets Node 18.
+Requires Node >= 22. All common tasks are available through the `Makefile` (see `make help`).
 
 ```bash
-npm install
+make install
+make test
 make package
 ```
 
