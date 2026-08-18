@@ -3,8 +3,6 @@ import { BsFillBookmarksFill, BsFillGearFill, BsMoonFill } from 'react-icons/bs'
 import { CgTab } from 'react-icons/cg'
 import { IoMdSunny } from 'react-icons/io'
 import { MdDoDisturbOff } from 'react-icons/md'
-import { RiDashboardHorizontalFill } from 'react-icons/ri'
-import { TfiLayoutColumn4Alt } from 'react-icons/tfi'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import DevTabLogo from 'src/assets/logo.svg?react'
 import { UserTags } from 'src/components/Elements/UserTags'
@@ -14,8 +12,7 @@ import { SearchEngineBar } from '../Elements/SearchBar/SearchEngineBar'
 
 export const Header = () => {
   const [themeIcon, setThemeIcon] = useState(<BsMoonFill />)
-  const { theme, setTheme, setDNDDuration, isDNDModeActive, layout, setLayout } =
-    useUserPreferences()
+  const { theme, setTheme, setDNDDuration, isDNDModeActive } = useUserPreferences()
   const navigate = useNavigate()
   const location = useLocation()
 
@@ -38,11 +35,6 @@ export const Header = () => {
     const newTheme = theme === 'dark' ? 'light' : 'dark'
     setTheme(newTheme)
   }, [theme, setTheme])
-
-  const onLayoutChange = useCallback(() => {
-    const newLayout = layout === 'cards' ? 'grid' : 'cards'
-    setLayout(newLayout)
-  }, [layout, setLayout])
 
   const onSettingsClick = useCallback(() => {
     navigate('/settings/general')
@@ -79,9 +71,6 @@ export const Header = () => {
 
           <CircleButton onClick={onSettingsClick}>
             <BsFillGearFill />
-          </CircleButton>
-          <CircleButton onClick={onLayoutChange}>
-            {layout === 'cards' ? <RiDashboardHorizontalFill /> : <TfiLayoutColumn4Alt />}
           </CircleButton>
           <CircleButton onClick={onThemeChange} variant="darkfocus">
             {themeIcon}

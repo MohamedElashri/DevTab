@@ -1,4 +1,3 @@
-export * from '../feed/api/getFeed'
 export * from './components/githubCard'
 export * from './components/hackernewsCard'
 export * from './components/lobstersCard'

@@ -1,4 +1,3 @@
-import clsx from 'clsx'
 import { useEffect, useLayoutEffect } from 'react'
 import { DNDLayout } from 'src/components/Layout'
 import { useUserPreferences } from 'src/stores/preferences'
@@ -21,7 +20,6 @@ export const App = () => {
     maxVisibleCards,
     onboardingCompleted,
     isDNDModeActive,
-    layout,
     DNDDuration,
     setDNDDuration,
   } = useUserPreferences()
@@ -60,11 +58,7 @@ export const App = () => {
   return (
     <>
       {!onboardingCompleted && <OnboardingModal />}
-      <div
-        className={clsx(
-          'layoutLayers hideScrollBar',
-          layout === 'cards' ? 'cardsLayout' : 'gridLayout'
-        )}>
+      <div className="layoutLayers hideScrollBar cardsLayout">
         {isDNDModeActive() && <DNDLayout />}
         <AppContentLayout />
       </div>

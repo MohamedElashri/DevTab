@@ -9,7 +9,7 @@ A private, focused developer news new tab page for Firefox. No tracking, no ads,
 ## Features
 
 - News from GitHub, Hacker News, Lobsters, Product Hunt, Reddit, and your own RSS feeds
-- Tag and layout filters to organize feeds your way
+- Tag filters and card controls to organize feeds your way
 - Bookmarks, read state, and continued-sync across sessions
 - Do Not Disturb hours, dark/light theme, compact mode
 - All requests go directly to each source's public API

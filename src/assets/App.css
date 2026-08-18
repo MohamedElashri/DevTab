@@ -1062,11 +1062,6 @@ Counter
     margin-right: 1%;
   }
 
-  .layoutLayers.gridLayout {
-    margin-top: 1%;
-    box-shadow: 0px -10px 20px -15px var(--card-border-color);
-  }
-
   .Cards {
     padding-bottom: 20px;
   }

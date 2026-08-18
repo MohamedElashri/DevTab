@@ -12,7 +12,6 @@ export type SelectedCard = {
   type: 'rss' | 'supported'
 }
 
-export type Layout = 'grid' | 'cards'
 export type Theme = 'dark' | 'light'
 export type ListingMode = 'normal' | 'compact'
 
@@ -63,36 +62,6 @@ export type Repository = {
   stars_in_range: number
   name: string
 }
-
-export type ArticleFeedItemData = {
-  title: string
-  id: string
-  url: string
-  date: Date
-  image: string
-  tags: Array<string>
-  type: 'post'
-  source: string
-}
-
-export type GithubFeedItemData = {
-  title: string
-  id: string
-  url: string
-  date: Date
-  image: string
-  tags: Array<string>
-  type: 'github'
-  stars: number
-  stars_in_range: number
-  forks: number
-  programmingLanguage: string
-  description?: string
-}
-
-export type FeedItemData =
-  | ArticleFeedItemData
-  | GithubFeedItemData
 
 export type SupportedCardType = {
   value: string

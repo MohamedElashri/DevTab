@@ -3,17 +3,13 @@ import { useUserPreferences } from 'src/stores/preferences'
 import { Option } from 'src/types'
 
 export const CardsNumberSettings = () => {
-  const { maxVisibleCards, setMaxVisibleCards, layout } = useUserPreferences()
+  const { maxVisibleCards, setMaxVisibleCards } = useUserPreferences()
 
   const onMaxVisibleCardsChange = (selectedChips: Option[]) => {
     if (selectedChips.length) {
       const maxVisibleCards = parseInt(selectedChips[0].value)
       setMaxVisibleCards(maxVisibleCards)
     }
-  }
-
-  if (layout === 'grid') {
-    return null // Hide this setting in grid layout
   }
 
   return (

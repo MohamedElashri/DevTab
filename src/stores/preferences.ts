@@ -6,7 +6,6 @@ import { createJSONStorage, persist } from 'zustand/middleware'
 import {
   CardSettingsType,
   DNDDuration,
-  Layout,
   ListingMode,
   SearchEngineType,
   SelectedCard,
@@ -16,7 +15,6 @@ import {
 
 export type UserPreferencesState = {
   userSelectedTags: Tag[]
-  layout: Layout
   theme: Theme
   openLinksNewTab: boolean
   onboardingCompleted: boolean
@@ -39,7 +37,6 @@ export type UserPreferencesState = {
 }
 
 type UserPreferencesStoreActions = {
-  setLayout: (layout: Layout) => void
   setTheme: (theme: Theme) => void
   setPromptEngine: (engine: string) => void
   setOpenLinksNewTab: (openLinksNewTab: boolean) => void
@@ -73,7 +70,6 @@ export const useUserPreferences = create(
         },
       ],
       occupation: null,
-      layout: 'cards',
       cardsSettings: {
         reddit: { language: 'myLangs', sortBy: '' },
       },
@@ -94,7 +90,6 @@ export const useUserPreferences = create(
       userCustomCards: [],
       DNDDuration: 'never',
       showReadPosts: true,
-      setLayout: (layout) => set({ layout }),
       setPromptEngine: (promptEngine: string) => set({ promptEngine }),
       setListingMode: (listingMode: ListingMode) => set({ listingMode }),
       setTheme: (theme: Theme) => set({ theme }),

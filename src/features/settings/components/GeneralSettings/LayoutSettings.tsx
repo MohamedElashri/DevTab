@@ -1,23 +1,13 @@
-import { RiSparkling2Fill } from 'react-icons/ri'
 import { TfiLayoutColumn4Alt } from 'react-icons/tfi'
-import Select, {
-  GroupBase,
-  OptionProps,
-  SingleValue,
-  SingleValueProps,
-  components,
-} from 'react-select'
-import { useUserPreferences } from 'src/stores/preferences'
-import { Layout } from 'src/types'
+import Select, { GroupBase, OptionProps, SingleValueProps, components } from 'react-select'
 
 type LayoutOption = {
   label: string
-  value: Layout
+  value: 'cards'
   icon: React.ReactNode
 }
 
 const Layouts: LayoutOption[] = [
-  { value: 'grid', label: 'AI Feed (Beta)', icon: <RiSparkling2Fill color="#F1D247" /> },
   { value: 'cards', label: 'Cards', icon: <TfiLayoutColumn4Alt /> },
 ]
 
@@ -42,20 +32,6 @@ const SingleIconOption = (
 )
 
 export const LayoutSettings = () => {
-  const { layout, setLayout } = useUserPreferences()
-
-  const onPeriodSelect = (selectedOption: SingleValue<LayoutOption>) => {
-    if (!selectedOption) {
-      return
-    }
-
-    setLayout(selectedOption.value)
-  }
-
-  const getDefaultValue = (): LayoutOption | undefined => {
-    return Layouts.find((e) => e.value === layout)
-  }
-
   return (
     <div className="settingRow">
       <p className="settingTitle">Layout Style</p>
@@ -71,9 +47,8 @@ export const LayoutSettings = () => {
               isMulti={false}
               isClearable={false}
               isSearchable={false}
-              defaultValue={getDefaultValue()}
+              value={Layouts[0]}
               classNamePrefix={'devtab'}
-              onChange={onPeriodSelect}
             />
           </div>
         </div>

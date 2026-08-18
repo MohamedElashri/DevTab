@@ -44,7 +44,7 @@ export default defineConfig(({ mode }) => {
           manualChunks(id) {
             if (id.includes('node_modules')) {
               if (id.includes('react') || id.includes('zustand') || id.includes('@tanstack') || id.includes('react-error-boundary')) {
-                if (id.includes('react-contexify') || id.includes('react-select') || id.includes('react-share') || id.includes('react-simple-toasts') || id.includes('react-responsive') || id.includes('react-toggle') || id.includes('react-icons') || id.includes('react-modal') || id.includes('react-infinite-scroll-hook') || id.includes('@dnd-kit') || id.includes('@szhsin')) {
+                if (id.includes('react-contexify') || id.includes('react-select') || id.includes('react-share') || id.includes('react-simple-toasts') || id.includes('react-responsive') || id.includes('react-toggle') || id.includes('react-icons') || id.includes('react-modal') || id.includes('@dnd-kit') || id.includes('@szhsin')) {
                   return 'ui'
                 }
                 return 'core'
