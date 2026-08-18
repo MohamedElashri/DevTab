@@ -1,7 +1,8 @@
 # DevTab — Makefile
 # Targets for testing, updating, building, and releasing the Firefox extension.
 
-.PHONY: all install ci update dev test lint typecheck build package source release clean help
+.PHONY: all install ci update dev test lint typecheck build package source \
+	bump bump-minor bump-major _bump release clean help
 
 # ---------------------------------------------------------------------------
 # Configuration
@@ -35,6 +36,9 @@ help:
 	@echo "  make build        Build the extension for production"
 	@echo "  make package      Create $(RELEASE_ZIP) from $(DIST_DIR)"
 	@echo "  make source       Create $(SOURCE_ZIP) for the AMO review"
+	@echo "  make bump         Bump the patch version (x.y.Z)"
+	@echo "  make bump-minor   Bump the minor version (x.Y.0)"
+	@echo "  make bump-major   Bump the major version (X.0.0)"
 	@echo "  make release      Bump version, test, build, and package"
 	@echo "  make clean        Remove $(DIST_DIR), *.zip, and build artifacts"
 	@echo "  make all          Run: clean → install → test → build → package"
@@ -113,6 +117,25 @@ source:
 	@echo "✅  Source archive: $(SOURCE_ZIP)"
 
 # ---------------------------------------------------------------------------
+# Versioning
+# ---------------------------------------------------------------------------
+bump:
+	@$(MAKE) _bump BUMP_TYPE=patch
+
+bump-minor:
+	@$(MAKE) _bump BUMP_TYPE=minor
+
+bump-major:
+	@$(MAKE) _bump BUMP_TYPE=major
+
+_bump:
+	@echo "🏷️   Bumping $(BUMP_TYPE) version..."
+	$(NPM) version $(BUMP_TYPE) --no-git-tag-version
+	@VERSION=$$(node -p "require('./package.json').version"); \
+		node -e "const fs=require('fs'); const p='$(MANIFEST)'; const j=JSON.parse(fs.readFileSync(p)); j.version=process.argv[1]; fs.writeFileSync(p, JSON.stringify(j,null,2)+'\n')" "$$VERSION"; \
+		echo "✅  Extension version bumped to $$VERSION."
+
+# ---------------------------------------------------------------------------
 # Release
 # ---------------------------------------------------------------------------
 release:
@@ -121,8 +144,8 @@ release:
 		exit 1; \
 	fi
 	@echo "🏷️   Bumping version to $(VERSION)..."
+	$(NPM) version $(VERSION) --no-git-tag-version --allow-same-version
 	node -e "const fs=require('fs'); const p='$(MANIFEST)'; const j=JSON.parse(fs.readFileSync(p)); j.version='$(VERSION)'; fs.writeFileSync(p, JSON.stringify(j,null,2)+'\n')"
-	node -e "const fs=require('fs'); const p='package.json'; const j=JSON.parse(fs.readFileSync(p)); j.version='$(VERSION)'; fs.writeFileSync(p, JSON.stringify(j,null,2)+'\n')"
 	@echo "🧹  Cleaning and reinstalling..."
 	$(MAKE) clean
 	$(MAKE) install
