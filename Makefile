@@ -1,7 +1,7 @@
 # DevTab — Makefile
 # Targets for testing, updating, building, and releasing the Firefox extension.
 
-.PHONY: all install ci update dev test lint typecheck build package source \
+.PHONY: all install ci update update-dev dev test lint typecheck build package source \
 	bump bump-minor bump-major _bump release clean help
 
 # ---------------------------------------------------------------------------
@@ -13,6 +13,7 @@ RELEASE_ZIP    := firefox_extension.zip
 SOURCE_ZIP     := source_code.zip
 NPM            := npm
 NPX            := npx
+DEV_DEPS       := $(shell node -p "Object.keys(require('./package.json').devDependencies || {}).join(' ')")
 
 # ---------------------------------------------------------------------------
 # Default target
@@ -29,6 +30,7 @@ help:
 	@echo ""
 	@echo "  make install      Install dependencies (npm ci)"
 	@echo "  make update       Update dependencies within their ranges (npm update)"
+	@echo "  make update-dev   Update only dev dependencies within their ranges"
 	@echo "  make dev          Start the Vite dev server"
 	@echo "  make test         Run quality checks: lint + typecheck"
 	@echo "  make lint         Run ESLint"
@@ -57,6 +59,11 @@ update:
 	@echo "🚀  Checking for dependency updates within ranges..."
 	$(NPM) update
 	@echo "✅  Dependencies updated."
+
+update-dev:
+	@echo "🚀  Checking for dev dependency updates within ranges..."
+	$(NPM) update $(DEV_DEPS)
+	@echo "✅  Dev dependencies updated."
 
 # ---------------------------------------------------------------------------
 # Development
