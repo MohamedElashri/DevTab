@@ -1,5 +1,4 @@
-import { create } from 'zustand'
-import { persist } from 'zustand/middleware'
+import { create, persist } from 'src/lib/store'
 
 const MAX_READ_POST_IDS = 5000
 

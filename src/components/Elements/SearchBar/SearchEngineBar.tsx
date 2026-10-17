@@ -1,4 +1,4 @@
-import { HiSparkles } from 'react-icons/hi'
+import { HiSparkles } from 'src/components/Elements/Icons'
 import { AI_PROMPT_ENGINES } from 'src/config/SearchEngines'
 import { useUserPreferences } from 'src/stores/preferences'
 import { SearchBar } from './SearchBar'

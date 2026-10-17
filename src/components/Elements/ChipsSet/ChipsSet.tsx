@@ -1,6 +1,6 @@
 import clsx from 'src/utils/clsx'
 import { useEffect, useState } from 'react'
-import { IoIosClose } from 'react-icons/io'
+import { IoIosClose } from 'src/components/Elements/Icons'
 import { Option } from 'src/types'
 import './chipset.css'
 type ChipProps = {

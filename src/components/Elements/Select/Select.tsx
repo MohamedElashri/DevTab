@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { FiChevronDown } from 'react-icons/fi'
+import { FiChevronDown } from 'src/components/Elements/Icons'
 import clsx from 'src/utils/clsx'
 import './Select.css'
 

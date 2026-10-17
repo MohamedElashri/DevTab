@@ -1,5 +1,5 @@
-import { FaReddit } from 'react-icons/fa'
-import { SiGithub, SiProducthunt, SiYcombinator } from 'react-icons/si'
+import { FaReddit } from 'src/components/Elements/Icons'
+import { SiGithub, SiProducthunt, SiYcombinator } from 'src/components/Elements/Icons'
 import LobstersIcon from 'src/assets/icon_lobsters.png'
 import { SupportedCardType } from 'src/types'
 import { lazyImport } from 'src/utils/lazyImport'

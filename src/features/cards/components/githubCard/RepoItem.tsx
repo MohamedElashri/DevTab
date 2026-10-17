@@ -1,6 +1,6 @@
 import { CardItemWithActions, CardLink } from 'src/components/Elements'
 
-import { VscRepoForked, VscStarFull } from 'react-icons/vsc'
+import { VscRepoForked, VscStarFull } from 'src/components/Elements/Icons'
 import { ColoredLanguagesBadge } from 'src/components/Elements'
 import { dateRanges } from 'src/config'
 import { useUserPreferences } from 'src/stores/preferences'

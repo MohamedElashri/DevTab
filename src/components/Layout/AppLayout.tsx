@@ -1,10 +1,9 @@
 import React from 'react'
-import { Outlet } from 'react-router-dom'
 import { Spinner } from 'src/components/Elements'
 import 'src/assets/App.css'
 import { Header } from './Header'
 
-export const AppLayout = () => {
+export const AppLayout = ({ children }: { children?: React.ReactNode }) => {
   return (
     <div className="App">
       <Header />
@@ -14,7 +13,7 @@ export const AppLayout = () => {
             <Spinner size="medium" />
           </div>
         }>
-        <Outlet />
+        {children}
       </React.Suspense>
     </div>
   )

@@ -1,8 +1,7 @@
 import { Tag } from 'src/features/remoteConfig'
 import localStateStore from 'src/utils/LocalStateStorage'
 import { capitalize } from 'src/utils/String'
-import { create } from 'zustand'
-import { createJSONStorage, persist } from 'zustand/middleware'
+import { create, createJSONStorage, persist } from 'src/lib/store'
 import {
   CardSettingsType,
   DNDDuration,

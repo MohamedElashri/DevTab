@@ -1,7 +1,5 @@
-import { create } from 'zustand'
-
 import { BookmarkedPost } from 'src/features/bookmarks'
-import { persist } from 'zustand/middleware'
+import { create, persist } from 'src/lib/store'
 
 type BookmarksState = {
   userBookmarks: BookmarkedPost[]

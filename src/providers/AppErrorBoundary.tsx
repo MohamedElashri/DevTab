@@ -1,6 +1,6 @@
 import React, { Component, ErrorInfo, ReactNode } from 'react'
-import { AiFillBug } from 'react-icons/ai'
-import { WiRefresh } from 'react-icons/wi'
+import { AiFillBug } from 'src/components/Elements/Icons'
+import { WiRefresh } from 'src/components/Elements/Icons'
 
 type AppErrorBoundaryProps = {
   children: ReactNode

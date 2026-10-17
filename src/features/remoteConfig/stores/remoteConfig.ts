@@ -1,6 +1,4 @@
-import { create } from 'zustand'
-
-import { persist } from 'zustand/middleware'
+import { create, persist } from 'src/lib/store'
 import { RemoteConfig, Tag } from '../types'
 
 type RemoteConfigStore = {

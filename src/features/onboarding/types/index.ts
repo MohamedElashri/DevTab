@@ -1,4 +1,4 @@
-import { IconType } from 'react-icons/lib'
+import { IconType } from 'src/components/Elements/Icons'
 
 export type Occupation = {
   title: string

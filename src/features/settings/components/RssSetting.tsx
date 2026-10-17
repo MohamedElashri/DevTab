@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { BsRssFill } from 'react-icons/bs'
+import { BsRssFill } from 'src/components/Elements/Icons'
 import { Button } from 'src/components/Elements'
 import { getRssUrlFeed } from 'src/features/cards'
 import { useUserPreferences } from 'src/stores/preferences'

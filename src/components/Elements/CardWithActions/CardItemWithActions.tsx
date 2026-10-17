@@ -1,11 +1,11 @@
 import clsx from 'src/utils/clsx'
 import React, { useCallback, useEffect, useState } from 'react'
-import { BiBookmarkMinus, BiBookmarkPlus, BiCheckDouble, BiShareAlt } from 'react-icons/bi'
+import { BiBookmarkMinus, BiBookmarkPlus, BiCheckDouble, BiShareAlt } from 'src/components/Elements/Icons'
 import { ShareModal } from 'src/features/shareModal'
 import { ShareModalData } from 'src/features/shareModal/types'
 import { useBookmarks } from 'src/stores/bookmarks'
 import { useReadPosts } from 'src/stores/readPosts'
-import { useShallow } from 'zustand/shallow'
+import { useShallow } from 'src/lib/store'
 
 type CardItemWithActionsProps = {
   item: {

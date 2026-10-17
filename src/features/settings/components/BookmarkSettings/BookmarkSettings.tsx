@@ -1,6 +1,6 @@
 import { useRef } from 'react'
-import { BiBookmarkMinus } from 'react-icons/bi'
-import { RiFileDownloadFill, RiFileUploadFill } from 'react-icons/ri'
+import { BiBookmarkMinus } from 'src/components/Elements/Icons'
+import { RiFileDownloadFill, RiFileUploadFill } from 'src/components/Elements/Icons'
 import toast from 'src/utils/toast'
 import { Button, CardLink, CircleButton } from 'src/components/Elements'
 import { SettingsContentLayout } from 'src/components/Layout/SettingsContentLayout'

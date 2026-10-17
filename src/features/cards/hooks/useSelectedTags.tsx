@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 import { useUserPreferences } from 'src/stores/preferences'
-import { useShallow } from 'zustand/shallow'
+import { useShallow } from 'src/lib/store'
 import { MY_LANGUAGES_OPTION } from '../config'
 
 type useSelectedTagsProps = {

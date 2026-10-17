@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { BsRssFill } from 'react-icons/bs'
+import { BsRssFill } from 'src/components/Elements/Icons'
 import { ChipsSet, ConfirmModal } from 'src/components/Elements'
 import { SettingsContentLayout } from 'src/components/Layout/SettingsContentLayout/SettingsContentLayout'
 import { SUPPORTED_CARDS } from 'src/config/supportedCards'

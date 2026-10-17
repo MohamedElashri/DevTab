@@ -1,5 +1,4 @@
-import { useQuery } from '@tanstack/react-query'
-import { ExtractFnReturnType, QueryConfig } from 'src/lib/react-query'
+import { ExtractFnReturnType, QueryConfig, useQuery } from 'src/lib/react-query'
 import { Article } from 'src/types'
 import { extensionFetch } from 'src/utils/extensionFetch'
 

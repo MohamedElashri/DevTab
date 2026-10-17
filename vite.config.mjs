@@ -33,12 +33,7 @@ export default defineConfig(({ mode }) => {
           assetFileNames: `assets/[name]-[hash].[ext]`,
           manualChunks(id) {
             if (id.includes('node_modules')) {
-              if (id.includes('react') || id.includes('zustand') || id.includes('@tanstack')) {
-                if (id.includes('react-icons') || id.includes('@dnd-kit') || id.includes('@szhsin')) {
-                  return 'ui'
-                }
-                return 'core'
-              }
+              return 'core'
             }
           },
         },

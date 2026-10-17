@@ -1,9 +1,9 @@
 import { useCallback, useMemo } from 'react'
-import { FaGlobe } from 'react-icons/fa'
-import { TiPlus } from 'react-icons/ti'
-import { Link } from 'react-router-dom'
+import { FaGlobe } from 'src/components/Elements/Icons'
+import { TiPlus } from 'src/components/Elements/Icons'
+import { Link } from 'src/lib/router'
 import { useUserPreferences } from 'src/stores/preferences'
-import { useShallow } from 'zustand/shallow'
+import { useShallow } from 'src/lib/store'
 
 export const UserTags = () => {
   const { cards, userSelectedTags, cardsSettings, setCardSettings, clearCardSettingsLanguages } =

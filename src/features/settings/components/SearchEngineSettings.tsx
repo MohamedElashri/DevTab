@@ -1,4 +1,4 @@
-import { HiSparkles } from 'react-icons/hi'
+import { HiSparkles } from 'src/components/Elements/Icons'
 import { ChipsSet } from 'src/components/Elements'
 import { SettingsContentLayout } from 'src/components/Layout/SettingsContentLayout/SettingsContentLayout'
 import { AI_PROMPT_ENGINES } from 'src/config/SearchEngines'

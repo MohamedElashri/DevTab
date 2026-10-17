@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
-import { FiChevronLeft, FiChevronRight } from 'react-icons/fi'
+import { FiChevronLeft, FiChevronRight } from 'src/components/Elements/Icons'
 import { maxCardsPerRow } from 'src/config'
 import { useUserPreferences } from 'src/stores/preferences'
 

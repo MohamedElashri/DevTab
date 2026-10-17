@@ -1,5 +1,5 @@
 import React from 'react'
-import { BsRssFill } from 'react-icons/bs'
+import { BsRssFill } from 'src/components/Elements/Icons'
 import { SUPPORTED_CARDS } from 'src/config/supportedCards'
 import { useUserPreferences } from 'src/stores/preferences'
 import { SelectedCard } from 'src/types'

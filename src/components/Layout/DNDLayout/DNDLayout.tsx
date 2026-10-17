@@ -1,5 +1,5 @@
 import { useLayoutEffect, useRef } from 'react'
-import { BsChevronDown } from 'react-icons/bs'
+import { BsChevronDown } from 'src/components/Elements/Icons'
 import { SearchBarWithLogo } from 'src/components/Elements'
 import './DNDLayout.css'
 

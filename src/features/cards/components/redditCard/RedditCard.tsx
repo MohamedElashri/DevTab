@@ -1,4 +1,4 @@
-import { VscTriangleUp } from 'react-icons/vsc'
+import { VscTriangleUp } from 'src/components/Elements/Icons'
 import { Card } from 'src/components/Elements'
 import { ListPostComponent } from 'src/components/List/ListPostComponent'
 

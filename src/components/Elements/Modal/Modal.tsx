@@ -1,4 +1,4 @@
-import { VscClose } from 'react-icons/vsc'
+import { VscClose } from 'src/components/Elements/Icons'
 import clsx from 'src/utils/clsx'
 import { BaseModal } from './BaseModal'
 type ModalProps = {

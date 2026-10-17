@@ -1,4 +1,4 @@
-import { StateStorage } from 'zustand/middleware'
+import { StateStorage } from 'src/lib/store'
 
 const localStateStore: StateStorage = {
   getItem: (name: string) => {

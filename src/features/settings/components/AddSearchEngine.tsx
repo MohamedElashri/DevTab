@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { isValidURL } from 'src/utils/UrlUtils'
 
-import { TiPlus } from 'react-icons/ti'
+import { TiPlus } from 'src/components/Elements/Icons'
 import { Button } from 'src/components/Elements'
 import { AI_PROMPT_ENGINES } from 'src/config/SearchEngines'
 import { useUserPreferences } from 'src/stores/preferences'

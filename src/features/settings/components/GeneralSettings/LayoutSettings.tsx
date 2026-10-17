@@ -1,4 +1,4 @@
-import { TfiLayoutColumn4Alt } from 'react-icons/tfi'
+import { TfiLayoutColumn4Alt } from 'src/components/Elements/Icons'
 import { Select, SelectOption } from 'src/components/Elements'
 
 type LayoutOption = SelectOption<'cards'>

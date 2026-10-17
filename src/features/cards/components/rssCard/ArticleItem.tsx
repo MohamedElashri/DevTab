@@ -1,4 +1,4 @@
-import { MdAccessTime } from 'react-icons/md'
+import { MdAccessTime } from 'src/components/Elements/Icons'
 import { CardItemWithActions, CardLink } from 'src/components/Elements'
 import { Article, BaseItemPropsType } from 'src/types'
 import { formatTimeAgo } from 'src/utils/DateUtils'

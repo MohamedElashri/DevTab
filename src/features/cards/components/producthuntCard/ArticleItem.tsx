@@ -1,5 +1,5 @@
-import { BiCommentDetail } from 'react-icons/bi'
-import { SiProducthunt } from 'react-icons/si'
+import { BiCommentDetail } from 'src/components/Elements/Icons'
+import { SiProducthunt } from 'src/components/Elements/Icons'
 import { CardItemWithActions, CardLink } from 'src/components/Elements'
 import { useUserPreferences } from 'src/stores/preferences'
 import { BaseItemPropsType, Product } from 'src/types'

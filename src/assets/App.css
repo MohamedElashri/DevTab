@@ -306,6 +306,11 @@ a {
   transform: rotate(3deg);
   opacity: 0.5;
 }
+.dropTargetBlock {
+  opacity: 0.85;
+  outline: 2px dashed var(--app-name-text-color);
+  outline-offset: -2px;
+}
 .blockHeaderHighlight {
   border-radius: 15px;
   padding: 1px 6px;
