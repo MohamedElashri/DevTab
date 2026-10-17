@@ -19,7 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Single Source of Truth Versioning**: Consolidated version number strictly to `package.json`, automatically injecting it into `dist/manifest.json` and client runtime via Vite at build time.
 - **Component Consolidation**: Unified duplicate article row items into a shared `ArticleCardItem` component across Hacker News, Lobsters, Reddit, and RSS cards; consolidated list and placeholder components into `ListComponent.tsx`.
 - **Dead Code & Asset Removal**: Removed obsolete storage wrappers, unused string utilities, empty feed directories, and orphaned icons (`icon_hackernoon.jpeg`, `icon_hashnode.png`).
-
+- ** Reddit fallback**: Add reddit fallback to `.rss` when `.json` not working and show error instead of No items
 
 ---
 
