@@ -1,6 +1,9 @@
 import react from '@vitejs/plugin-react'
+import fs from 'fs'
 import path from 'path'
 import { defineConfig, loadEnv } from 'vite'
+
+const pkg = JSON.parse(fs.readFileSync(new URL('./package.json', import.meta.url), 'utf-8'))
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
@@ -10,11 +13,13 @@ export default defineConfig(({ mode }) => {
     base: './',
     plugins: [
       devTabHtmlPlugin(isWebBuild),
+      manifestVersionPlugin(),
       react(),
       stripCrossorigin(),
     ],
     define: {
       'process.env': {},
+      __APP_VERSION__: JSON.stringify(pkg.version),
     },
     resolve: {
       alias: {
@@ -72,3 +77,49 @@ function stripCrossorigin() {
     },
   }
 }
+
+// Injects the version from package.json into dist/manifest.json at build time,
+// ensuring package.json remains the single source of truth for versioning.
+function manifestVersionPlugin() {
+  return {
+    name: 'manifest-version-sync',
+    closeBundle() {
+      const manifestPath = path.resolve(import.meta.dirname, 'dist/manifest.json')
+      if (fs.existsSync(manifestPath)) {
+        const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf-8'))
+        const updated = {
+          manifest_version: manifest.manifest_version,
+          name: manifest.name,
+          description: manifest.description,
+          version: pkg.version,
+          ...manifest,
+        }
+        updated.version = pkg.version
+        fs.writeFileSync(manifestPath, JSON.stringify(updated, null, 2) + '\n')
+      }
+    },
+    configureServer(server) {
+      server.middlewares.use((req, res, next) => {
+        if (req.url === '/manifest.json') {
+          const manifestPath = path.resolve(import.meta.dirname, 'public/manifest.json')
+          if (fs.existsSync(manifestPath)) {
+            const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf-8'))
+            const updated = {
+              manifest_version: manifest.manifest_version,
+              name: manifest.name,
+              description: manifest.description,
+              version: pkg.version,
+              ...manifest,
+            }
+            updated.version = pkg.version
+            res.setHeader('Content-Type', 'application/json')
+            res.end(JSON.stringify(updated, null, 2) + '\n')
+            return
+          }
+        }
+        next()
+      })
+    },
+  }
+}
+

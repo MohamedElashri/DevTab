@@ -26,7 +26,7 @@ export const UserTags = () => {
 
       cards.forEach((card) => {
         setCardSettings(card.name, {
-          ...cardsSettings[card.id],
+          ...cardsSettings[card.name],
           language: tagValue,
         })
       })

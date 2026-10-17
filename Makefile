@@ -7,7 +7,6 @@
 # ---------------------------------------------------------------------------
 # Configuration
 # ---------------------------------------------------------------------------
-MANIFEST       := public/manifest.json
 DIST_DIR       := dist
 RELEASE_ZIP    := firefox_extension.zip
 SOURCE_ZIP     := source_code.zip
@@ -117,7 +116,7 @@ source:
 	zip -r $(SOURCE_ZIP) \
 		public/ script/ src/ LICENSE \
 		package.json package-lock.json \
-		README.md vite.config.mjs \
+		README.md CHANGELOG.md vite.config.mjs \
 		tsconfig.json tsconfig.node.json \
 		Makefile \
 		-x "*.DS_Store" -x "*/node_modules/*"
@@ -139,8 +138,7 @@ _bump:
 	@echo "🏷️   Bumping $(BUMP_TYPE) version..."
 	$(NPM) version $(BUMP_TYPE) --no-git-tag-version
 	@VERSION=$$(node -p "require('./package.json').version"); \
-		node -e "const fs=require('fs'); const p='$(MANIFEST)'; const j=JSON.parse(fs.readFileSync(p)); j.version=process.argv[1]; fs.writeFileSync(p, JSON.stringify(j,null,2)+'\n')" "$$VERSION"; \
-		echo "✅  Extension version bumped to $$VERSION."
+		echo "✅  Version bumped to $$VERSION (package.json is the single source of truth)."
 
 # ---------------------------------------------------------------------------
 # Release
@@ -152,7 +150,6 @@ release:
 	fi
 	@echo "🏷️   Bumping version to $(VERSION)..."
 	$(NPM) version $(VERSION) --no-git-tag-version --allow-same-version
-	node -e "const fs=require('fs'); const p='$(MANIFEST)'; const j=JSON.parse(fs.readFileSync(p)); j.version='$(VERSION)'; fs.writeFileSync(p, JSON.stringify(j,null,2)+'\n')"
 	@echo "🧹  Cleaning and reinstalling..."
 	$(MAKE) clean
 	$(MAKE) install

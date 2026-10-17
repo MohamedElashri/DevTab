@@ -209,10 +209,12 @@ a {
   font-size: 1em;
   display: flex;
   flex-direction: row;
+  align-items: center;
   font-family: 'nunito';
   column-gap: 8px;
   svg {
     font-size: 1.1em;
+    flex-shrink: 0;
   }
 }
 

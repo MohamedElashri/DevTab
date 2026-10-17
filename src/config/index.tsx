@@ -1,4 +1,5 @@
 export const repository = 'https://github.com/MohamedElashri/DevTab'
+export const appVersion = __APP_VERSION__
 export const maxCardsPerRow = 4
 export const MAX_ITEMS_PER_CARD = 50
 

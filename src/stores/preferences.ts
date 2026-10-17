@@ -1,7 +1,7 @@
 import { Tag } from 'src/features/remoteConfig'
-import localStateStore from 'src/utils/LocalStateStorage'
-import { capitalize } from 'src/utils/String'
-import { create, createJSONStorage, persist } from 'src/lib/store'
+import { create, persist } from 'src/lib/store'
+
+const capitalize = (s: string) => (typeof s === 'string' ? s.charAt(0).toUpperCase() + s.slice(1) : '')
 import {
   CardSettingsType,
   DNDDuration,
@@ -188,7 +188,6 @@ export const useUserPreferences = create(
     {
       name: 'preferences_storage',
       version: 1,
-      storage: createJSONStorage(() => localStateStore),
       migrate: (persistedState, version) => {
         const state = persistedState as unknown as UserPreferencesState &
           UserPreferencesStoreActions

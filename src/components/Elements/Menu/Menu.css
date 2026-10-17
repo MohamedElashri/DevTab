@@ -1,6 +1,10 @@
 .szh-menu-container {
   position: relative;
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Nunito', 'nunito', sans-serif;
+  font-size: 1em;
 }
 
 .szh-menu-button {
@@ -13,95 +17,188 @@
   justify-content: center;
   color: inherit;
   font-size: inherit;
+  line-height: 1;
+}
+
+.szh-menu-button:focus {
+  outline: none;
 }
 
 .szh-menu {
+  display: flex !important;
+  flex-direction: column !important;
   position: absolute;
   top: calc(100% + 4px);
   right: 0;
-  min-width: 180px;
-  max-height: 400px;
-  overflow-y: auto;
-  padding: 6px 0;
   margin: 0;
+  padding: 0.5rem 0;
   list-style: none;
-  background-color: var(--card-background-color);
-  border: 1px solid var(--card-border-color);
-  border-radius: 8px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+  box-sizing: border-box;
+  width: max-content;
+  min-width: 10rem;
+  overflow: visible;
+  user-select: none;
+  font-family: 'Nunito', 'nunito', sans-serif;
+  font-size: 1em;
+  background-color: var(--card-background-color, #0d1116);
+  border: 1px solid var(--card-border-color, #1f2429);
+  border-radius: 12px;
+  box-shadow: 0 0 20px var(--card-border-color, rgba(0, 0, 0, 0.4));
   z-index: 1000;
-  animation: szhMenuFadeIn 0.15s ease-out;
+  animation: szhMenuFadeIn 0.125s ease-out;
+}
+
+.szh-menu:focus {
+  outline: none;
 }
 
 .szh-menu__item {
-  padding: 8px 14px;
   display: flex;
   align-items: center;
-  gap: 8px;
+  position: relative;
+  padding: 0.375rem 1.5rem;
+  box-sizing: border-box;
   cursor: pointer;
-  font-size: 14px;
-  color: var(--primary-text-color);
+  font-size: 1em;
+  font-family: 'Nunito', 'nunito', sans-serif;
+  line-height: 1.5;
+  color: var(--primary-text-color, #fff);
   user-select: none;
-  transition: background-color 0.1s ease;
+  white-space: nowrap;
+  gap: 8px;
+  transition: background-color 0.12s ease-in-out, color 0.12s ease-in-out;
 }
 
-.szh-menu__item:hover:not(.szh-menu__item--disabled) {
-  background-color: var(--tag-background-color);
-  color: var(--tag-text-color);
+.szh-menu__item .menuItem,
+.szh-menu__item.menuItem {
+  color: inherit;
+  font-size: 1em;
+  font-family: 'Nunito', 'nunito', sans-serif;
+  line-height: inherit;
+}
+
+.szh-menu__item:hover:not(.szh-menu__item--disabled),
+.szh-menu__item.szh-menu__item--hover:not(.szh-menu__item--disabled) {
+  background-color: #ebebeb;
+  color: #212529;
+}
+
+html.dark .szh-menu__item:hover:not(.szh-menu__item--disabled),
+html.dark .szh-menu__item.szh-menu__item--hover:not(.szh-menu__item--disabled),
+.dark .szh-menu__item:hover:not(.szh-menu__item--disabled),
+.dark .szh-menu__item.szh-menu__item--hover:not(.szh-menu__item--disabled) {
+  background-color: var(--app-name-text-color, #fff);
+  color: var(--background-color, #0d1116);
 }
 
 .szh-menu__item--disabled {
-  opacity: 0.5;
+  opacity: 0.6;
   cursor: not-allowed;
+  color: var(--secondary-text-color, #666);
+}
+
+.szh-menu__item svg {
+  font-size: 1.1em;
+  flex-shrink: 0;
+}
+
+.szh-menu__item--type-radio {
+  padding-left: 2.2rem;
+}
+
+.szh-menu__item--type-radio::before {
+  content: "○";
+  position: absolute;
+  left: 0.8rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.8rem;
+  line-height: 1;
+}
+
+.szh-menu__item--type-radio.szh-menu__item--checked::before,
+.szh-menu__item--type-radio.szh-menu__item--disabled::before {
+  content: "●";
 }
 
 .szh-menu__divider {
   height: 1px;
-  margin: 4px 0;
-  background-color: var(--card-border-color);
+  margin: 0.5rem 0;
+  background-color: var(--card-border-color, rgba(255, 255, 255, 0.12));
   border: none;
   list-style: none;
-}
-
-.szh-menu__submenu-item {
-  position: relative;
-  list-style: none;
-}
-
-.szh-menu__submenu-label {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.szh-menu__submenu-arrow {
-  margin-right: 4px;
-  font-size: 14px;
+  padding: 0;
+  flex-shrink: 0;
 }
 
 .szh-menu__submenu {
+  position: relative;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.szh-menu__submenu > .szh-menu__item {
+  padding-right: 2.5rem;
+}
+
+.szh-menu__submenu > .szh-menu__item::after {
+  content: "❯";
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.8em;
+  line-height: 1;
+}
+
+.szh-menu__submenu .szh-menu,
+.szh-menu__submenu .szh-menu--submenu-left {
   position: absolute;
   top: 0;
   right: 100%;
+  left: auto;
   margin: 0;
   margin-right: 4px;
   min-width: 160px;
   max-height: 350px;
   overflow-y: auto;
-  padding: 6px 0;
-  list-style: none;
-  background-color: var(--card-background-color);
-  border: 1px solid var(--card-border-color);
-  border-radius: 8px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
   z-index: 1001;
-  animation: szhMenuFadeIn 0.15s ease-out;
+}
+
+.szh-menu__submenu .szh-menu--submenu-right {
+  position: absolute;
+  top: 0;
+  left: 100%;
+  right: auto;
+  margin: 0;
+  margin-left: 4px;
+  min-width: 160px;
+  max-height: 350px;
+  overflow-y: auto;
+  z-index: 1001;
+}
+
+/* Invisible hover bridge between parent item and flyout submenu */
+.szh-menu__submenu .szh-menu::before {
+  content: '';
+  position: absolute;
+  top: -4px;
+  bottom: -4px;
+  right: -8px;
+  width: 12px;
+}
+
+.szh-menu__submenu .szh-menu--submenu-right::before {
+  left: -8px;
+  right: auto;
 }
 
 @keyframes szhMenuFadeIn {
   from {
-    opacity: 0;
-    transform: scale(0.96);
+    opacity: 0.1;
+    transform: scale(0.95);
   }
   to {
     opacity: 1;

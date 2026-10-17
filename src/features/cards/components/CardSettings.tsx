@@ -1,5 +1,5 @@
 import { Menu, MenuDivider, MenuItem, SubMenu } from 'src/components/Elements'
-import { memo, useCallback, useMemo } from 'react'
+import { Fragment, memo, useCallback, useMemo } from 'react'
 import { AiOutlineCode } from 'src/components/Elements/Icons'
 import { BsBoxArrowInUpRight } from 'src/components/Elements/Icons'
 import { FiFilter } from 'src/components/Elements/Icons'
@@ -27,7 +27,7 @@ type CardSettingsProps = {
 }
 
 const DEFAULT_SORT_OPTIONS = [{ label: 'Newest', value: 'published_at', icon: <MdDateRange /> }]
-const SPECIAL_LABELS = ['global', MY_LANGUAGES_OPTION.label.toLowerCase()]
+const SPECIAL_LABELS = ['global', 'tech', MY_LANGUAGES_OPTION.label.toLowerCase()]
 
 const CardSettings = ({
   id,
@@ -84,7 +84,6 @@ const CardSettings = ({
       menuButton={menuIcon}
       theming="dark"
       portal={true}
-      className={`menuItem`}
       transition
       direction={'bottom'}
       align="start">
@@ -97,20 +96,20 @@ const CardSettings = ({
             </span>
           }>
           {userTagsMemo.map((tag, i) => (
-            <>
+            <Fragment key={tag.value}>
               {i === firstFollowedIndex && <MenuDivider />}
               <MenuItem
                 className={`menuItem`}
                 type="radio"
                 value={tag.value}
-                key={tag.value}
                 disabled={language === tag.value}
+                checked={language === tag.value}
                 onClick={() => {
                   setCardSettings(id, { ...cardSettings, language: tag.value })
                 }}>
                 {tag.label}
               </MenuItem>
-            </>
+            </Fragment>
           ))}
         </SubMenu>
       )}

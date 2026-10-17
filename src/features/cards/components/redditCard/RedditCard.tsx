@@ -1,15 +1,15 @@
-import { VscTriangleUp } from 'src/components/Elements/Icons'
+import { BsArrowReturnRight, VscTriangleUp } from 'src/components/Elements/Icons'
 import { Card } from 'src/components/Elements'
-import { ListPostComponent } from 'src/components/List/ListPostComponent'
+import { ListPostComponent } from 'src/components/List'
 
 import { useCallback } from 'react'
 import { Article, CardPropsType } from 'src/types'
 import { useGetSourceArticles } from '../../api/getSourceArticles'
 import { useLazyListLoad } from '../../hooks/useLazyListLoad'
 import { useSelectedTags } from '../../hooks/useSelectedTags'
+import { ArticleCardItem } from '../ArticleCardItem'
 import { MemoizedCardHeader } from '../CardHeader'
 import { MemoizedCardSettings } from '../CardSettings'
-import ArticleItem from './ArticleItem'
 
 const GLOBAL_TAG = { label: 'Tech', value: '' }
 
@@ -33,15 +33,29 @@ export function RedditCard(props: CardPropsType) {
   })
 
   const renderItem = useCallback(
-    (item: Article) => (
-      <ArticleItem
-        item={item}
-        key={item.id}
-        selectedTag={selectedTag}
-        analyticsTag={meta.analyticsTag}
-      />
-    ),
-    [selectedTag, meta.analyticsTag]
+    (item: Article) => {
+      const parts = item.url.split('/')
+      const rIndex = parts.findIndex((part) => part.toLowerCase() === 'r')
+      const subReddit = rIndex !== -1 && parts.length > rIndex + 1 ? parts[rIndex + 1] : null
+
+      return (
+        <ArticleCardItem
+          key={item.id}
+          item={item}
+          analyticsTag={meta.analyticsTag}
+          badgeClass="redditRowItem"
+          pointsLabel="upvotes"
+          extraDetails={
+            subReddit ? (
+              <span className="rowItem">
+                <BsArrowReturnRight className="rowItemIcon" /> {`r/${subReddit}`}
+              </span>
+            ) : null
+          }
+        />
+      )
+    },
+    [meta.analyticsTag]
   )
 
   return (

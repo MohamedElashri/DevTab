@@ -1,11 +1,11 @@
 import { useCallback } from 'react'
 import { Card } from 'src/components/Elements'
-import { ListPostComponent } from 'src/components/List/ListPostComponent'
+import { ListPostComponent } from 'src/components/List'
 import { Article, CardPropsType } from 'src/types'
 import { useRssFeed } from '../../api/getRssFeed'
 import { useLazyListLoad } from '../../hooks/useLazyListLoad'
+import { ArticleCardItem } from '../ArticleCardItem'
 import { MemoizedCardSettings } from '../CardSettings'
-import ArticleItem from './ArticleItem'
 import CardIcon from './CardIcon'
 
 const HeaderTitle = ({ title }: { title: string }) => {
@@ -23,7 +23,14 @@ export function CustomRssCard(props: CardPropsType) {
   })
 
   const renderItem = useCallback(
-    (item: Article) => <ArticleItem item={item} key={item.id} analyticsTag={meta.analyticsTag} />,
+    (item: Article) => (
+      <ArticleCardItem
+        key={item.id}
+        item={item}
+        analyticsTag={meta.analyticsTag}
+        sourceType="rss"
+      />
+    ),
     [meta.analyticsTag]
   )
 

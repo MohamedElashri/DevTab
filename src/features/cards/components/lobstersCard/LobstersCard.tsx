@@ -1,14 +1,14 @@
 import { useCallback } from 'react'
 import { BiSolidCircle } from 'src/components/Elements/Icons'
 import { Card } from 'src/components/Elements'
-import { ListPostComponent } from 'src/components/List/ListPostComponent'
+import { ListPostComponent } from 'src/components/List'
 import { useUserPreferences } from 'src/stores/preferences'
 import { Article, CardPropsType } from 'src/types'
 import { useShallow } from 'src/lib/store'
 import { useGetSourceArticles } from '../../api/getSourceArticles'
 import { useLazyListLoad } from '../../hooks/useLazyListLoad'
+import { ArticleCardItem } from '../ArticleCardItem'
 import { MemoizedCardSettings } from '../CardSettings'
-import ArticleItem from './ArticleItem'
 
 export function LobstersCard(props: CardPropsType) {
   const { meta } = props
@@ -24,7 +24,14 @@ export function LobstersCard(props: CardPropsType) {
   })
 
   const renderItem = useCallback(
-    (item: Article) => <ArticleItem item={item} key={item.id} analyticsTag={meta.analyticsTag} />,
+    (item: Article) => (
+      <ArticleCardItem
+        key={item.id}
+        item={item}
+        analyticsTag={meta.analyticsTag}
+        badgeClass="lobstersRowItem"
+      />
+    ),
     [meta.analyticsTag]
   )
 

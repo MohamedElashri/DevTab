@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from 'react'
 import { Card, MenuDivider, MenuItem } from 'src/components/Elements'
 import { VscRepoForked, VscStarFull } from 'src/components/Elements/Icons'
-import { ListRepoComponent } from 'src/components/List/ListRepoComponent'
+import { ListRepoComponent } from 'src/components/List'
 import { dateRanges } from 'src/config'
 import { useUserPreferences } from 'src/stores/preferences'
 import { CardPropsType, Repository } from 'src/types'

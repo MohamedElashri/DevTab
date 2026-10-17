@@ -1,8 +1,20 @@
 import React, { memo, ReactNode, useMemo } from 'react'
-import { Placeholder } from 'src/components/placeholders'
 import { MAX_ITEMS_PER_CARD } from 'src/config'
 import { useUserPreferences } from 'src/stores/preferences'
 import { useReadPosts } from 'src/stores/readPosts'
+import { Article, Repository } from 'src/types'
+
+export const Placeholder = () => (
+  <div className="cardPlaceholder">
+    <span className="line"></span>
+    <span className="smallLine" />
+    <div className="details">
+      <span className="detail" />
+      <span className="detail" style={{ width: '78px' }} />
+      <span className="detail" style={{ width: '78px' }} />
+    </div>
+  </div>
+)
 
 type PlaceholdersProps = {
   placeholder: ReactNode
@@ -56,36 +68,37 @@ export function ListComponent<T>(props: ListComponentPropsType<T>) {
     }
 
     const hasId = (item: T): item is T & { id: string } =>
-  typeof (item as { id?: unknown }).id === 'string'
+      typeof (item as { id?: unknown }).id === 'string'
 
-    return items.filter((item: T) => !hasId(item) || readPostIdSet.has(item.id))
-  }, [items, readPostIdSet, showReadPosts])
+    return items.filter((item) => {
+      if (!hasId(item)) return true
+      return !readPostIdSet.has(item.id)
+    })
+  }, [items, showReadPosts, readPostIdSet])
 
   const sortedData = useMemo(() => {
-    if (!filteredItems || filteredItems.length == 0) return []
-    if (!sortBy) return filteredItems
-
-    const result = sortFn
-      ? [...filteredItems].sort(sortFn)
-      : [...filteredItems].sort((a, b) => {
-          const aVal = a[sortBy]
-          const bVal = b[sortBy]
-          if (typeof aVal === 'number' && typeof bVal === 'number') return bVal - aVal
-          if (typeof aVal === 'string' && typeof bVal === 'string') return bVal.localeCompare(aVal)
-          return 0
-        })
-
-    return result
-  }, [sortBy, sortFn, filteredItems])
-
-  const enrichedItems = useMemo(() => {
-    if (!sortedData || sortedData.length === 0) {
-      return []
+    if (sortFn) {
+      return filteredItems.slice().sort(sortFn)
     }
 
+    if (sortBy) {
+      return filteredItems.slice().sort((a, b) => {
+        if (a[sortBy] < b[sortBy]) {
+          return 1
+        }
+        if (a[sortBy] > b[sortBy]) {
+          return -1
+        }
+        return 0
+      })
+    }
+    return filteredItems
+  }, [filteredItems, sortBy, sortFn])
+
+  const enrichedItems = useMemo(() => {
     try {
-      return sortedData.slice(0, limit).map((item, index) => {
-        const content: ReactNode[] = [renderItem(item, index)]
+      return sortedData.slice(0, limit).flatMap((item, index) => {
+        const content = [renderItem(item, index)]
         if (header && index === 0) {
           content.unshift(header)
         }
@@ -123,4 +136,12 @@ export function ListComponent<T>(props: ListComponentPropsType<T>) {
   }
 
   return <>{enrichedItems}</>
+}
+
+export function ListPostComponent(props: ListComponentPropsType<Article>) {
+  return <ListComponent<Article> {...props} />
+}
+
+export function ListRepoComponent(props: ListComponentPropsType<Repository>) {
+  return <ListComponent<Repository> {...props} />
 }
