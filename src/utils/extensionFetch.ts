@@ -17,6 +17,7 @@ interface ProxyFetchResponse {
   data?: unknown
   error?: string
   status?: number
+  contentType?: string
 }
 
 const isExtensionContext = (): boolean => {
@@ -47,6 +48,8 @@ export async function extensionFetch(url: string, init?: RequestInit): Promise<R
       })
     } else if (Array.isArray(init.headers)) {
       headers = Object.fromEntries(init.headers)
+    } else {
+      headers = { ...(init.headers as Record<string, string>) }
     }
   }
 
@@ -61,8 +64,8 @@ export async function extensionFetch(url: string, init?: RequestInit): Promise<R
   if (!result) {
     throw new Error('No response from background script')
   }
-  if (!result.ok) {
-    throw new Error(result.error || `HTTP ${result.status}`)
+  if (result.status === 0 || result.error) {
+    throw new Error(result.error || 'Network request failed')
   }
 
   // Reconstruct a Response-like object so callers can use .json() / .text()
@@ -73,9 +76,8 @@ export async function extensionFetch(url: string, init?: RequestInit): Promise<R
     statusText: result.ok ? 'OK' : 'Error',
     headers: {
       'content-type':
-        typeof result.data === 'object'
-          ? 'application/json'
-          : 'text/plain',
+        result.contentType ||
+        (typeof result.data === 'object' ? 'application/json' : 'text/plain'),
     },
   })
 }

@@ -34,9 +34,13 @@ export function RedditCard(props: CardPropsType) {
 
   const renderItem = useCallback(
     (item: Article) => {
-      const parts = item.url.split('/')
-      const rIndex = parts.findIndex((part) => part.toLowerCase() === 'r')
-      const subReddit = rIndex !== -1 && parts.length > rIndex + 1 ? parts[rIndex + 1] : null
+      const subReddit =
+        item.tags?.[0] ||
+        (() => {
+          const parts = (item.canonical_url || item.url).split('/')
+          const rIndex = parts.findIndex((part) => part.toLowerCase() === 'r')
+          return rIndex !== -1 && parts.length > rIndex + 1 ? parts[rIndex + 1] : null
+        })()
 
       return (
         <ArticleCardItem

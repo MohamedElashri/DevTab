@@ -95,6 +95,9 @@ const getFeedDocument = async (feedUrl: string) => {
       accept: 'application/rss+xml, application/atom+xml, application/xml, text/xml, */*',
     },
   })
+  if (!res.ok) {
+    throw new Error(`Failed to fetch feed: HTTP ${res.status}`)
+  }
   const text = await res.text()
   const doc = new DOMParser().parseFromString(text, 'text/xml')
   const parserError = getParserError(doc)

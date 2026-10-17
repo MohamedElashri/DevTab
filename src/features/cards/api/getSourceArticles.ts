@@ -26,6 +26,159 @@ type RedditPost = {
   }
 }
 
+const parseRedditAtomFeed = (xmlText: string): Article[] => {
+  try {
+    const doc = new DOMParser().parseFromString(xmlText, 'text/xml')
+    const entries = Array.from(doc.querySelectorAll('entry'))
+    return entries.map((entry, index) => {
+      const rawId = entry.querySelector('id')?.textContent?.trim() || ''
+      const id = rawId.replace(/^t3_/, '') || `reddit-${index}`
+      const linkElem = entry.querySelector('link')
+      const canonicalUrl = linkElem?.getAttribute('href') || ''
+      const title = entry.querySelector('title')?.textContent?.trim() || 'Untitled'
+      const category = entry.querySelector('category')
+      const subreddit =
+        category?.getAttribute('term') ||
+        category?.getAttribute('label')?.replace(/^r\//, '') ||
+        'reddit'
+      const published =
+        entry.querySelector('published')?.textContent ||
+        entry.querySelector('updated')?.textContent
+      const publishedAt = published ? new Date(published).getTime() : Date.now()
+
+      const content = entry.querySelector('content')?.textContent || ''
+      const linkMatch = content.match(/<a\s+href="([^"]+)">\[link\]<\/a>/i)
+      const url = linkMatch && linkMatch[1] ? linkMatch[1] : canonicalUrl
+
+      const thumbnailElem = entry.querySelector('thumbnail')
+      const mediaThumbnail = thumbnailElem?.getAttribute('url')
+      const imgMatch = content.match(/<img\s+src="([^"]+)"/i)
+      const imageUrl = mediaThumbnail || (imgMatch ? imgMatch[1] : '')
+
+      return {
+        id,
+        url: url || canonicalUrl,
+        title,
+        tags: [subreddit],
+        comments_count: 0,
+        points_count: 0,
+        image_url: imageUrl && imageUrl.startsWith('http') ? imageUrl : '',
+        published_at: Number.isNaN(publishedAt) ? Date.now() : publishedAt,
+        description: '',
+        source: 'reddit',
+        canonical_url: canonicalUrl,
+      }
+    })
+  } catch {
+    return []
+  }
+}
+
+const mapRedditJsonPosts = (children: RedditPost[]): Article[] => {
+  return children.map(({ data: d }) => ({
+    id: d.id,
+    url: d.url || `https://www.reddit.com${d.permalink}`,
+    title: d.title,
+    tags: [d.subreddit],
+    comments_count: d.num_comments || 0,
+    points_count: d.score || 0,
+    image_url: d.thumbnail && d.thumbnail.startsWith('http') ? d.thumbnail : '',
+    published_at: d.created_utc ? d.created_utc * 1000 : Date.now(),
+    description: '',
+    source: 'reddit',
+    canonical_url: `https://www.reddit.com${d.permalink}`,
+  }))
+}
+
+const fetchRedditArticles = async (subreddits: string[]): Promise<Article[]> => {
+  const subPath = subreddits.join('+')
+
+  // 1. Try combined JSON endpoint
+  try {
+    const jsonUrl = `https://www.reddit.com/r/${subPath}/hot.json?limit=30`
+    const res = await extensionFetch(jsonUrl, {
+      headers: {
+        accept: 'application/json, text/plain, */*',
+      },
+    })
+    if (res.ok) {
+      const contentType = res.headers.get('content-type') || ''
+      if (contentType.includes('application/json')) {
+        const data = await res.json()
+        const children: RedditPost[] = data?.data?.children || []
+        if (Array.isArray(children) && children.length > 0) {
+          const mapped = mapRedditJsonPosts(children)
+          if (mapped.length > 0) return mapped
+        }
+      }
+    }
+  } catch {
+    // Continue to RSS fallback
+  }
+
+  // 2. Fallback: try combined RSS/Atom endpoint
+  try {
+    const rssUrl = `https://www.reddit.com/r/${subPath}/hot.rss`
+    const res = await extensionFetch(rssUrl, {
+      headers: {
+        accept: 'application/atom+xml, application/rss+xml, application/xml, text/xml, */*',
+      },
+    })
+    if (res.ok) {
+      const text = await res.text()
+      const articles = parseRedditAtomFeed(text)
+      if (articles.length > 0) {
+        return articles
+      }
+    }
+  } catch {
+    // Continue to individual subreddits fallback
+  }
+
+  // 3. Fallback: if multi-subreddit failed and multiple subreddits exist, try individual subreddits
+  for (const sub of subreddits) {
+    try {
+      const jsonUrl = `https://www.reddit.com/r/${sub}/hot.json?limit=30`
+      const res = await extensionFetch(jsonUrl, {
+        headers: { accept: 'application/json, text/plain, */*' },
+      })
+      if (res.ok) {
+        const contentType = res.headers.get('content-type') || ''
+        if (contentType.includes('application/json')) {
+          const data = await res.json()
+          const children: RedditPost[] = data?.data?.children || []
+          if (Array.isArray(children) && children.length > 0) {
+            const mapped = mapRedditJsonPosts(children)
+            if (mapped.length > 0) return mapped
+          }
+        }
+      }
+    } catch {
+      // Continue
+    }
+
+    try {
+      const rssUrl = `https://www.reddit.com/r/${sub}/hot.rss`
+      const res = await extensionFetch(rssUrl, {
+        headers: {
+          accept: 'application/atom+xml, application/rss+xml, application/xml, text/xml, */*',
+        },
+      })
+      if (res.ok) {
+        const text = await res.text()
+        const articles = parseRedditAtomFeed(text)
+        if (articles.length > 0) {
+          return articles
+        }
+      }
+    } catch {
+      continue
+    }
+  }
+
+  throw new Error('Unable to load Reddit posts. Reddit may be rate-limiting requests; please try again in a few moments.')
+}
+
 const getArticles = async ({
   source,
   tags,
@@ -87,50 +240,7 @@ const getArticles = async ({
       ? rawTags.map((t) => t.replace(/\s+/g, '').toLowerCase())
       : DEFAULT_TECH_SUBREDDITS
 
-    const urls = subreddits.map((sub) =>
-      `https://www.reddit.com/r/${sub}/hot.json?limit=30`
-    )
-
-    const results = await Promise.allSettled(
-      urls.map(async (url) => {
-        const res = await extensionFetch(url)
-        const data = await res.json()
-        return data?.data?.children || []
-      })
-    )
-
-    const posts = results
-      .filter((r): r is PromiseFulfilledResult<RedditPost[]> => r.status === 'fulfilled')
-      .flatMap((r) => r.value)
-
-    const seen = new Set<string>()
-    const uniquePosts = posts.filter((p: RedditPost) => {
-      if (seen.has(p.data.id)) return false
-      seen.add(p.data.id)
-      return true
-    })
-
-    const sorted = uniquePosts
-      .map((p: RedditPost) => ({
-        data: p.data,
-        score: p.data.score || 0,
-      }))
-      .sort((a, b) => b.score - a.score)
-      .slice(0, 30)
-
-    return sorted.map(({ data: d }) => ({
-      id: d.id,
-      url: d.url || `https://www.reddit.com${d.permalink}`,
-      title: d.title,
-      tags: [d.subreddit],
-      comments_count: d.num_comments || 0,
-      points_count: d.score || 0,
-      image_url: d.thumbnail && d.thumbnail.startsWith('http') ? d.thumbnail : '',
-      published_at: d.created_utc ? d.created_utc * 1000 : Date.now(),
-      description: '',
-      source: 'reddit',
-      canonical_url: `https://www.reddit.com${d.permalink}`,
-    }))
+    return fetchRedditArticles(subreddits)
   }
 
   return []

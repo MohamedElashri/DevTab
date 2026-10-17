@@ -21,15 +21,21 @@ chrome.runtime.onMessage.addListener((request, _sender) => {
     .then(async (res) => {
       clearTimeout(timeoutId)
       const contentType = res.headers.get('content-type') || ''
+      const text = await res.text()
       let data
       if (contentType.includes('application/json')) {
-        data = await res.json()
+        try {
+          data = JSON.parse(text)
+        } catch {
+          data = text
+        }
       } else {
-        data = await res.text()
+        data = text
       }
       return {
         ok: res.ok,
         status: res.status,
+        contentType,
         data,
       }
     })
