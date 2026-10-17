@@ -1,6 +1,6 @@
-import clsx from 'clsx'
 import { VscClose } from 'react-icons/vsc'
-import ReactModal from 'react-modal'
+import clsx from 'src/utils/clsx'
+import { BaseModal } from './BaseModal'
 type ModalProps = {
   showModal: boolean
   onClose: () => void
@@ -14,7 +14,7 @@ type ModalProps = {
 }
 export const Modal = ({ showModal, className, header, onClose, children }: ModalProps) => {
   return (
-    <ReactModal
+    <BaseModal
       isOpen={showModal}
       ariaHideApp={false}
       shouldCloseOnEsc={true}
@@ -44,6 +44,6 @@ export const Modal = ({ showModal, className, header, onClose, children }: Modal
 
         {children}
       </div>
-    </ReactModal>
+    </BaseModal>
   )
 }

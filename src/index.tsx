@@ -1,7 +1,5 @@
 import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client'
-import { ErrorBoundary } from 'react-error-boundary'
-import 'normalize.css'
-import 'react-simple-toasts/dist/style.css'
+import 'src/assets/normalize.css'
 import 'src/assets/index.css'
 import { persister, queryClient } from 'src/lib/react-query'
 import { AppErrorBoundary } from 'src/providers/AppErrorBoundary'
@@ -18,11 +16,9 @@ if (!container) {
 
 const root = createRoot(container)
 root.render(
-  <ErrorBoundary fallbackRender={({ error, resetErrorBoundary }) => (
-    <AppErrorBoundary error={error} resetError={resetErrorBoundary} />
-  )}>
+  <AppErrorBoundary>
     <PersistQueryClientProvider client={queryClient} persistOptions={{ persister: persister }}>
       <AppRoutes />
     </PersistQueryClientProvider>
-  </ErrorBoundary>
+  </AppErrorBoundary>
 )

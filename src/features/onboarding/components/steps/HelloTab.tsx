@@ -1,4 +1,4 @@
-import clsx from 'clsx'
+import clsx from 'src/utils/clsx'
 import { BsArrowRight, BsFillGearFill } from 'react-icons/bs'
 import { FaDatabase, FaMicrochip, FaRobot, FaServer } from 'react-icons/fa'
 import { RiShieldKeyholeFill } from 'react-icons/ri'

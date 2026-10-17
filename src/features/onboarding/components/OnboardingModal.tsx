@@ -1,15 +1,13 @@
-import ReactModal from 'react-modal'
+import { BaseModal } from 'src/components/Elements'
 import { HelloTab } from './steps/HelloTab'
 import './steps/tabs.css'
 
 export const OnboardingModal = () => {
   return (
-    <ReactModal
+    <BaseModal
       isOpen={true}
-      ariaHideApp={false}
       shouldCloseOnEsc={false}
       shouldCloseOnOverlayClick={false}
-      shouldFocusAfterRender={false}
       contentLabel="Onboarding"
       className="Modal scrollable"
       style={{
@@ -21,6 +19,6 @@ export const OnboardingModal = () => {
       <div className="onboardingModal">
         <HelloTab />
       </div>
-    </ReactModal>
+    </BaseModal>
   )
 }

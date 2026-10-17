@@ -5,7 +5,7 @@ import { VscTriangleUp } from 'react-icons/vsc'
 import { CardItemWithActions, CardLink, ClickableItem } from 'src/components/Elements'
 import { useUserPreferences } from 'src/stores/preferences'
 import { Article, BaseItemPropsType } from 'src/types'
-import { format } from 'timeago.js'
+import { formatTimeAgo } from 'src/utils/DateUtils'
 
 const ArticleItem = ({ item, analyticsTag }: BaseItemPropsType<Article>) => {
   const { listingMode } = useUserPreferences()
@@ -34,7 +34,7 @@ const ArticleItem = ({ item, analyticsTag }: BaseItemPropsType<Article>) => {
                 <GoDotFill className="rowItemIcon" /> {item.points_count} points
               </span>
               <span className="rowItem" title={new Date(item.published_at).toUTCString()}>
-                <MdAccessTime className="rowItemIcon" /> {format(new Date(item.published_at))}
+                <MdAccessTime className="rowItemIcon" /> {formatTimeAgo(item.published_at)}
               </span>
               <ClickableItem
                 link={item.canonical_url || item.url}

@@ -1,4 +1,4 @@
-import clsx from 'clsx'
+import clsx from 'src/utils/clsx'
 import React, { useCallback, useEffect, useState } from 'react'
 import { BiBookmarkMinus, BiBookmarkPlus, BiCheckDouble, BiShareAlt } from 'react-icons/bi'
 import { ShareModal } from 'src/features/shareModal'

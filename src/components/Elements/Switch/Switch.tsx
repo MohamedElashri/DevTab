@@ -1,4 +1,4 @@
-import clsx from 'clsx'
+import clsx from 'src/utils/clsx'
 import React from 'react'
 import './Switch.css'
 

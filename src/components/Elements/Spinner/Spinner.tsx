@@ -1,4 +1,4 @@
-import clsx from 'clsx'
+import clsx from 'src/utils/clsx'
 import './Spinner.css'
 
 const sizes = {

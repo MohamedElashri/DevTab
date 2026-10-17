@@ -1,7 +1,7 @@
 import { useRef } from 'react'
 import { BiBookmarkMinus } from 'react-icons/bi'
 import { RiFileDownloadFill, RiFileUploadFill } from 'react-icons/ri'
-import toast from 'react-simple-toasts'
+import toast from 'src/utils/toast'
 import { Button, CardLink, CircleButton } from 'src/components/Elements'
 import { SettingsContentLayout } from 'src/components/Layout/SettingsContentLayout'
 import { SUPPORTED_CARDS } from 'src/config/supportedCards'

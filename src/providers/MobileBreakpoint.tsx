@@ -1,4 +1,4 @@
-import { useMediaQuery } from 'react-responsive'
+import { useMediaQuery } from 'src/hooks/useMediaQuery'
 
 export const MobileBreakpoint = ({ children }: { children: React.ReactNode }) => {
   const isMobile = useMediaQuery({ maxWidth: 767 })

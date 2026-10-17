@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import Select, { SingleValue } from 'react-select'
-import { Button } from 'src/components/Elements'
+import { Button, Select, SelectOption } from 'src/components/Elements'
 import { useUserPreferences } from 'src/stores/preferences'
 import { diffBetweenTwoDatesInMinutes } from 'src/utils/DateUtils'
 
@@ -42,7 +41,7 @@ export const DNDSettings = () => {
     navigate('/')
   }
 
-  const onPeriodSelect = (selectedOption: SingleValue<DndOption>) => {
+  const onPeriodSelect = (selectedOption: SelectOption<DndOption['value']> | null) => {
     if (!selectedOption) {
       return
     }
@@ -91,11 +90,7 @@ export const DNDSettings = () => {
             <Select
               options={DNDDurations}
               placeholder="For x minutes"
-              isMulti={false}
-              isClearable={false}
-              isSearchable={false}
               defaultValue={getDefaultValue()}
-              classNamePrefix={'devtab'}
               onChange={onPeriodSelect}
             />
           </div>

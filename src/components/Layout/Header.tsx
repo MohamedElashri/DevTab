@@ -4,10 +4,9 @@ import { CgTab } from 'react-icons/cg'
 import { IoMdSunny } from 'react-icons/io'
 import { MdDoDisturbOff } from 'react-icons/md'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
-import DevTabLogo from 'src/assets/logo.svg?react'
+import { Button, CircleButton, DevTabLogo } from 'src/components/Elements'
 import { UserTags } from 'src/components/Elements/UserTags'
 import { useUserPreferences } from 'src/stores/preferences'
-import { Button, CircleButton } from '../Elements'
 import { SearchEngineBar } from '../Elements/SearchBar/SearchEngineBar'
 
 export const Header = () => {

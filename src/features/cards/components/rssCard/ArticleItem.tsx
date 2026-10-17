@@ -1,7 +1,7 @@
 import { MdAccessTime } from 'react-icons/md'
 import { CardItemWithActions, CardLink } from 'src/components/Elements'
 import { Article, BaseItemPropsType } from 'src/types'
-import { format } from 'timeago.js'
+import { formatTimeAgo } from 'src/utils/DateUtils'
 
 const ArticleItem = (props: BaseItemPropsType<Article>) => {
   const { item, analyticsTag } = props
@@ -21,7 +21,7 @@ const ArticleItem = (props: BaseItemPropsType<Article>) => {
           <p className="rowDescription">
             <span className="rowItem" title={new Date(item.published_at).toUTCString()}>
               <MdAccessTime className="rowTitleIcon" />
-              {format(new Date(item.published_at))}
+              {formatTimeAgo(item.published_at)}
             </span>
           </p>
         </>

@@ -14,7 +14,7 @@ import {
   useSortable,
 } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
-import { clsx } from 'clsx'
+import { clsx } from 'src/utils/clsx'
 import { MdOutlineDragIndicator } from 'react-icons/md'
 import { SUPPORTED_CARDS } from 'src/config/supportedCards'
 import { CustomRssCard } from 'src/features/cards'

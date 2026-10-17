@@ -1,23 +1,10 @@
+import React from 'react'
+import { FaLinkedinIn } from 'react-icons/fa'
+import { MdEmail } from 'react-icons/md'
+import { SiFacebook, SiReddit, SiTelegram, SiWhatsapp, SiX } from 'react-icons/si'
 import { VscClose, VscCopy } from 'react-icons/vsc'
-import ReactModal from 'react-modal'
-import {
-  EmailIcon,
-  EmailShareButton,
-  FacebookIcon,
-  FacebookShareButton,
-  LinkedinIcon,
-  LinkedinShareButton,
-  RedditIcon,
-  RedditShareButton,
-  TelegramIcon,
-  TelegramShareButton,
-  TwitterIcon,
-  TwitterShareButton,
-  WhatsappIcon,
-  WhatsappShareButton,
-} from 'react-share'
-import toast from 'react-simple-toasts'
-import { Button } from 'src/components/Elements'
+import { Button, BaseModal } from 'src/components/Elements'
+import toast from 'src/utils/toast'
 import { ShareModalData } from '../types'
 import './share.css'
 
@@ -27,19 +14,64 @@ type ShareModalProps = {
   shareData: ShareModalData | undefined
 }
 
-const sharingButtons = [
-  { component: EmailShareButton, icon: EmailIcon, name: 'email' },
-  { component: FacebookShareButton, icon: FacebookIcon, name: 'facebook' },
+type SharePlatform = {
+  name: string
+  label: string
+  bg: string
+  icon: React.ReactNode
+  getUrl: (url: string, title: string) => string
+}
+
+const sharingPlatforms: SharePlatform[] = [
   {
-    component: TwitterShareButton,
-    icon: TwitterIcon,
-    name: 'twitter',
-    body: `via @devtab`,
+    name: 'email',
+    label: 'Share via Email',
+    bg: '#7f7f7f',
+    icon: <MdEmail size={20} color="#ffffff" />,
+    getUrl: (url, title) => `mailto:?subject=${encodeURIComponent(title)}&body=${encodeURIComponent(url)}`,
   },
-  { component: RedditShareButton, icon: RedditIcon, name: 'reddit' },
-  { component: LinkedinShareButton, icon: LinkedinIcon, name: 'linkedin' },
-  { component: TelegramShareButton, icon: TelegramIcon, name: 'telegram' },
-  { component: WhatsappShareButton, icon: WhatsappIcon, name: 'whatsapp' },
+  {
+    name: 'facebook',
+    label: 'Share on Facebook',
+    bg: '#1877f2',
+    icon: <SiFacebook size={18} color="#ffffff" />,
+    getUrl: (url) => `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`,
+  },
+  {
+    name: 'twitter',
+    label: 'Share on X',
+    bg: '#000000',
+    icon: <SiX size={18} color="#ffffff" />,
+    getUrl: (url, title) => `https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(`${title} via @devtab`)}`,
+  },
+  {
+    name: 'reddit',
+    label: 'Share on Reddit',
+    bg: '#ff4500',
+    icon: <SiReddit size={20} color="#ffffff" />,
+    getUrl: (url, title) => `https://reddit.com/submit?url=${encodeURIComponent(url)}&title=${encodeURIComponent(title)}`,
+  },
+  {
+    name: 'linkedin',
+    label: 'Share on LinkedIn',
+    bg: '#0077b5',
+    icon: <FaLinkedinIn size={18} color="#ffffff" />,
+    getUrl: (url) => `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`,
+  },
+  {
+    name: 'telegram',
+    label: 'Share on Telegram',
+    bg: '#229ed9',
+    icon: <SiTelegram size={20} color="#ffffff" />,
+    getUrl: (url, title) => `https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(title)}`,
+  },
+  {
+    name: 'whatsapp',
+    label: 'Share on WhatsApp',
+    bg: '#25d366',
+    icon: <SiWhatsapp size={20} color="#ffffff" />,
+    getUrl: (url, title) => `https://api.whatsapp.com/send?text=${encodeURIComponent(`${title} ${url}`)}`,
+  },
 ]
 
 export const ShareModal = ({ showModal, closeModal, shareData }: ShareModalProps) => {
@@ -54,8 +86,17 @@ export const ShareModal = ({ showModal, closeModal, shareData }: ShareModalProps
     toast('Link copied to clipboard', { theme: 'defaultToast' })
   }
 
+  const handleShare = (platform: SharePlatform) => {
+    const shareUrl = platform.getUrl(link, title)
+    if (platform.name === 'email') {
+      window.location.href = shareUrl
+    } else {
+      window.open(shareUrl, '_blank', 'noopener,noreferrer,width=600,height=500')
+    }
+  }
+
   return (
-    <ReactModal
+    <BaseModal
       isOpen={showModal}
       ariaHideApp={true}
       shouldCloseOnEsc={true}
@@ -82,7 +123,7 @@ export const ShareModal = ({ showModal, closeModal, shareData }: ShareModalProps
       <div className="shareBody">
         <p className="source">{source}</p>
         <h3 className="title">{title}</h3>
-        <a className="link" href={link} target="_blank">
+        <a className="link" href={link} target="_blank" rel="noreferrer">
           {link}
         </a>
       </div>
@@ -90,13 +131,27 @@ export const ShareModal = ({ showModal, closeModal, shareData }: ShareModalProps
       <div className="shareOptions">
         <h3>Share via</h3>
         <div className="shareButtons">
-          {sharingButtons.map(({ component: ShareButton, body, icon: Icon }, index) => (
-            <ShareButton
-              key={index}
-              url={link}
-              title={!body ? title : `${title} ${body}`}>
-              <Icon size={38} round />
-            </ShareButton>
+          {sharingPlatforms.map((platform) => (
+            <button
+              key={platform.name}
+              type="button"
+              onClick={() => handleShare(platform)}
+              aria-label={platform.label}
+              style={{
+                width: 38,
+                height: 38,
+                borderRadius: '50%',
+                backgroundColor: platform.bg,
+                border: 'none',
+                cursor: 'pointer',
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                padding: 0,
+                transition: 'opacity 0.2s linear',
+              }}>
+              {platform.icon}
+            </button>
           ))}
         </div>
       </div>
@@ -119,6 +174,6 @@ export const ShareModal = ({ showModal, closeModal, shareData }: ShareModalProps
           </div>
         </div>
       </div>
-    </ReactModal>
+    </BaseModal>
   )
 }
