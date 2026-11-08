@@ -18,7 +18,7 @@ A private, focused developer news page for your browser's new tab. No tracking, 
 ## Install in your Browser
 
 [![Firefox — Get the extension](https://img.shields.io/badge/Firefox-Get_the_extension-FF7139?style=for-the-badge&logo=firefoxbrowser&logoColor=white)](https://addons.mozilla.org/en-US/firefox/addon/mdevtab/)
-![Chrome — Coming soon](https://img.shields.io/badge/Chrome-Coming_soon-4285F4?style=for-the-badge&logo=googlechrome&logoColor=white)
+[![Chrome — Get the extension](https://img.shields.io/badge/Chrome-Get_the_extension-4285F4?style=for-the-badge&logo=firefoxbrowser&logoColor=white)](https://chromewebstore.google.com/detail/devtab/bohcncbmpdonbeamifbibleeghmbdece/)
 
 The Chrome Web Store listing is coming soon. To try Chrome now, build and load the
 extension locally using the instructions below.
