@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - Separate Firefox and Chrome build directories and ZIP packages, with Make and npm commands for each browser or both together.
-- Chrome first-submission and resubmission walkthrough, and browser install badges in the README.
+- Browser install badges in the README.
 - Background messaging tests and CI packaging for both browsers.
 
 ### Changed

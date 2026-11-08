@@ -70,8 +70,6 @@ or background messaging.
 
 ## Manual releases
 
-For the first Chrome submission, follow [the Chrome publishing walkthrough](CHROME_PUBLISHING.md).
-
 For a later release, choose a version greater than the one in **both** stores:
 
 ```bash

@@ -129,7 +129,7 @@ source:
 	zip -qr $(SOURCE_ZIP) \
 		public/ script/ src/ LICENSE \
 		package.json package-lock.json \
-		index.html README.md CHANGELOG.md CHROME_PUBLISHING.md vite.config.mjs \
+		index.html README.md CHANGELOG.md vite.config.mjs \
 		tsconfig.json tsconfig.node.json \
 		Makefile .npmrc .nvmrc eslint.config.mjs \
 		-x "*.DS_Store" -x "*/node_modules/*"
