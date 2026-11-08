@@ -1,10 +1,5 @@
-echo 'building extension for Firefox...'
+#!/bin/bash
+set -euo pipefail
 
-# Remove previous artifacts
-rm -f firefox_extension.zip
-
-# Build
-npm run build:ext
-
-# Zip the distribution folder
-cd dist/ && zip -r ../firefox_extension.zip * -x "*.DS_Store" "web_manifest.json" "screenshots/*" "images/*" "robots.txt" && cd ..
+# Compatibility entry point: this script has always built and packaged Firefox.
+exec bash "$(dirname "$0")/package.sh" firefox

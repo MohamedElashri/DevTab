@@ -1,11 +1,11 @@
-// Background script proxy for cross-origin fetches in Firefox MV3
+// Cross-origin fetch proxy: Firefox background script / Chrome service worker.
 // Some APIs (Lobsters, Reddit) don't send CORS headers. Extension pages
 // can still fetch them via the background script because host_permissions
 // allow cross-origin requests from privileged extension contexts.
 
 const PROXY_TIMEOUT_MS = 15000
 
-chrome.runtime.onMessage.addListener((request, _sender) => {
+chrome.runtime.onMessage.addListener((request, _sender, sendResponse) => {
   if (request.type !== 'PROXY_FETCH') {
     return false
   }
@@ -19,7 +19,6 @@ chrome.runtime.onMessage.addListener((request, _sender) => {
     signal: controller.signal,
   })
     .then(async (res) => {
-      clearTimeout(timeoutId)
       const contentType = res.headers.get('content-type') || ''
       const text = await res.text()
       let data
@@ -40,7 +39,6 @@ chrome.runtime.onMessage.addListener((request, _sender) => {
       }
     })
     .catch((err) => {
-      clearTimeout(timeoutId)
       const errMsg = err?.message || String(err)
       console.error('[DevTab BG Proxy] fetch failed:', request.url, errMsg, err?.name || '')
       return {
@@ -49,9 +47,14 @@ chrome.runtime.onMessage.addListener((request, _sender) => {
         error: errMsg,
       }
     })
+    .finally(() => clearTimeout(timeoutId))
 
-  // Returning a Promise from the listener sends the resolved value as the response.
-  // This is more reliable in Firefox than using sendResponse + return true.
-  return promise
+  // Preserve Firefox's Promise response; Chrome's callback form also works on
+  // versions where Promise-returning listeners are not supported.
+  if (typeof browser !== 'undefined' && browser.runtime) {
+    return promise
+  }
+  promise.then(sendResponse)
+  return true
 })
 

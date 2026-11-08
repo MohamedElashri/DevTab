@@ -1,14 +1,16 @@
 # DevTab — Makefile
-# Targets for testing, updating, building, and releasing the Firefox extension.
+# Build and package Firefox and Chrome extensions for manual store uploads.
 
-.PHONY: all install ci update update-dev dev test lint typecheck build package source \
+.PHONY: all install ci update update-dev dev test lint typecheck test-background \
+	build build-firefox build-chrome package package-firefox package-chrome source \
 	bump bump-minor bump-major _bump release clean help
 
 # ---------------------------------------------------------------------------
 # Configuration
 # ---------------------------------------------------------------------------
 DIST_DIR       := dist
-RELEASE_ZIP    := firefox_extension.zip
+FIREFOX_ZIP    := firefox_extension.zip
+CHROME_ZIP     := chrome_extension.zip
 SOURCE_ZIP     := source_code.zip
 NPM            := npm
 NPX            := npx
@@ -17,9 +19,13 @@ DEV_DEPS       := $(shell node -p "Object.keys(require('./package.json').devDepe
 # ---------------------------------------------------------------------------
 # Default target
 # ---------------------------------------------------------------------------
-all: clean install test build package
+all:
+	$(MAKE) clean
+	$(MAKE) install
+	$(MAKE) test
+	$(MAKE) package
 	@echo ""
-	@echo "✅  All done. Extension ready at: $(RELEASE_ZIP)"
+	@echo "✅  All done. Extensions ready: $(FIREFOX_ZIP) and $(CHROME_ZIP)"
 
 # ---------------------------------------------------------------------------
 # Help
@@ -31,11 +37,15 @@ help:
 	@echo "  make update       Update dependencies within their ranges (npm update)"
 	@echo "  make update-dev   Update only dev dependencies within their ranges"
 	@echo "  make dev          Start the Vite dev server"
-	@echo "  make test         Run quality checks: lint + typecheck"
+	@echo "  make test         Run lint, typecheck, and background messaging tests"
 	@echo "  make lint         Run ESLint"
 	@echo "  make typecheck    Run TypeScript type checker (no emit)"
-	@echo "  make build        Build the extension for production"
-	@echo "  make package      Create $(RELEASE_ZIP) from $(DIST_DIR)"
+	@echo "  make build        Build both browsers into dist/firefox and dist/chrome"
+	@echo "  make build-firefox Build only Firefox"
+	@echo "  make build-chrome  Build only Chrome"
+	@echo "  make package      Build and ZIP both browsers for manual upload"
+	@echo "  make package-firefox Create $(FIREFOX_ZIP)"
+	@echo "  make package-chrome  Create $(CHROME_ZIP)"
 	@echo "  make source       Create $(SOURCE_ZIP) for the AMO review"
 	@echo "  make bump         Bump the patch version (x.y.Z)"
 	@echo "  make bump-minor   Bump the minor version (x.Y.0)"
@@ -74,7 +84,7 @@ dev:
 # ---------------------------------------------------------------------------
 # Testing / Quality
 # ---------------------------------------------------------------------------
-test: lint typecheck
+test: lint typecheck test-background
 	@echo "✅  All checks passed."
 
 lint:
@@ -85,27 +95,30 @@ typecheck:
 	@echo "🔍  Running TypeScript type check..."
 	$(NPM) run typecheck
 
+test-background:
+	$(NPM) test
+
 # ---------------------------------------------------------------------------
 # Building
 # ---------------------------------------------------------------------------
-build:
-	@echo "🔨  Building extension for production..."
-	VITE_BUILD_TARGET=extension $(NPX) vite build
+build: build-firefox build-chrome
+
+build-firefox:
+	$(NPM) run build:firefox
+
+build-chrome:
+	$(NPM) run build:chrome
 
 # ---------------------------------------------------------------------------
 # Packaging
 # ---------------------------------------------------------------------------
-package: build
-	@echo "📦  Packaging Firefox extension..."
-	rm -f $(RELEASE_ZIP)
-	cd $(DIST_DIR) && zip -r ../$(RELEASE_ZIP) * \
-		-x "*.DS_Store" \
-		-x "web_manifest.json" \
-		-x "screenshots/*" \
-		-x "images/*" \
-		-x "robots.txt"
-	@echo ""
-	@echo "✅  Packaged: $(RELEASE_ZIP)"
+package: package-firefox package-chrome
+
+package-firefox:
+	$(NPM) run package:firefox
+
+package-chrome:
+	$(NPM) run package:chrome
 
 # ---------------------------------------------------------------------------
 # Source code zip (for Mozilla add-on review)
@@ -113,12 +126,12 @@ package: build
 source:
 	@echo "📦  Creating source code archive..."
 	rm -f $(SOURCE_ZIP)
-	zip -r $(SOURCE_ZIP) \
+	zip -qr $(SOURCE_ZIP) \
 		public/ script/ src/ LICENSE \
 		package.json package-lock.json \
-		README.md CHANGELOG.md vite.config.mjs \
+		index.html README.md CHANGELOG.md CHROME_PUBLISHING.md vite.config.mjs \
 		tsconfig.json tsconfig.node.json \
-		Makefile \
+		Makefile .npmrc .nvmrc eslint.config.mjs \
 		-x "*.DS_Store" -x "*/node_modules/*"
 	@echo "✅  Source archive: $(SOURCE_ZIP)"
 
@@ -154,11 +167,10 @@ release:
 	$(MAKE) clean
 	$(MAKE) install
 	$(MAKE) test
-	$(MAKE) build
 	$(MAKE) package
 	$(MAKE) source
 	@echo ""
-	@echo "✅  Release $(VERSION) ready: $(RELEASE_ZIP) and $(SOURCE_ZIP)"
+	@echo "✅  Release $(VERSION) ready: $(FIREFOX_ZIP), $(CHROME_ZIP), and $(SOURCE_ZIP)"
 
 # ---------------------------------------------------------------------------
 # Cleanup
@@ -166,5 +178,5 @@ release:
 clean:
 	@echo "🧹  Cleaning build artifacts..."
 	rm -rf $(DIST_DIR)
-	rm -f $(RELEASE_ZIP) $(SOURCE_ZIP)
+	rm -f $(FIREFOX_ZIP) $(CHROME_ZIP) $(SOURCE_ZIP)
 	@echo "✅  Clean complete."

@@ -29,5 +29,8 @@ jobs:
       - name: Typecheck
         run: npx tsc --noEmit
 
-      - name: Build extension
-        run: npm run build:ext
+      - name: Test background messaging
+        run: npm test
+
+      - name: Package Firefox and Chrome extensions
+        run: npm run package:all

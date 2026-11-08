@@ -8,12 +8,16 @@ const pkg = JSON.parse(fs.readFileSync(new URL('./package.json', import.meta.url
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
   const isWebBuild = env.VITE_BUILD_TARGET === 'web'
+  const browser = env.VITE_BROWSER || 'firefox'
+  if (!['firefox', 'chrome'].includes(browser)) {
+    throw new Error(`Unsupported extension browser: ${browser}`)
+  }
 
   return {
     base: './',
     plugins: [
       devTabHtmlPlugin(isWebBuild),
-      manifestVersionPlugin(),
+      manifestVersionPlugin(browser),
       react(),
       stripCrossorigin(),
     ],
@@ -27,6 +31,7 @@ export default defineConfig(({ mode }) => {
       },
     },
     build: {
+      outDir: isWebBuild ? 'dist/web' : `dist/${browser}`,
       sourcemap: false,
       emptyOutDir: true,
       cssCodeSplit: false,
@@ -78,23 +83,28 @@ function stripCrossorigin() {
   }
 }
 
-// Injects the version from package.json into dist/manifest.json at build time,
-// ensuring package.json remains the single source of truth for versioning.
-function manifestVersionPlugin() {
+// Keep the source manifest shared; generate browser-specific fields at build time.
+function manifestVersionPlugin(browser) {
+  function transformManifest(manifest) {
+    const updated = { ...manifest, version: pkg.version }
+    if (browser === 'chrome') {
+      delete updated.browser_specific_settings
+      updated.background = { service_worker: 'background.js' }
+    }
+    return updated
+  }
+
+  let outDir
   return {
     name: 'manifest-version-sync',
+    configResolved(config) {
+      outDir = path.resolve(config.root, config.build.outDir)
+    },
     closeBundle() {
-      const manifestPath = path.resolve(import.meta.dirname, 'dist/manifest.json')
+      const manifestPath = path.join(outDir, 'manifest.json')
       if (fs.existsSync(manifestPath)) {
         const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf-8'))
-        const updated = {
-          manifest_version: manifest.manifest_version,
-          name: manifest.name,
-          description: manifest.description,
-          version: pkg.version,
-          ...manifest,
-        }
-        updated.version = pkg.version
+        const updated = transformManifest(manifest)
         fs.writeFileSync(manifestPath, JSON.stringify(updated, null, 2) + '\n')
       }
     },
@@ -104,14 +114,7 @@ function manifestVersionPlugin() {
           const manifestPath = path.resolve(import.meta.dirname, 'public/manifest.json')
           if (fs.existsSync(manifestPath)) {
             const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf-8'))
-            const updated = {
-              manifest_version: manifest.manifest_version,
-              name: manifest.name,
-              description: manifest.description,
-              version: pkg.version,
-              ...manifest,
-            }
-            updated.version = pkg.version
+            const updated = transformManifest(manifest)
             res.setHeader('Content-Type', 'application/json')
             res.end(JSON.stringify(updated, null, 2) + '\n')
             return

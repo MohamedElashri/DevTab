@@ -53,7 +53,7 @@ export async function extensionFetch(url: string, init?: RequestInit): Promise<R
     }
   }
 
-  // Firefox supports Promise-based sendMessage when no callback is provided.
+  // Both browsers support Promise-based sendMessage without a callback.
   const result = await runtime.sendMessage({
     type: 'PROXY_FETCH',
     url,

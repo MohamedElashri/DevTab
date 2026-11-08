@@ -5,6 +5,22 @@ All notable changes to DevTab are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.1] - 2026-11-08
+
+### Added
+- Separate Firefox and Chrome build directories and ZIP packages, with Make and npm commands for each browser or both together.
+- Chrome first-submission and resubmission walkthrough, and browser install badges in the README.
+- Background messaging tests and CI packaging for both browsers.
+
+### Changed
+- Use a Chrome service worker while preserving Firefox's background script and Gecko settings.
+- Shorten the manifest description to address the Chrome Web Store's excessive-keywords rejection.
+- Remove the unused storage permission; preferences and bookmarks continue to use localStorage.
+
+### Fixed
+- Support asynchronous background responses across both browsers.
+- Include the HTML entry point and required configuration in the Firefox source archive.
+
 ## [1.3.0] - 2026-10-17
 
 ### Changed
@@ -29,5 +45,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Make targets for automated version bumping and release packaging.
 - Product Hunt card integration via RSS feed.
 
+[1.3.1]: https://github.com/MohamedElashri/DevTab/compare/v1.3.0...v1.3.1
 [1.3.0]: https://github.com/MohamedElashri/DevTab/compare/v1.2.2...v1.3.0
 [1.2.2]: https://github.com/MohamedElashri/DevTab/releases/tag/v1.2.2
