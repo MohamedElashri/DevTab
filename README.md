@@ -26,11 +26,10 @@ extension locally using the instructions below.
 
 ## Follow Reddit with a personal RSS feed
 
-1. Create one personal feed in RSS Ground. [RSS Ground guide](https://help.rssground.com/article/251-personal-feeds-user-guide)
-2. Set up one IFTTT applet per subreddit, using the same personal feed as the destination for each. Start with `programming`, `technology`, and `compsci` to recreate the old Tech selection. Use Reddit’s `Title` and `PostURL` for the RSS item's title and link. [IFTTT applet](https://ifttt.com/applets/f6maSFd9-new-posts-from-a-reddit-subreddit-added-to-rss-ground-personal-feed-rss)
-3. In DevTab, open **Settings → Sources**, paste the personal feed URL into **Reddit RSS Feed URL**, and select **Save**. Choose **Topic → All Subreddits** on the Reddit card to see the combined feed. **My Stack** and individual topics filter incoming posts by subreddit.
+1. Get a combined RSS or Atom feed URL. For example, create a Redlisten key and enter `programming+technology+compsci` in the feed builder. Copy the URL with your key and keep it private. [Redlisten feed builder](https://www.redlisten.com/tools/reddit-rss-feed-builder)
+2. In DevTab, open **Settings → Sources**, paste the URL into **Reddit RSS Feed URL**, and select **Save**. The Reddit card opens on **All Subreddits** the first time. **My Stack** and individual topics filter posts by subreddit.
 
-Use IFTTT's **New hot post in subreddit** trigger to keep volumes down when following busy communities. DevTab sorts delivered posts by date. RSS Ground exposes the latest 50 items and stores up to 500. At that cap, remove old items to make room for new ones. [IFTTT Hot trigger](https://ifttt.com/reddit/triggers/new_hot_post_in_subreddit) · [RSS Ground feed limits](https://help.rssground.com/article/252-limits-on-personal-feeds)
+DevTab accepts RSS or Atom from any provider whose feed items link directly to Reddit posts. Posts are sorted by feed date. The feed provider controls which posts are available and how often they update.
 
 ## Build from source
 

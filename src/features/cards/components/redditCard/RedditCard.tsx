@@ -37,16 +37,9 @@ export function RedditCard(props: CardPropsType) {
     content = (
       <div className="redditNotice">
         <h2>Reddit feed paused</h2>
-        <p>Reddit ended public RSS access. I’m working on a solution.</p>
+        <p>Reddit ended public RSS access.</p>
         <p>
-          In the meantime,{' '}
-          <a
-            href="https://ifttt.com/applets/f6maSFd9-new-posts-from-a-reddit-subreddit-added-to-rss-ground-personal-feed-rss"
-            target="_blank"
-            rel="noreferrer">
-            set up a feed with IFTTT and RSS Ground
-          </a>{' '}
-          and <Link to="/settings/sources">add its RSS URL in Sources</Link>.
+          <Link to="/settings/sources">Add a Reddit feed URL</Link> to follow one or more subreddits on this card.
         </p>
         <Button size="small" onClick={() => removeCard(meta.value)}>
           Disable Reddit card
@@ -64,7 +57,7 @@ export function RedditCard(props: CardPropsType) {
             </Button>
           </>
         ) : (
-          <p>No Reddit threads in the feed yet. Map IFTTT’s PostURL to the RSS item link.</p>
+          <p>No Reddit threads in the feed yet. Feed items need direct links to Reddit posts.</p>
         )}
       </div>
     )

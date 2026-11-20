@@ -124,12 +124,24 @@ export const useUserPreferences = create(
         })),
       setUserCustomCards: (cards: SupportedCardType[]) => set({ userCustomCards: cards }),
       setRedditFeedUrl: (url) =>
-        set((state) => ({
-          redditFeedUrl: url,
-          cards: url && !state.cards.some((card) => card.name === 'reddit')
-            ? [...state.cards, { id: state.cards.length, name: 'reddit', type: 'supported' }]
-            : state.cards,
-        })),
+        set((state) => {
+          if (!url) return { redditFeedUrl: undefined }
+
+          const cards: SelectedCard[] = state.cards.some((card) => card.name === 'reddit')
+            ? state.cards
+            : [...state.cards, { id: state.cards.length, name: 'reddit', type: 'supported' }]
+          const cardsSettings = state.redditFeedUrl
+            ? state.cardsSettings
+            : {
+                ...state.cardsSettings,
+                reddit: {
+                  ...state.cardsSettings.reddit,
+                  sortBy: state.cardsSettings.reddit?.sortBy ?? '',
+                  language: '',
+                },
+              }
+          return { redditFeedUrl: url, cards, cardsSettings }
+        }),
       updateCardOrder: (prevIndex: number, newIndex: number) =>
         set((state) => {
           const updated = [...state.cards]
