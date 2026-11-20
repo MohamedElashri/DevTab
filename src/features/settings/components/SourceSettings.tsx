@@ -3,14 +3,14 @@ import { BsRssFill } from 'src/components/Elements/Icons'
 import { ChipsSet, ConfirmModal } from 'src/components/Elements'
 import { SettingsContentLayout } from 'src/components/Layout/SettingsContentLayout/SettingsContentLayout'
 import { SUPPORTED_CARDS } from 'src/config/supportedCards'
+import { DEFAULT_REDDIT_POST_LIMIT, normalizeRedditPostLimit, REDDIT_POST_LIMITS } from 'src/features/cards/api/redditFeed'
 import { RedlistenKeyForm } from 'src/features/cards/components/redditCard/RedlistenKeyForm'
 import { useUserPreferences } from 'src/stores/preferences'
 import { Option, SelectedCard } from 'src/types'
-import { RedditFeedSetting } from './RedditFeedSetting'
 import { RssSetting } from './RssSetting'
 
 export const SourceSettings = () => {
-  const { cards, setCards, userCustomCards, setUserCustomCards } = useUserPreferences()
+  const { cards, setCards, userCustomCards, setUserCustomCards, redditPostLimit, setRedditPostLimit } = useUserPreferences()
   const [confirmDelete, setConfirmDelete] = useState<{
     showModal: boolean
     option?: Option
@@ -106,9 +106,23 @@ export const SourceSettings = () => {
           <p className="settingTitle">Reddit via Redlisten</p>
           <div className="settingContent">
             <RedlistenKeyForm />
+            <div className="redditPostLimit">
+              <label htmlFor="reddit-post-limit">Posts per Reddit feed</label>
+              <select
+                id="reddit-post-limit"
+                aria-describedby="reddit-post-limit-hint"
+                value={normalizeRedditPostLimit(redditPostLimit)}
+                onChange={(event) => setRedditPostLimit(Number(event.target.value))}>
+                {REDDIT_POST_LIMITS.map((limit) => (
+                  <option value={limit} key={limit}>
+                    {limit}{limit === DEFAULT_REDDIT_POST_LIMIT ? ' (default)' : ''}
+                  </option>
+                ))}
+              </select>
+              <p id="reddit-post-limit-hint">Maximum across the selected subreddits. Redlisten may return fewer recent posts.</p>
+            </div>
           </div>
         </div>
-        <RedditFeedSetting />
         <RssSetting />
       </>
     </SettingsContentLayout>

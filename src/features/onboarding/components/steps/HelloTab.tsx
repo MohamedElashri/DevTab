@@ -5,6 +5,7 @@ import { FaDatabase, FaMicrochip, FaRobot, FaServer } from 'src/components/Eleme
 import { RiShieldKeyholeFill } from 'src/components/Elements/Icons'
 import { TbDots, TbWorldWww } from 'src/components/Elements/Icons'
 import { RedlistenKeyForm } from 'src/features/cards/components/redditCard/RedlistenKeyForm'
+import { MY_LANGUAGES_OPTION } from 'src/features/cards/config'
 import { Tag, useRemoteConfigStore } from 'src/features/remoteConfig'
 import { useUserPreferences } from 'src/stores/preferences'
 import { Occupation } from '../../types'
@@ -101,7 +102,7 @@ export const HelloTab = () => {
       setTags(userTags)
       for (const source of selectedOccupation.sources) {
         setCardSettings(source, {
-          language: selectedOccupation.tags[0],
+          language: source === 'reddit' ? MY_LANGUAGES_OPTION.value : selectedOccupation.tags[0],
           sortBy: 'published_at',
         })
       }
@@ -115,7 +116,7 @@ export const HelloTab = () => {
       <div>
         <div className="tabHeader">
           <h1 className="tabTitle">Set up Reddit</h1>
-          <p className="tabBody">Add a key to see subreddit posts in DevTab, or set it up later in Sources.</p>
+          <p className="tabBody">See recent posts from the subreddits in My Stack. You can set this up later in Sources.</p>
         </div>
         <RedlistenKeyForm onFinished={markOnboardingAsCompleted} />
       </div>

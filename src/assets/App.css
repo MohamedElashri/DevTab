@@ -59,6 +59,15 @@ a {
   .button {
     margin-top: 16px;
   }
+
+  a.button {
+    text-decoration: none;
+  }
+
+  .redditSecondaryAction {
+    display: block;
+    margin: 4px auto 0;
+  }
 }
 
 .redditFeedStatus {
@@ -70,7 +79,6 @@ a {
 .redditKeyForm {
   display: grid;
   gap: 8px;
-  padding-bottom: 8px;
 
   p {
     margin: 0;
@@ -90,12 +98,44 @@ a {
     padding: 6px 14px;
     color: var(--settings-input-text-color);
   }
+
+  [role="status"]:empty {
+    position: absolute;
+  }
+}
+
+.redditPostLimit {
+  display: grid;
+  grid-template-columns: minmax(0, max-content) max-content;
+  gap: 6px 12px;
+  align-items: center;
+  margin-top: 16px;
+
+  select {
+    font: inherit;
+    background: var(--settings-input-background-color);
+    color: var(--settings-input-text-color);
+    border: 1px solid var(--settings-input-border-color);
+    border-radius: 8px;
+    padding: 4px 8px;
+  }
+
+  p {
+    grid-column: 1 / -1;
+    margin: 0;
+    font-size: 0.875rem;
+  }
 }
 
 .redditKeyActions {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
+}
+
+.button.redditSecondaryAction:not(:hover) {
+  background: transparent;
+  color: inherit;
 }
 
 .AppHeader {

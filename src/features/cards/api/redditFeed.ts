@@ -2,40 +2,44 @@ import type { Article } from 'src/types'
 
 export const REDLISTEN_ORIGIN = 'https://api.redlisten.com'
 export const REDLISTEN_DASHBOARD = 'https://app.redlisten.com/'
-export const TECH_SUBREDDITS = ['programming', 'technology', 'compsci']
-const SUBREDDIT_TOKEN = '{subreddit}'
+export const DEFAULT_REDDIT_POST_LIMIT = 25
+export const REDDIT_POST_LIMITS = [10, DEFAULT_REDDIT_POST_LIMIT, 50] as const
+const TECH_SUBREDDITS = ['compsci', 'programming', 'technology']
+const SUBREDDIT_ALIASES: Record<string, string> = { 'c++': 'cpp', 'c#': 'csharp', artificialintelligence: 'artificial' }
 
-export type RedditFeedRequest = { url: string; authorization?: string }
+export type RedditFeedRequest = { url: string; authorization: string; subreddits: string[] }
 
-export const hasSubredditTemplate = (url?: string) => Boolean(url?.includes(SUBREDDIT_TOKEN))
-
-export function getRedditSubreddits(topics: string[]) {
-  const names = topics.map((topic) => topic.trim().replace(/^r\//i, '').toLowerCase())
-  return [...new Set(names.filter((name) => /^[a-z0-9_]{2,21}$/.test(name)))]
-}
-
-export function resolveRedditFeedUrl(input: string, subreddit: string): string {
-  if (!/^[a-z0-9_]{2,21}$/i.test(subreddit)) throw new Error('Invalid subreddit name.')
-  const url = new URL(input.replaceAll(SUBREDDIT_TOKEN, subreddit))
-  if (!/^https?:$/.test(url.protocol) || url.username || url.password) {
-    throw new Error('Enter an HTTP or HTTPS feed URL without a username or password.')
-  }
-
-  if (hasSubredditTemplate(input)) {
-    const test = new URL(input.replaceAll(SUBREDDIT_TOKEN, 'devtab_placeholder'))
-    if (url.origin !== test.origin || !`${test.pathname}${test.search}`.includes('devtab_placeholder')) {
-      throw new Error('Place {subreddit} in the URL path or query.')
+export function parseRedlistenKey(input: string): string | undefined {
+  const value = input.trim().replace(/^(["'`])(.+)\1$/, '$2').trim()
+  let key = value.replace(/^(?:Authorization:[ \t]*)?Bearer[ \t]+/i, '')
+  if (/^https:\/\//i.test(key)) {
+    try {
+      const url = new URL(key)
+      if (url.origin !== REDLISTEN_ORIGIN || url.username || url.password) return undefined
+      key = url.searchParams.get('key') ?? ''
+    } catch {
+      return undefined
     }
   }
 
-  url.hash = ''
-  return url.href
+  return /^[a-z0-9._~+/-]+=*$/i.test(key) ? key : undefined
 }
 
-export function redlistenFeedRequest(subreddit: string, key: string): RedditFeedRequest {
+export function normalizeRedditPostLimit(value: number) {
+  return REDDIT_POST_LIMITS.find((limit) => limit === value) ?? DEFAULT_REDDIT_POST_LIMIT
+}
+
+export function redlistenFeedRequest(topics: string[], key: string, postLimit = DEFAULT_REDDIT_POST_LIMIT): RedditFeedRequest {
+  const names = topics.map((topic) => {
+    const normalized = topic.trim().replace(/^r\//i, '').replace(/\s+/g, '').toLowerCase()
+    return Object.hasOwn(SUBREDDIT_ALIASES, normalized) ? SUBREDDIT_ALIASES[normalized] : normalized
+  })
+  const selected = [...new Set(names.filter((name) => /^[a-z0-9_]{2,21}$/.test(name)))].sort()
+  const subreddits = selected.length ? selected : TECH_SUBREDDITS
   return {
-    url: resolveRedditFeedUrl(`${REDLISTEN_ORIGIN}/r/{subreddit}/new.rss?limit=10`, subreddit),
+    url: `${REDLISTEN_ORIGIN}/r/${subreddits.join('+')}/new.rss?limit=${normalizeRedditPostLimit(postLimit)}`,
     authorization: `Bearer ${key}`,
+    subreddits,
   }
 }
 
@@ -76,20 +80,6 @@ export async function getRedlistenError(response: Response, now = Date.now()) {
       : 'Redlisten temporarily rate-limited this feed.',
     retryAt: validRetryAt ?? now + 60_000,
   }
-}
-
-export function mergeRedditSubreddits(feeds: Article[][], limit: number): Article[] {
-  const sorted = feeds.map((feed) => feed.slice().sort((a, b) => b.published_at - a.published_at))
-  const unique = new Map<string, Article>()
-  const rounds = Math.max(0, ...sorted.map((feed) => feed.length))
-  for (let index = 0; index < rounds && unique.size < limit; index += 1) {
-    for (const feed of sorted) {
-      const item = feed[index]
-      if (item && !unique.has(item.id)) unique.set(item.id, item)
-      if (unique.size === limit) break
-    }
-  }
-  return [...unique.values()]
 }
 
 export function getRedditFeedItems(entries: Article[], topics: string[]): Article[] {

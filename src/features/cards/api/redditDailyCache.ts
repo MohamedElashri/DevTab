@@ -94,6 +94,6 @@ export async function loadDailyRedditFeed(
   })
 
   // Free Redlisten keys have a small concurrency limit. Hold one lock across
-  // their requests so queued subreddits see provider cooldowns before fetching.
+  // their requests so queued feeds see provider cooldowns before fetching.
   return provider ? locks.request(provider, refresh) : refresh()
 }

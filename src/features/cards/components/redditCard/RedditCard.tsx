@@ -3,7 +3,8 @@ import { ListPostComponent } from 'src/components/List'
 import { Link, useNavigate } from 'src/lib/router'
 import { useUserPreferences } from 'src/stores/preferences'
 import { CardPropsType } from 'src/types'
-import { hasSubredditTemplate } from '../../api/redditFeed'
+import { normalizeRedditPostLimit } from '../../api/redditFeed'
+import { REDDIT_TECH_OPTION } from '../../config'
 import { useLazyListLoad } from '../../hooks/useLazyListLoad'
 import { useRedditFeed } from '../../hooks/useRedditFeed'
 import { useSelectedTags } from '../../hooks/useSelectedTags'
@@ -11,21 +12,18 @@ import { ArticleCardItem } from '../ArticleCardItem'
 import { MemoizedCardHeader } from '../CardHeader'
 import { MemoizedCardSettings } from '../CardSettings'
 
-const ALL_SUBREDDITS = { label: 'All Subreddits', value: '' }
-const TECH_SUBREDDITS = { label: 'Tech', value: '' }
-
 export function RedditCard(props: CardPropsType) {
   const { meta } = props
-  const feedUrl = useUserPreferences((state) => state.redditFeedUrl)
   const key = useUserPreferences((state) => state.redlistenKey)
-  const configured = Boolean(feedUrl || key)
-  const fallbackTag = key || hasSubredditTemplate(feedUrl) ? TECH_SUBREDDITS : ALL_SUBREDDITS
+  const postLimit = useUserPreferences((state) => normalizeRedditPostLimit(state.redditPostLimit))
+  const configured = Boolean(key)
+  const fallbackTag = REDDIT_TECH_OPTION
   const { ref, isVisible } = useLazyListLoad()
   const { queryTags, selectedTag, cardSettings } = useSelectedTags({
     source: meta.value,
     fallbackTag,
   })
-  const { current, isLoading } = useRedditFeed(feedUrl, key, queryTags, configured && isVisible)
+  const { current, isLoading } = useRedditFeed(key, queryTags, postLimit, isVisible)
   const isFiltered = queryTags.some(Boolean)
   const navigate = useNavigate()
   const removeCard = useUserPreferences((state) => state.removeCard)
@@ -36,11 +34,9 @@ export function RedditCard(props: CardPropsType) {
     content = (
       <div className="redditNotice">
         <h2>Reddit feed paused</h2>
-        <p>Reddit ended public RSS access.</p>
-        <p>
-          <Link to="/settings/sources">Set up Reddit in Sources</Link> with a Redlisten key or an RSS feed URL.
-        </p>
-        <Button size="small" onClick={() => removeCard(meta.value)}>
+        <p>Add a free Redlisten key to see recent posts from the topics you follow.</p>
+        <Link className="button small" to="/settings/sources">Set up Reddit</Link>
+        <Button className="redditSecondaryAction" size="small" onClick={() => removeCard(meta.value)}>
           Disable Reddit card
         </Button>
       </div>
@@ -50,13 +46,13 @@ export function RedditCard(props: CardPropsType) {
       <div className="redditNotice">
         {isFiltered ? (
           <>
-            <p>No posts match the selected topic.</p>
+            <p>Redlisten has no recent posts for your selected topics.</p>
             <Button size="small" onClick={() => setCardSettings(meta.value, { sortBy: '', language: '' })}>
               Show {fallbackTag.label}
             </Button>
           </>
         ) : (
-          <p>No Reddit threads in the feed yet.</p>
+          <p>Redlisten has no recent posts for this feed.</p>
         )}
       </div>
     )
@@ -68,6 +64,7 @@ export function RedditCard(props: CardPropsType) {
           items={current?.posts}
           isLoading={isLoading}
           error={!current?.partial && current?.error ? new Error(current.error) : undefined}
+          limit={postLimit}
           sortBy="published_at"
           renderItem={(item) => (
             <ArticleCardItem
@@ -98,11 +95,11 @@ export function RedditCard(props: CardPropsType) {
           language={cardSettings?.language || fallbackTag.value}
           showLanguageFilter={configured}
           showDateRangeFilter={false}
-          customStartMenuItems={configured && (
+          customStartMenuItems={
             <MenuItem className="menuItem" onClick={() => navigate('/settings/sources')}>
-              RSS feed settings
+              Reddit settings
             </MenuItem>
-          )}
+          }
         />
       }>
       {content}

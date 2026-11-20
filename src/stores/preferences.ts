@@ -1,4 +1,6 @@
 import { Tag } from 'src/features/remoteConfig'
+import { DEFAULT_REDDIT_POST_LIMIT, normalizeRedditPostLimit } from 'src/features/cards/api/redditFeed'
+import { MY_LANGUAGES_OPTION } from 'src/features/cards/config'
 import { create, persist } from 'src/lib/store'
 
 const capitalize = (s: string) => (typeof s === 'string' ? s.charAt(0).toUpperCase() + s.slice(1) : '')
@@ -31,8 +33,8 @@ export type UserPreferencesState = {
   cardsSettings: Record<string, CardSettingsType>
   firstSeenDate: number
   userCustomCards: SupportedCardType[]
-  redditFeedUrl?: string
   redlistenKey?: string
+  redditPostLimit: number
   DNDDuration: DNDDuration
   showReadPosts: boolean
 }
@@ -53,7 +55,8 @@ type UserPreferencesStoreActions = {
   setOccupation: (occupation: string | null) => void
   markOnboardingAsCompleted: () => void
   setUserCustomCards: (cards: SupportedCardType[]) => void
-  setRedditFeed: (feed?: { url?: string; key?: string }) => void
+  setRedlistenKey: (key?: string) => void
+  setRedditPostLimit: (limit: number) => void
   updateCardOrder: (prevIndex: number, newIndex: number) => void
   setDNDDuration: (value: DNDDuration) => void
   isDNDModeActive: () => boolean
@@ -73,7 +76,7 @@ export const useUserPreferences = create(
       ],
       occupation: null,
       cardsSettings: {
-        reddit: { language: 'myLangs', sortBy: '' },
+        reddit: { language: MY_LANGUAGES_OPTION.value, sortBy: '' },
       },
       maxVisibleCards: 4,
       theme: 'dark',
@@ -90,6 +93,7 @@ export const useUserPreferences = create(
         { id: 3, name: 'reddit', type: 'supported' },
       ],
       userCustomCards: [],
+      redditPostLimit: DEFAULT_REDDIT_POST_LIMIT,
       DNDDuration: 'never',
       showReadPosts: true,
       setPromptEngine: (promptEngine: string) => set({ promptEngine }),
@@ -124,25 +128,14 @@ export const useUserPreferences = create(
           occupation: occupation,
         })),
       setUserCustomCards: (cards: SupportedCardType[]) => set({ userCustomCards: cards }),
-      setRedditFeed: (feed) =>
+      setRedlistenKey: (redlistenKey) =>
         set((state) => {
-          if (!feed) return { redditFeedUrl: undefined, redlistenKey: undefined }
+          if (!redlistenKey || state.cards.some((card) => card.name === 'reddit')) return { redlistenKey }
 
-          const cards: SelectedCard[] = state.cards.some((card) => card.name === 'reddit')
-            ? state.cards
-            : [...state.cards, { id: state.cards.length, name: 'reddit', type: 'supported' }]
-          const cardsSettings = state.redditFeedUrl || state.redlistenKey
-            ? state.cardsSettings
-            : {
-                ...state.cardsSettings,
-                reddit: {
-                  ...state.cardsSettings.reddit,
-                  sortBy: state.cardsSettings.reddit?.sortBy ?? '',
-                  language: '',
-                },
-              }
-          return { redditFeedUrl: feed.url, redlistenKey: feed.key, cards, cardsSettings }
+          const cards: SelectedCard[] = [...state.cards, { id: state.cards.length, name: 'reddit', type: 'supported' }]
+          return { redlistenKey, cards }
         }),
+      setRedditPostLimit: (limit) => set({ redditPostLimit: normalizeRedditPostLimit(limit) }),
       updateCardOrder: (prevIndex: number, newIndex: number) =>
         set((state) => {
           const updated = [...state.cards]
@@ -209,10 +202,10 @@ export const useUserPreferences = create(
     }),
     {
       name: 'preferences_storage',
-      version: 1,
+      version: 2,
       migrate: (persistedState, version) => {
-        const state = persistedState as unknown as UserPreferencesState &
-          UserPreferencesStoreActions
+        const state = { ...(persistedState as UserPreferencesState & UserPreferencesStoreActions & { redditFeedUrl?: string }) }
+        delete state.redditFeedUrl
 
         if (version === 0) {
           const previousTags = state.userSelectedTags as unknown as string[]

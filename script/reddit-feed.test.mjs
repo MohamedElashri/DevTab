@@ -2,11 +2,9 @@ import assert from 'node:assert/strict'
 import test from 'node:test'
 import {
   getRedditFeedItems,
-  getRedditSubreddits,
   getRedlistenError,
-  mergeRedditSubreddits,
+  parseRedlistenKey,
   redlistenFeedRequest,
-  resolveRedditFeedUrl,
 } from '../src/features/cards/api/redditFeed.ts'
 import { loadDailyRedditFeed, RedditFeedFailure, REDDIT_DAILY_REQUEST_LIMIT } from '../src/features/cards/api/redditDailyCache.ts'
 
@@ -67,27 +65,65 @@ test('unsupported links and malformed entries are ignored', () => {
   assert.deepEqual(getRedditFeedItems(entries, []), [])
 })
 
-test('subreddit templates support paths and query values without changing origin', () => {
-  assert.deepEqual(getRedditSubreddits(['r/CompSci', 'compsci', 'c++', 'programming']), ['compsci', 'programming'])
-  assert.equal(resolveRedditFeedUrl('https://feeds.example.com/{subreddit}/feed#section', 'compsci'), 'https://feeds.example.com/compsci/feed')
-  assert.equal(resolveRedditFeedUrl('https://feeds.example.com/feed?sub={subreddit}', 'compsci'), 'https://feeds.example.com/feed?sub=compsci')
-  assert.throws(() => resolveRedditFeedUrl('https://{subreddit}.example.com/feed', 'compsci'), /path or query/)
-  assert.throws(() => resolveRedditFeedUrl('https://feeds.example.com/feed#{subreddit}', 'compsci'), /path or query/)
-  assert.throws(() => resolveRedditFeedUrl('https://feeds.example.com/feed', '../other'), /Invalid subreddit/)
+test('My Stack builds one stable feed URL from normalized topics', () => {
+  const key = 'rl_live_fixture'
+  const request = redlistenFeedRequest(['JavaScript', 'r/CompSci', 'compsci', 'c++', 'Machine Learning', '../other'], key)
+  assert.deepEqual(request, {
+    url: 'https://api.redlisten.com/r/compsci+cpp+javascript+machinelearning/new.rss?limit=25',
+    authorization: 'Bearer rl_live_fixture',
+    subreddits: ['compsci', 'cpp', 'javascript', 'machinelearning'],
+  })
+  assert.deepEqual(request, redlistenFeedRequest(['machinelearning', 'compsci', 'cpp', 'javascript'], key))
 })
 
 test('Redlisten requests contain the key only in the authorization header', () => {
-  assert.deepEqual(redlistenFeedRequest('compsci', 'rl_live_fixture'), {
-    url: 'https://api.redlisten.com/r/compsci/new.rss?limit=10',
+  assert.deepEqual(redlistenFeedRequest(['compsci'], 'rl_live_fixture'), {
+    url: 'https://api.redlisten.com/r/compsci/new.rss?limit=25',
     authorization: 'Bearer rl_live_fixture',
+    subreddits: ['compsci'],
   })
 })
 
-test('merging gives each subreddit room before a busy feed fills the card', () => {
-  const busy = [{ ...technology, id: 't1' }, { ...technology, id: 't2' }]
-  assert.deepEqual(mergeRedditSubreddits([busy, [compsci]], 2).map((item) => item.id), [
-    't1', compsci.id,
-  ])
+test('the post limit applies to the combined feed and falls back to 25 for unsupported values', () => {
+  for (const limit of [10, 25, 50, 100, NaN]) {
+    const request = redlistenFeedRequest(['python', 'rust'], 'rl_live_fixture', limit)
+    const expected = limit === 10 || limit === 50 ? limit : 25
+    assert.equal(request.url, `https://api.redlisten.com/r/python+rust/new.rss?limit=${expected}`)
+  }
+})
+
+test('Redlisten accepts raw keys and common copy formats without requiring a fixed prefix', () => {
+  const key = 'fixture.Abc+DEF/ghi=='
+  assert.equal(parseRedlistenKey('  rl_live_fixture  '), 'rl_live_fixture')
+  for (const input of [
+    key,
+    `"${key}"`,
+    `Bearer ${key}`,
+    `Authorization: Bearer ${key}`,
+    `https://api.redlisten.com/r/compsci/new.rss?key=${encodeURIComponent(key)}`,
+  ]) {
+    assert.equal(parseRedlistenKey(input), key)
+  }
+})
+
+test('Redlisten rejects incomplete entries, other hosts, and malformed bearer tokens', () => {
+  for (const input of [
+    '',
+    'rl_live_…',
+    'https://[',
+    'https://api.redlisten.com/r/compsci/new.rss',
+    'https://api.redlisten.com.example.org/r/compsci/new.rss?key=fixture',
+    'https://api.redlisten.com@another.example.org/?key=fixture',
+    'Bearer key\nX-Foo: value',
+  ]) {
+    assert.equal(parseRedlistenKey(input), undefined)
+  }
+})
+
+test('Tech and an empty stack use the same default feed', () => {
+  const request = redlistenFeedRequest([], 'rl_live_fixture')
+  assert.equal(request.url, 'https://api.redlisten.com/r/compsci+programming+technology/new.rss?limit=25')
+  assert.deepEqual(redlistenFeedRequest([''], 'rl_live_fixture'), request)
 })
 
 test('Redlisten key, plan, and service errors get distinct safe messages', async () => {
@@ -146,10 +182,12 @@ const dailyFixture = () => {
 
 test('validation and concurrent readers share one request per rolling day', async () => {
   const { options, advance, values } = dailyFixture()
-  const request = redlistenFeedRequest('programming', 'rl_live_fixture')
+  const key = 'rl_live_fixture'
+  const request = redlistenFeedRequest(['technology', 'programming'], key)
+  const reordered = redlistenFeedRequest(['programming', 'technology'], key)
   let attempts = 0
   const load = async () => { attempts += 1; return [programming] }
-  await Promise.all([loadDailyRedditFeed(request, load, options), loadDailyRedditFeed(request, load, options)])
+  await Promise.all([loadDailyRedditFeed(request, load, options), loadDailyRedditFeed(reordered, load, options)])
   advance(day - 1)
   assert.deepEqual((await loadDailyRedditFeed(request, load, options)).posts, [programming])
   assert.equal(attempts, 1)
@@ -159,13 +197,26 @@ test('validation and concurrent readers share one request per rolling day', asyn
   assert.equal(attempts, 2)
 })
 
+test('switching post limits preserves each feed in the daily cache', async () => {
+  const { options } = dailyFixture()
+  const key = 'rl_live_fixture'
+  const topics = ['programming', 'technology']
+  const defaultRequest = redlistenFeedRequest(topics, key)
+  const largerRequest = redlistenFeedRequest(topics, key, 50)
+  await loadDailyRedditFeed(defaultRequest, async () => [programming], options)
+  await loadDailyRedditFeed(largerRequest, async () => [programming, technology], options)
+  const cached = async () => assert.fail('Cached feed was fetched again')
+  assert.deepEqual((await loadDailyRedditFeed(defaultRequest, cached, options)).posts, [programming])
+  assert.deepEqual((await loadDailyRedditFeed(largerRequest, cached, options)).posts, [programming, technology])
+})
+
 test('distinct feeds share a 20-request budget that resets at the next UTC day', async () => {
   const { options, advance } = dailyFixture()
   let attempts = 0
   const load = async () => { attempts += 1; return [] }
-  const requests = Array.from({ length: REDDIT_DAILY_REQUEST_LIMIT + 1 }, (_, index) => ({
-    url: `https://feeds.example.com/${index}`,
-  }))
+  const requests = Array.from({ length: REDDIT_DAILY_REQUEST_LIMIT + 1 }, (_, index) =>
+    redlistenFeedRequest([`topic${index}`], 'rl_live_fixture')
+  )
   const results = await Promise.all(requests.map((request) => loadDailyRedditFeed(request, load, options)))
   assert.equal(attempts, 20)
   assert.equal(results.filter((result) => result.error).length, 1)
@@ -177,7 +228,7 @@ test('distinct feeds share a 20-request budget that resets at the next UTC day',
 
 test('a failed refresh keeps cached posts and avoids immediate retries', async () => {
   const { options, advance } = dailyFixture()
-  const request = redlistenFeedRequest('programming', 'rl_live_fixture')
+  const request = redlistenFeedRequest(['programming'], 'rl_live_fixture')
   await loadDailyRedditFeed(request, async () => [programming], options)
   advance(day)
   const failed = await loadDailyRedditFeed(request, async () => { throw new Error('Failed to fetch feed: HTTP 429') }, options)
@@ -187,10 +238,10 @@ test('a failed refresh keeps cached posts and avoids immediate retries', async (
   assert.deepEqual(cached, failed)
 })
 
-test('a provider cooldown blocks other queued subreddits without spending their requests', async () => {
+test('a provider cooldown blocks other queued views without spending their requests', async () => {
   const { options, advance, values } = dailyFixture()
   const providerKey = 'provider-fixture-key'
-  const requests = ['programming', 'technology', 'compsci'].map((subreddit) => redlistenFeedRequest(subreddit, 'rl_live_fixture'))
+  const requests = [['programming'], ['technology'], []].map((topics) => redlistenFeedRequest(topics, 'rl_live_fixture'))
   let attempts = 0
   const load = async () => {
     attempts += 1
@@ -201,7 +252,7 @@ test('a provider cooldown blocks other queued subreddits without spending their 
   assert.deepEqual(held.map((result) => result.error), requests.map(() => 'Provider quota exhausted.'))
   assert(!JSON.stringify([...values]).includes(providerKey))
   advance(8 * day)
-  await loadDailyRedditFeed({ url: 'https://other.example.com/feed' }, async () => [], options)
+  await loadDailyRedditFeed(redlistenFeedRequest(['python'], 'rl_live_other_fixture'), async () => [], options)
   await loadDailyRedditFeed(requests[1], load, { ...options, providerKey })
   assert.equal(attempts, 1)
   advance(2 * day)
