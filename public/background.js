@@ -1,5 +1,5 @@
 // Cross-origin fetch proxy: Firefox background script / Chrome service worker.
-// Some APIs (Lobsters, Reddit) don't send CORS headers. Extension pages
+// Some APIs (such as Lobsters) don't send CORS headers. Extension pages
 // can still fetch them via the background script because host_permissions
 // allow cross-origin requests from privileged extension contexts.
 
@@ -16,6 +16,7 @@ chrome.runtime.onMessage.addListener((request, _sender, sendResponse) => {
   const promise = fetch(request.url, {
     method: request.method || 'GET',
     headers: request.headers || {},
+    redirect: request.redirect || 'follow',
     signal: controller.signal,
   })
     .then(async (res) => {
@@ -35,12 +36,13 @@ chrome.runtime.onMessage.addListener((request, _sender, sendResponse) => {
         ok: res.ok,
         status: res.status,
         contentType,
+        retryAfter: res.headers.get('retry-after'),
         data,
       }
     })
     .catch((err) => {
       const errMsg = err?.message || String(err)
-      console.error('[DevTab BG Proxy] fetch failed:', request.url, errMsg, err?.name || '')
+      console.error('[DevTab BG Proxy] fetch failed:', errMsg, err?.name || '')
       return {
         ok: false,
         status: 0,

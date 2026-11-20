@@ -1,98 +1,108 @@
-import { BsArrowReturnRight, VscTriangleUp } from 'src/components/Elements/Icons'
-import { Card } from 'src/components/Elements'
+import { Button, Card, MenuItem } from 'src/components/Elements'
 import { ListPostComponent } from 'src/components/List'
-
-import { useCallback } from 'react'
-import { Article, CardPropsType } from 'src/types'
-import { useGetSourceArticles } from '../../api/getSourceArticles'
+import { Link, useNavigate } from 'src/lib/router'
+import { useUserPreferences } from 'src/stores/preferences'
+import { CardPropsType } from 'src/types'
+import { normalizeRedditPostLimit } from '../../api/redditFeed'
+import { REDDIT_TECH_OPTION } from '../../config'
 import { useLazyListLoad } from '../../hooks/useLazyListLoad'
+import { useRedditFeed } from '../../hooks/useRedditFeed'
 import { useSelectedTags } from '../../hooks/useSelectedTags'
 import { ArticleCardItem } from '../ArticleCardItem'
 import { MemoizedCardHeader } from '../CardHeader'
 import { MemoizedCardSettings } from '../CardSettings'
 
-const GLOBAL_TAG = { label: 'Tech', value: '' }
-
 export function RedditCard(props: CardPropsType) {
   const { meta } = props
+  const key = useUserPreferences((state) => state.redlistenKey)
+  const postLimit = useUserPreferences((state) => normalizeRedditPostLimit(state.redditPostLimit))
+  const configured = Boolean(key)
+  const fallbackTag = REDDIT_TECH_OPTION
   const { ref, isVisible } = useLazyListLoad()
-  const {
-    queryTags,
-    selectedTag,
-    cardSettings: { sortBy, language } = {},
-  } = useSelectedTags({
+  const { queryTags, selectedTag, cardSettings } = useSelectedTags({
     source: meta.value,
-    fallbackTag: GLOBAL_TAG,
+    fallbackTag,
   })
-  const { isLoading, data: results, error } = useGetSourceArticles({
-    source: 'reddit',
-    tags: queryTags,
-    config: {
-      enabled: isVisible,
-    },
-  })
+  const { current, isLoading } = useRedditFeed(key, queryTags, postLimit, isVisible)
+  const isFiltered = queryTags.some(Boolean)
+  const navigate = useNavigate()
+  const removeCard = useUserPreferences((state) => state.removeCard)
+  const setCardSettings = useUserPreferences((state) => state.setCardSettings)
 
-  const renderItem = useCallback(
-    (item: Article) => {
-      const subReddit =
-        item.tags?.[0] ||
-        (() => {
-          const parts = (item.canonical_url || item.url).split('/')
-          const rIndex = parts.findIndex((part) => part.toLowerCase() === 'r')
-          return rIndex !== -1 && parts.length > rIndex + 1 ? parts[rIndex + 1] : null
-        })()
-
-      return (
-        <ArticleCardItem
-          key={item.id}
-          item={item}
-          analyticsTag={meta.analyticsTag}
-          badgeClass="redditRowItem"
-          pointsLabel="upvotes"
-          extraDetails={
-            subReddit ? (
-              <span className="rowItem">
-                <BsArrowReturnRight className="rowItemIcon" /> {`r/${subReddit}`}
-              </span>
-            ) : null
-          }
+  let content
+  if (!configured) {
+    content = (
+      <div className="redditNotice">
+        <h2>Reddit feed paused</h2>
+        <p>Add a free Redlisten key to see recent posts from the topics you follow.</p>
+        <Link className="button small" to="/settings/sources">Set up Reddit</Link>
+        <Button className="redditSecondaryAction" size="small" onClick={() => removeCard(meta.value)}>
+          Disable Reddit card
+        </Button>
+      </div>
+    )
+  } else if (current && !current.posts.length && !current.error) {
+    content = (
+      <div className="redditNotice">
+        {isFiltered ? (
+          <>
+            <p>Redlisten has no recent posts for your selected topics.</p>
+            <Button size="small" onClick={() => setCardSettings(meta.value, { sortBy: '', language: '' })}>
+              Show {fallbackTag.label}
+            </Button>
+          </>
+        ) : (
+          <p>Redlisten has no recent posts for this feed.</p>
+        )}
+      </div>
+    )
+  } else {
+    content = (
+      <>
+        {current?.partial && <p className="redditFeedStatus" role="status">{current.error} Showing available posts.</p>}
+        <ListPostComponent
+          items={current?.posts}
+          isLoading={isLoading}
+          error={!current?.partial && current?.error ? new Error(current.error) : undefined}
+          limit={postLimit}
+          sortBy="published_at"
+          renderItem={(item) => (
+            <ArticleCardItem
+              key={item.id}
+              item={item}
+              analyticsTag={meta.analyticsTag}
+              showDiscussionStats={false}
+              extraDetails={<span className="rowItem">r/{item.tags[0]}</span>}
+            />
+          )}
         />
-      )
-    },
-    [meta.analyticsTag]
-  )
+      </>
+    )
+  }
 
   return (
     <Card
-      ref={ref}
-      titleComponent={
-        <MemoizedCardHeader label={meta.label} fallbackTag={GLOBAL_TAG} selectedTag={selectedTag} />
-      }
       {...props}
+      ref={ref}
+      titleComponent={configured && (
+        <MemoizedCardHeader label={meta.label} fallbackTag={fallbackTag} selectedTag={selectedTag} />
+      )}
       settingsComponent={
         <MemoizedCardSettings
-          url={meta.link}
           id={meta.value}
-          globalTag={GLOBAL_TAG}
-          sortBy={sortBy}
-          language={language || GLOBAL_TAG.value}
-          sortOptions={(defaults) => [
-            ...defaults,
-            {
-              label: 'Upvotes',
-              value: 'points_count',
-              icon: <VscTriangleUp />,
-            },
-          ]}
+          url={meta.link}
+          globalTag={fallbackTag}
+          language={cardSettings?.language || fallbackTag.value}
+          showLanguageFilter={configured}
+          showDateRangeFilter={false}
+          customStartMenuItems={
+            <MenuItem className="menuItem" onClick={() => navigate('/settings/sources')}>
+              Reddit settings
+            </MenuItem>
+          }
         />
       }>
-      <ListPostComponent
-        sortBy={sortBy as keyof Article}
-        items={results}
-        error={error}
-        isLoading={isLoading}
-        renderItem={renderItem}
-      />
+      {content}
     </Card>
   )
 }

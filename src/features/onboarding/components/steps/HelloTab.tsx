@@ -1,8 +1,11 @@
 import clsx from 'src/utils/clsx'
+import { useState } from 'react'
 import { BsArrowRight, BsFillGearFill } from 'src/components/Elements/Icons'
 import { FaDatabase, FaMicrochip, FaRobot, FaServer } from 'src/components/Elements/Icons'
 import { RiShieldKeyholeFill } from 'src/components/Elements/Icons'
 import { TbDots, TbWorldWww } from 'src/components/Elements/Icons'
+import { RedlistenKeyForm } from 'src/features/cards/components/redditCard/RedlistenKeyForm'
+import { MY_LANGUAGES_OPTION } from 'src/features/cards/config'
 import { Tag, useRemoteConfigStore } from 'src/features/remoteConfig'
 import { useUserPreferences } from 'src/stores/preferences'
 import { Occupation } from '../../types'
@@ -67,6 +70,7 @@ const OCCUPATIONS: Occupation[] = [
 ]
 
 export const HelloTab = () => {
+  const [showRedditSetup, setShowRedditSetup] = useState(false)
   const {
     markOnboardingAsCompleted,
     setCardSettings,
@@ -98,13 +102,25 @@ export const HelloTab = () => {
       setTags(userTags)
       for (const source of selectedOccupation.sources) {
         setCardSettings(source, {
-          language: selectedOccupation.tags[0],
+          language: source === 'reddit' ? MY_LANGUAGES_OPTION.value : selectedOccupation.tags[0],
           sortBy: 'published_at',
         })
       }
     }
 
-    markOnboardingAsCompleted()
+    setShowRedditSetup(true)
+  }
+
+  if (showRedditSetup) {
+    return (
+      <div>
+        <div className="tabHeader">
+          <h1 className="tabTitle">Set up Reddit</h1>
+          <p className="tabBody">See recent posts from the subreddits in My Stack. You can set this up later in Sources.</p>
+        </div>
+        <RedlistenKeyForm onFinished={markOnboardingAsCompleted} />
+      </div>
+    )
   }
 
   return (
@@ -131,7 +147,7 @@ export const HelloTab = () => {
       <div className="tabFooter">
         {occupation && (
           <button className="positiveButton" onClick={onStartClicked}>
-            <BsArrowRight /> Start now
+            <BsArrowRight /> Continue
           </button>
         )}
       </div>

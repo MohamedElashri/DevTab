@@ -12,7 +12,6 @@ const HOST_ORIGINS = [
   'https://hacker-news.firebaseio.com/*',
   'https://lobste.rs/*',
   'https://www.producthunt.com/*',
-  'https://www.reddit.com/*',
 ]
 
 const getOriginPattern = (url: string) => `${new URL(url).origin}/*`

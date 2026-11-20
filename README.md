@@ -8,7 +8,8 @@ A private, focused developer news page for your browser's new tab. No tracking, 
 
 ## Features
 
-- News from GitHub, Hacker News, Lobsters, Product Hunt, Reddit, and your own RSS feeds
+- News from GitHub, Hacker News, Lobsters, Product Hunt, and your own RSS feeds
+- The Reddit card builds a combined feed from your followed topics via [Redlisten](#follow-reddit).
 - Tag filters and card controls to organize feeds your way
 - Bookmarks, read state, and preferences saved locally across sessions
 - Do Not Disturb hours, dark/light theme, compact mode
@@ -18,10 +19,22 @@ A private, focused developer news page for your browser's new tab. No tracking, 
 ## Install in your Browser
 
 [![Firefox — Get the extension](https://img.shields.io/badge/Firefox-Get_the_extension-FF7139?style=for-the-badge&logo=firefoxbrowser&logoColor=white)](https://addons.mozilla.org/en-US/firefox/addon/mdevtab/)
-[![Chrome — Get the extension](https://img.shields.io/badge/Chrome-Get_the_extension-4285F4?style=for-the-badge&logo=firefoxbrowser&logoColor=white)](https://chromewebstore.google.com/detail/devtab/bohcncbmpdonbeamifbibleeghmbdece/)
+![Chrome — Coming soon](https://img.shields.io/badge/Chrome-Coming_soon-4285F4?style=for-the-badge&logo=googlechrome&logoColor=white)
 
 The Chrome Web Store listing is coming soon. To try Chrome now, build and load the
 extension locally using the instructions below.
+
+## Follow Reddit
+
+1. Create a free Redlisten account and copy your API key from the dashboard. [Redlisten dashboard](https://app.redlisten.com/)
+2. In onboarding, or under **Settings → Sources → Reddit via Redlisten**, paste the key and select **Save key**. DevTab stores the key in the current browser profile and sends it to Redlisten when fetching posts. You can replace or remove it in Sources.
+3. **My Stack** automatically combines the subreddits for your followed topics. Use the card's **Topic** menu to view one topic or switch to **Tech**, which combines `r/programming`, `r/technology`, and `r/compsci`. The Tech feed also covers an empty stack.
+
+DevTab asks for up to 25 recent posts in one request across the selected subreddits. Under **Settings → Sources → Reddit via Redlisten**, you can choose 10, 25, or 50 posts per feed. Redlisten may have fewer recent posts available.
+
+DevTab refreshes each combination of subreddits and post limit at most once every 24 hours. It makes up to 20 Reddit feed requests per UTC day per browser profile, including setup checks, and reuses the cache across tabs and restarts. Redlisten’s free account has a shared monthly limit of 1,000 requests and 50,000 results. [Redlisten plan limits](https://www.redlisten.com/docs#plans)
+
+The key setup and Reddit card show when Redlisten rejects a key, denies feed access, reaches a quota, or has a service error. DevTab keeps cached posts available and waits for Redlisten's retry window before making another request with the same key. [Redlisten API errors](https://www.redlisten.com/docs#errors)
 
 ## Build from source
 
@@ -73,7 +86,7 @@ or background messaging.
 For a later release, choose a version greater than the one in **both** stores:
 
 ```bash
-VERSION=1.3.2 make release
+VERSION=1.4.0 make release
 ```
 
 This updates the shared version, installs dependencies, runs checks, builds both

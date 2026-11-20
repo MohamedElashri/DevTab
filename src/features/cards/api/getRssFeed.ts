@@ -89,20 +89,32 @@ const getFeedIcon = (doc: Document, feedUrl: string) => {
   return resolveUrl(itunesImage?.getAttribute('href') || '', feedUrl) || undefined
 }
 
-const getFeedDocument = async (feedUrl: string) => {
+export class RssHttpError extends Error {
+  readonly response: Response
+
+  constructor(response: Response) {
+    super(`Failed to fetch feed: HTTP ${response.status}`)
+    this.response = response
+  }
+}
+
+const getFeedDocument = async (feedUrl: string, authorization?: string) => {
+  const headers = new Headers({
+    accept: 'application/rss+xml, application/atom+xml, application/xml, text/xml, */*',
+  })
+  if (authorization) headers.set('Authorization', authorization)
   const res = await extensionFetch(feedUrl, {
-    headers: {
-      accept: 'application/rss+xml, application/atom+xml, application/xml, text/xml, */*',
-    },
+    headers,
+    redirect: authorization ? 'error' : undefined,
   })
   if (!res.ok) {
-    throw new Error(`Failed to fetch feed: HTTP ${res.status}`)
+    throw new RssHttpError(res)
   }
   const text = await res.text()
   const doc = new DOMParser().parseFromString(text, 'text/xml')
   const parserError = getParserError(doc)
 
-  if (parserError) {
+  if (parserError || !doc.querySelector('channel, feed')) {
     throw new Error('This URL did not return a valid RSS or Atom feed.')
   }
 
@@ -170,8 +182,8 @@ const parseAtomEntry = (entry: Element, feedUrl: string, index: number): Article
   }
 }
 
-export const getRssArticles = async (feedUrl: string): Promise<Article[]> => {
-  const doc = await getFeedDocument(feedUrl)
+export const getRssArticles = async (feedUrl: string, authorization?: string): Promise<Article[]> => {
+  const doc = await getFeedDocument(feedUrl, authorization)
   const rssItems = Array.from(doc.querySelectorAll('channel > item'))
   const atomEntries = Array.from(doc.querySelectorAll('feed > entry'))
 

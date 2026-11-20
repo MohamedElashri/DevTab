@@ -9,7 +9,8 @@ import { ScrollCardsNavigator } from './ScrollCardsNavigator'
 
 export const CardsLayout = () => {
   const { cards } = useUserPreferences()
-  const [selectedCard, setSelectedCard] = useState(cards[0])
+  const [selectedCardName, setSelectedCardName] = useState(cards[0]?.name)
+  const selectedCard = cards.find((card) => card.name === selectedCardName) ?? cards[0]
   return (
     <>
       <ScrollCardsNavigator />
@@ -18,10 +19,13 @@ export const CardsLayout = () => {
       </DesktopBreakpoint>
       <MobileBreakpoint>
         <div className="Cards HorizontalScroll">
-          <MobileCards selectedCard={selectedCard} />
+          {selectedCard && <MobileCards selectedCard={selectedCard} />}
         </div>
       </MobileBreakpoint>
-      <BottomNavigation selectedCard={selectedCard} setSelectedCard={setSelectedCard} />
+      <BottomNavigation
+        selectedCard={selectedCard}
+        setSelectedCard={(card) => setSelectedCardName(card.name)}
+      />
     </>
   )
 }

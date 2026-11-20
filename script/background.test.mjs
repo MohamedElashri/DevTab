@@ -79,3 +79,16 @@ test('RSS text and HTTP failures retain their body and status in Chrome', async 
   assert.equal(result.contentType, 'application/xml')
   assert.equal(result.data, '<error>missing</error>')
 })
+
+test('the proxy forwards provider backoff on rate-limited responses', async () => {
+  const background = loadBackground({ fetchImpl: async () => new Response('{"error":{"code":"quota_exceeded"}}', {
+    status: 429,
+    headers: { 'content-type': 'application/json', 'retry-after': '7200' },
+  }) })
+  const result = await new Promise((resolve) => {
+    background.listener({ type: 'PROXY_FETCH', url: 'https://example.com/feed' }, {}, resolve)
+  })
+  assert.equal(result.status, 429)
+  assert.equal(result.retryAfter, '7200')
+  assert.equal(result.data.error.code, 'quota_exceeded')
+})

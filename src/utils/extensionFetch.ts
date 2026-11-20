@@ -2,7 +2,7 @@
  * Fetch wrapper that routes cross-origin requests through the extension
  * background script when running inside a Firefox/Chrome extension.
  *
- * Some APIs (Lobsters, Reddit) don't send CORS headers. In an extension
+ * Some APIs (such as Lobsters) don't send CORS headers. In an extension
  * context the background script is allowed to fetch those origins thanks
  * to host_permissions, so we proxy the request when needed.
  */
@@ -18,6 +18,7 @@ interface ProxyFetchResponse {
   error?: string
   status?: number
   contentType?: string
+  retryAfter?: string | null
 }
 
 const isExtensionContext = (): boolean => {
@@ -59,6 +60,7 @@ export async function extensionFetch(url: string, init?: RequestInit): Promise<R
     url,
     method: init?.method || 'GET',
     headers,
+    redirect: init?.redirect,
   })
 
   if (!result) {
@@ -78,6 +80,7 @@ export async function extensionFetch(url: string, init?: RequestInit): Promise<R
       'content-type':
         result.contentType ||
         (typeof result.data === 'object' ? 'application/json' : 'text/plain'),
+      ...(result.retryAfter && { 'retry-after': result.retryAfter }),
     },
   })
 }
