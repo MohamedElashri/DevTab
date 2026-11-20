@@ -8,7 +8,8 @@ A private, focused developer news page for your browser's new tab. No tracking, 
 
 ## Features
 
-- News from GitHub, Hacker News, Lobsters, Product Hunt, Reddit, and your own RSS feeds
+- News from GitHub, Hacker News, Lobsters, Product Hunt, and your own RSS feeds
+- The Reddit card supports a [personal RSS feed](#follow-reddit-with-a-personal-rss-feed) for multiple subreddits.
 - Tag filters and card controls to organize feeds your way
 - Bookmarks, read state, and preferences saved locally across sessions
 - Do Not Disturb hours, dark/light theme, compact mode
@@ -22,6 +23,14 @@ A private, focused developer news page for your browser's new tab. No tracking, 
 
 The Chrome Web Store listing is coming soon. To try Chrome now, build and load the
 extension locally using the instructions below.
+
+## Follow Reddit with a personal RSS feed
+
+1. Create one personal feed in RSS Ground. [RSS Ground guide](https://help.rssground.com/article/251-personal-feeds-user-guide)
+2. Set up one IFTTT applet per subreddit, using the same personal feed as the destination for each. Start with `programming`, `technology`, and `compsci` to recreate the old Tech selection. Use Reddit’s `Title` and `PostURL` for the RSS item's title and link. [IFTTT applet](https://ifttt.com/applets/f6maSFd9-new-posts-from-a-reddit-subreddit-added-to-rss-ground-personal-feed-rss)
+3. In DevTab, open **Settings → Sources**, paste the personal feed URL into **Reddit RSS Feed URL**, and select **Save**. Choose **Topic → All Subreddits** on the Reddit card to see the combined feed. **My Stack** and individual topics filter incoming posts by subreddit.
+
+Use IFTTT's **New hot post in subreddit** trigger to keep volumes down when following busy communities. DevTab sorts delivered posts by date. RSS Ground exposes the latest 50 items and stores up to 500. At that cap, remove old items to make room for new ones. [IFTTT Hot trigger](https://ifttt.com/reddit/triggers/new_hot_post_in_subreddit) · [RSS Ground feed limits](https://help.rssground.com/article/252-limits-on-personal-feeds)
 
 ## Build from source
 

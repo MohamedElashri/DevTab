@@ -102,7 +102,7 @@ const getFeedDocument = async (feedUrl: string) => {
   const doc = new DOMParser().parseFromString(text, 'text/xml')
   const parserError = getParserError(doc)
 
-  if (parserError) {
+  if (parserError || !doc.querySelector('channel, feed')) {
     throw new Error('This URL did not return a valid RSS or Atom feed.')
   }
 

@@ -31,6 +31,7 @@ export type UserPreferencesState = {
   cardsSettings: Record<string, CardSettingsType>
   firstSeenDate: number
   userCustomCards: SupportedCardType[]
+  redditFeedUrl?: string
   DNDDuration: DNDDuration
   showReadPosts: boolean
 }
@@ -51,6 +52,7 @@ type UserPreferencesStoreActions = {
   setOccupation: (occupation: string | null) => void
   markOnboardingAsCompleted: () => void
   setUserCustomCards: (cards: SupportedCardType[]) => void
+  setRedditFeedUrl: (url?: string) => void
   updateCardOrder: (prevIndex: number, newIndex: number) => void
   setDNDDuration: (value: DNDDuration) => void
   isDNDModeActive: () => boolean
@@ -121,6 +123,13 @@ export const useUserPreferences = create(
           occupation: occupation,
         })),
       setUserCustomCards: (cards: SupportedCardType[]) => set({ userCustomCards: cards }),
+      setRedditFeedUrl: (url) =>
+        set((state) => ({
+          redditFeedUrl: url,
+          cards: url && !state.cards.some((card) => card.name === 'reddit')
+            ? [...state.cards, { id: state.cards.length, name: 'reddit', type: 'supported' }]
+            : state.cards,
+        })),
       updateCardOrder: (prevIndex: number, newIndex: number) =>
         set((state) => {
           const updated = [...state.cards]

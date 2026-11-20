@@ -105,7 +105,7 @@ export const GeneralSettings = () => {
                 Grant permissions
               </button>
               <p style={{ fontSize: '0.8rem', marginTop: 4, opacity: 0.7 }}>
-                Required for Lobsters, Product Hunt &amp; Reddit cards to load.
+                Required for the Lobsters and Product Hunt cards to load.
               </p>
             </div>
           </div>

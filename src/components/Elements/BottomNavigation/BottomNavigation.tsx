@@ -5,7 +5,7 @@ import { useUserPreferences } from 'src/stores/preferences'
 import { SelectedCard } from 'src/types'
 
 type BottomNavigationProps = {
-  selectedCard: SelectedCard
+  selectedCard?: SelectedCard
   setSelectedCard: (card: SelectedCard) => void
 }
 

@@ -2,7 +2,7 @@
  * Fetch wrapper that routes cross-origin requests through the extension
  * background script when running inside a Firefox/Chrome extension.
  *
- * Some APIs (Lobsters, Reddit) don't send CORS headers. In an extension
+ * Some APIs (such as Lobsters) don't send CORS headers. In an extension
  * context the background script is allowed to fetch those origins thanks
  * to host_permissions, so we proxy the request when needed.
  */

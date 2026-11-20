@@ -40,6 +40,27 @@ a {
   padding: 16px;
 }
 
+.redditNotice {
+  margin: auto;
+  max-width: 29ch;
+  padding: 24px 16px;
+  text-align: center;
+  line-height: 1.5;
+
+  h2 {
+    margin: 0;
+    font-size: 1.125rem;
+  }
+
+  p {
+    margin: 8px 0 0;
+  }
+
+  .button {
+    margin-top: 16px;
+  }
+}
+
 .AppHeader {
   align-content: center;
   align-items: center;
@@ -575,10 +596,6 @@ a {
 
 .rowDetails .hnRowItem {
   color: #f6682f;
-}
-
-.rowDetails .redditRowItem {
-  color: #fa481d;
 }
 
 .rowDetails .lobstersRowItem {

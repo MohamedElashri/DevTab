@@ -5,6 +5,7 @@ import { SettingsContentLayout } from 'src/components/Layout/SettingsContentLayo
 import { SUPPORTED_CARDS } from 'src/config/supportedCards'
 import { useUserPreferences } from 'src/stores/preferences'
 import { Option, SelectedCard } from 'src/types'
+import { RedditFeedSetting } from './RedditFeedSetting'
 import { RssSetting } from './RssSetting'
 
 export const SourceSettings = () => {
@@ -100,6 +101,7 @@ export const SourceSettings = () => {
             setCards(cards)
           }}
         />
+        <RedditFeedSetting />
         <RssSetting />
       </>
     </SettingsContentLayout>

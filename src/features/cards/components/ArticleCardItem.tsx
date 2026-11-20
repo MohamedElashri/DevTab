@@ -18,6 +18,7 @@ export type ArticleCardItemProps = {
   pointsLabel?: string
   canonicalFallback?: string
   extraDetails?: ReactNode
+  showDiscussionStats?: boolean
 }
 
 export const ArticleCardItem = ({
@@ -28,6 +29,7 @@ export const ArticleCardItem = ({
   pointsLabel = 'points',
   canonicalFallback,
   extraDetails,
+  showDiscussionStats = true,
 }: ArticleCardItemProps) => {
   const { listingMode } = useUserPreferences()
 
@@ -40,7 +42,7 @@ export const ArticleCardItem = ({
         <>
           <p className="rowTitle">
             <CardLink link={item.url}>
-              {listingMode === 'compact' && (
+              {listingMode === 'compact' && showDiscussionStats && (
                 <div className="counterWrapper">
                   <VscTriangleUp />
                   <span className="value">{item.points_count}</span>
@@ -50,12 +52,13 @@ export const ArticleCardItem = ({
             </CardLink>
           </p>
 
-          {sourceType === 'rss' ? (
+          {sourceType === 'rss' || !showDiscussionStats ? (
             <p className="rowDescription">
               <span className="rowItem" title={new Date(item.published_at).toUTCString()}>
                 <MdAccessTime className="rowTitleIcon" />
                 {formatTimeAgo(item.published_at)}
               </span>
+              {extraDetails}
             </p>
           ) : (
             listingMode === 'normal' && (

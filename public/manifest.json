@@ -11,8 +11,7 @@
     "https://api.github.com/*",
     "https://hacker-news.firebaseio.com/*",
     "https://lobste.rs/*",
-    "https://www.producthunt.com/*",
-    "https://www.reddit.com/*"
+    "https://www.producthunt.com/*"
   ],
   "optional_host_permissions": [
     "<all_urls>"
