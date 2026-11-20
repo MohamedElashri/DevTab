@@ -9,7 +9,7 @@ A private, focused developer news page for your browser's new tab. No tracking, 
 ## Features
 
 - News from GitHub, Hacker News, Lobsters, Product Hunt, and your own RSS feeds
-- The Reddit card supports a [personal RSS feed](#follow-reddit-with-a-personal-rss-feed) for multiple subreddits.
+- The Reddit card combines multiple subreddits from [Redlisten or a personal RSS feed](#follow-reddit).
 - Tag filters and card controls to organize feeds your way
 - Bookmarks, read state, and preferences saved locally across sessions
 - Do Not Disturb hours, dark/light theme, compact mode
@@ -24,12 +24,15 @@ A private, focused developer news page for your browser's new tab. No tracking, 
 The Chrome Web Store listing is coming soon. To try Chrome now, build and load the
 extension locally using the instructions below.
 
-## Follow Reddit with a personal RSS feed
+## Follow Reddit
 
-1. Get a combined RSS or Atom feed URL. For example, create a Redlisten key and enter `programming+technology+compsci` in the feed builder. Copy the URL with your key and keep it private. [Redlisten feed builder](https://www.redlisten.com/tools/reddit-rss-feed-builder)
-2. In DevTab, open **Settings → Sources**, paste the URL into **Reddit RSS Feed URL**, and select **Save**. The Reddit card opens on **All Subreddits** the first time. **My Stack** and individual topics filter posts by subreddit.
+1. Create a free Redlisten account and copy your API key from the dashboard. [Redlisten dashboard](https://app.redlisten.com/)
+2. In onboarding, or under **Settings → Sources → Reddit via Redlisten**, paste the key and select **Save key**. DevTab stores the key in the current browser profile and sends it to Redlisten when fetching posts. You can replace or remove it in Sources.
+3. The **Tech** view combines `r/programming`, `r/technology`, and `r/compsci`. **My Stack** uses the topics you follow, and individual topics show their subreddit.
 
-DevTab accepts RSS or Atom from any provider whose feed items link directly to Reddit posts. Posts are sorted by feed date. The feed provider controls which posts are available and how often they update.
+DevTab asks for ten posts per subreddit from Redlisten and refreshes each feed at most once every 24 hours. It makes up to 20 Reddit feed requests per UTC day per browser profile, including setup checks, and reuses the cache across tabs and restarts. Redlisten’s free account has a shared monthly limit of 1,000 requests and 50,000 results. [Redlisten plan limits](https://www.redlisten.com/docs#plans)
+
+To use another provider, enter a combined RSS or Atom URL under **Reddit RSS Feed URL**. A URL template with `{subreddit}` in its path or query lets DevTab fetch the selected communities independently. Feed items must link directly to Reddit threads. Posts are sorted by feed date.
 
 ## Build from source
 

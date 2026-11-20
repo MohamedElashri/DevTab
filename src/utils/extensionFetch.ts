@@ -59,6 +59,7 @@ export async function extensionFetch(url: string, init?: RequestInit): Promise<R
     url,
     method: init?.method || 'GET',
     headers,
+    redirect: init?.redirect,
   })
 
   if (!result) {

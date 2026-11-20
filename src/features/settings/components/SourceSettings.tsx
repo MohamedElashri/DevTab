@@ -3,6 +3,7 @@ import { BsRssFill } from 'src/components/Elements/Icons'
 import { ChipsSet, ConfirmModal } from 'src/components/Elements'
 import { SettingsContentLayout } from 'src/components/Layout/SettingsContentLayout/SettingsContentLayout'
 import { SUPPORTED_CARDS } from 'src/config/supportedCards'
+import { RedlistenKeyForm } from 'src/features/cards/components/redditCard/RedlistenKeyForm'
 import { useUserPreferences } from 'src/stores/preferences'
 import { Option, SelectedCard } from 'src/types'
 import { RedditFeedSetting } from './RedditFeedSetting'
@@ -101,6 +102,12 @@ export const SourceSettings = () => {
             setCards(cards)
           }}
         />
+        <div className="settingRow">
+          <p className="settingTitle">Reddit via Redlisten</p>
+          <div className="settingContent">
+            <RedlistenKeyForm />
+          </div>
+        </div>
         <RedditFeedSetting />
         <RssSetting />
       </>

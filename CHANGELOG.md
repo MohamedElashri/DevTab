@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Replace the Reddit feed with an update about the loss of public access and a button to disable the card.
 - Stop requesting the Reddit host permission for built-in feeds.
+- Add optional Redlisten onboarding with local key storage and a daily Reddit request budget.
 - Restore the Reddit card with an optional personal RSS feed that combines subreddits and supports topic filtering.
 
 ## [1.3.1] - 2026-11-08

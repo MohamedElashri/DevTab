@@ -16,6 +16,7 @@ chrome.runtime.onMessage.addListener((request, _sender, sendResponse) => {
   const promise = fetch(request.url, {
     method: request.method || 'GET',
     headers: request.headers || {},
+    redirect: request.redirect || 'follow',
     signal: controller.signal,
   })
     .then(async (res) => {

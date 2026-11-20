@@ -32,6 +32,7 @@ export type UserPreferencesState = {
   firstSeenDate: number
   userCustomCards: SupportedCardType[]
   redditFeedUrl?: string
+  redlistenKey?: string
   DNDDuration: DNDDuration
   showReadPosts: boolean
 }
@@ -52,7 +53,7 @@ type UserPreferencesStoreActions = {
   setOccupation: (occupation: string | null) => void
   markOnboardingAsCompleted: () => void
   setUserCustomCards: (cards: SupportedCardType[]) => void
-  setRedditFeedUrl: (url?: string) => void
+  setRedditFeed: (feed?: { url?: string; key?: string }) => void
   updateCardOrder: (prevIndex: number, newIndex: number) => void
   setDNDDuration: (value: DNDDuration) => void
   isDNDModeActive: () => boolean
@@ -123,14 +124,14 @@ export const useUserPreferences = create(
           occupation: occupation,
         })),
       setUserCustomCards: (cards: SupportedCardType[]) => set({ userCustomCards: cards }),
-      setRedditFeedUrl: (url) =>
+      setRedditFeed: (feed) =>
         set((state) => {
-          if (!url) return { redditFeedUrl: undefined }
+          if (!feed) return { redditFeedUrl: undefined, redlistenKey: undefined }
 
           const cards: SelectedCard[] = state.cards.some((card) => card.name === 'reddit')
             ? state.cards
             : [...state.cards, { id: state.cards.length, name: 'reddit', type: 'supported' }]
-          const cardsSettings = state.redditFeedUrl
+          const cardsSettings = state.redditFeedUrl || state.redlistenKey
             ? state.cardsSettings
             : {
                 ...state.cardsSettings,
@@ -140,7 +141,7 @@ export const useUserPreferences = create(
                   language: '',
                 },
               }
-          return { redditFeedUrl: url, cards, cardsSettings }
+          return { redditFeedUrl: feed.url, redlistenKey: feed.key, cards, cardsSettings }
         }),
       updateCardOrder: (prevIndex: number, newIndex: number) =>
         set((state) => {

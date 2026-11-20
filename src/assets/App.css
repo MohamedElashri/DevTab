@@ -61,6 +61,43 @@ a {
   }
 }
 
+.redditFeedStatus {
+  margin: 0;
+  padding: 8px 12px;
+  font-size: 0.875rem;
+}
+
+.redditKeyForm {
+  display: grid;
+  gap: 8px;
+  padding-bottom: 8px;
+
+  p {
+    margin: 0;
+  }
+
+  form {
+    display: grid;
+    gap: 8px;
+    margin-top: 4px;
+  }
+
+  input {
+    min-width: 0;
+    background: var(--settings-input-background-color);
+    border: 1px solid var(--settings-input-border-color);
+    border-radius: 50px;
+    padding: 6px 14px;
+    color: var(--settings-input-text-color);
+  }
+}
+
+.redditKeyActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
 .AppHeader {
   align-content: center;
   align-items: center;
