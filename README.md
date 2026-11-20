@@ -32,6 +32,8 @@ extension locally using the instructions below.
 
 DevTab asks for ten posts per subreddit from Redlisten and refreshes each feed at most once every 24 hours. It makes up to 20 Reddit feed requests per UTC day per browser profile, including setup checks, and reuses the cache across tabs and restarts. Redlisten’s free account has a shared monthly limit of 1,000 requests and 50,000 results. [Redlisten plan limits](https://www.redlisten.com/docs#plans)
 
+The key setup and Reddit card show when Redlisten rejects a key, denies feed access, reaches a quota, or has a service error. DevTab keeps cached posts available and waits for Redlisten's retry window before making another request with the same key. [Redlisten API errors](https://www.redlisten.com/docs#errors)
+
 To use another provider, enter a combined RSS or Atom URL under **Reddit RSS Feed URL**. A URL template with `{subreddit}` in its path or query lets DevTab fetch the selected communities independently. Feed items must link directly to Reddit threads. Posts are sorted by feed date.
 
 ## Build from source

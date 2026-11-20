@@ -18,6 +18,7 @@ interface ProxyFetchResponse {
   error?: string
   status?: number
   contentType?: string
+  retryAfter?: string | null
 }
 
 const isExtensionContext = (): boolean => {
@@ -79,6 +80,7 @@ export async function extensionFetch(url: string, init?: RequestInit): Promise<R
       'content-type':
         result.contentType ||
         (typeof result.data === 'object' ? 'application/json' : 'text/plain'),
+      ...(result.retryAfter && { 'retry-after': result.retryAfter }),
     },
   })
 }

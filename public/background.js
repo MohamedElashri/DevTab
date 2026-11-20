@@ -36,6 +36,7 @@ chrome.runtime.onMessage.addListener((request, _sender, sendResponse) => {
         ok: res.ok,
         status: res.status,
         contentType,
+        retryAfter: res.headers.get('retry-after'),
         data,
       }
     })

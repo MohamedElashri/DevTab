@@ -29,7 +29,7 @@ export function RedlistenKeyForm({ onFinished }: { onFinished?: () => void }) {
 
       const feed = await loadRedditFeed(redlistenFeedRequest(TECH_SUBREDDITS[0], key))
       if (feed.error) {
-        setFeedback(/HTTP (401|403)$/.test(feed.error) ? 'Redlisten rejected this key. Check it in your dashboard.' : feed.error)
+        setFeedback(feed.error)
         return
       }
 

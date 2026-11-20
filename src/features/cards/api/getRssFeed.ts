@@ -89,6 +89,15 @@ const getFeedIcon = (doc: Document, feedUrl: string) => {
   return resolveUrl(itunesImage?.getAttribute('href') || '', feedUrl) || undefined
 }
 
+export class RssHttpError extends Error {
+  readonly response: Response
+
+  constructor(response: Response) {
+    super(`Failed to fetch feed: HTTP ${response.status}`)
+    this.response = response
+  }
+}
+
 const getFeedDocument = async (feedUrl: string, authorization?: string) => {
   const headers = new Headers({
     accept: 'application/rss+xml, application/atom+xml, application/xml, text/xml, */*',
@@ -99,7 +108,7 @@ const getFeedDocument = async (feedUrl: string, authorization?: string) => {
     redirect: authorization ? 'error' : undefined,
   })
   if (!res.ok) {
-    throw new Error(`Failed to fetch feed: HTTP ${res.status}`)
+    throw new RssHttpError(res)
   }
   const text = await res.text()
   const doc = new DOMParser().parseFromString(text, 'text/xml')

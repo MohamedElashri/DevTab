@@ -39,6 +39,45 @@ export function redlistenFeedRequest(subreddit: string, key: string): RedditFeed
   }
 }
 
+export async function getRedlistenError(response: Response, now = Date.now()) {
+  const { status } = response
+  if (status === 401) {
+    return {
+      message: 'Redlisten rejected this key. Check it in your dashboard.',
+      retryAt: now + 24 * 60 * 60 * 1000,
+    }
+  }
+  if (status === 403) return { message: 'Redlisten denied access to this feed. Check your plan in the dashboard.' }
+  if (status === 404) return { message: 'Redlisten couldn’t find this subreddit feed.' }
+  if (status >= 500) return { message: `Redlisten could not serve the feed (HTTP ${status}).` }
+  if (status !== 429) return { message: `Redlisten rejected the feed request (HTTP ${status}).` }
+
+  const details = await response.json().catch(() => null)
+  const code = details?.error?.code
+  const retryAfter = response.headers.get('retry-after')
+  const retryAt = retryAfter && /^\d+$/.test(retryAfter)
+    ? now + Number(retryAfter) * 1000
+    : Date.parse(retryAfter ?? '')
+  const validRetryAt = Number.isFinite(retryAt) && retryAt > now ? retryAt : undefined
+
+  if (code === 'quota_exceeded' || code === 'items_quota_exceeded') {
+    const date = new Date(now)
+    return {
+      message: code === 'quota_exceeded'
+        ? 'Redlisten’s monthly request quota is exhausted. It resets at the start of the next UTC month.'
+        : 'Redlisten’s monthly results quota is exhausted. It resets at the start of the next UTC month.',
+      retryAt: validRetryAt ?? Date.UTC(date.getUTCFullYear(), date.getUTCMonth() + 1, 1),
+    }
+  }
+
+  return {
+    message: code === 'too_many_in_flight'
+      ? 'Redlisten has too many requests in progress for this account.'
+      : 'Redlisten temporarily rate-limited this feed.',
+    retryAt: validRetryAt ?? now + 60_000,
+  }
+}
+
 export function mergeRedditSubreddits(feeds: Article[][], limit: number): Article[] {
   const sorted = feeds.map((feed) => feed.slice().sort((a, b) => b.published_at - a.published_at))
   const unique = new Map<string, Article>()
