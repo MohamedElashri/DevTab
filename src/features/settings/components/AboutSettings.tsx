@@ -1,17 +1,18 @@
 import { SettingsContentLayout } from 'src/components/Layout/SettingsContentLayout'
 import { appVersion } from 'src/config'
+import { TipLink } from './TipLink'
 import './aboutSettings.css'
 
 const repository = 'https://github.com/MohamedElashri/DevTab'
 const projectLinks = [
-  ['Project website', 'https://melashri.net/soft/devtab/'],
+  ['Project website', 'https://melashri.net/software/devtab/'],
   ['Source code', repository],
   ['Report an issue', `${repository}/issues`],
   ['Release notes', `${repository}/blob/master/CHANGELOG.md`],
 ]
 
 export const AboutSettings = () => (
-  <SettingsContentLayout title="About DevTab" description="Developer news on every new tab.">
+  <SettingsContentLayout title="About DevTab" description="Developer news on every new tab." actions={<TipLink />}>
     <section className="devtabAbout" aria-label="DevTab app information">
       <div className="devtabAboutBrand">
         <img src="./logos/logo64.png" width="48" height="48" alt="" />
@@ -28,9 +29,6 @@ export const AboutSettings = () => (
           Apache 2.0 license
         </a>
       </div>
-      <footer className="devtabAboutSupport">
-        <a href="https://ko-fi.com/melashri" target="_blank" rel="noopener noreferrer">Support on Ko-fi</a>
-      </footer>
     </section>
   </SettingsContentLayout>
 )

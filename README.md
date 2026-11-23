@@ -2,6 +2,8 @@
 
 A private, focused developer news page for your browser's new tab. No tracking, no ads, no external backend.
 
+[![Leave a tip on Ko-fi](https://img.shields.io/badge/Ko--fi-Leave%20a%20tip-913F51?style=for-the-badge&logo=ko-fi&logoColor=white)](https://ko-fi.com/melashri)
+
 <p align="center">
   <img src="assests/devtab.png" alt="DevTab screenshot" width="80%">
 </p>
@@ -103,7 +105,9 @@ make dev
 
 ## Support
 
-Visit the [project website](https://melashri.net/soft/devtab/) for downloads and links. [Support on Ko-fi](https://ko-fi.com/melashri) if you’d like to leave an optional tip.
+Tips are optional and help maintain the project.
+
+**[Leave a tip on Ko-fi](https://ko-fi.com/melashri)** · [Project website](https://melashri.net/software/devtab/)
 
 ## License
 

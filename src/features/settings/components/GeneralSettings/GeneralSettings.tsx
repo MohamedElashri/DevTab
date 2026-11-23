@@ -7,6 +7,7 @@ import { CardsNumberSettings } from './CardsNumberSettings'
 import { DNDSettings } from './DNDSettings'
 import './generalSettings.css'
 import { LayoutSettings } from './LayoutSettings'
+import { TipLink } from '../TipLink'
 
 export const GeneralSettings = () => {
   const {
@@ -56,6 +57,7 @@ export const GeneralSettings = () => {
   return (
     <SettingsContentLayout
       title="General Settings"
+      actions={<TipLink quiet />}
       description={
         'Customize your experience by selecting the number of cards you want to see, the search engine you want to use and more.'
       }>
