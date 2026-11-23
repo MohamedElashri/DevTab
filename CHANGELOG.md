@@ -5,6 +5,13 @@ All notable changes to DevTab are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.4.2] - 2026-11-23
+
+### Changed
+
+- Make the optional Ko-fi tip easy to find in About and keep it visible while browsing the app information.
+- Add a Ko-fi badge to the README and use the `melashri.net/software` catalog for project links.
+
 ## [1.4.1] - 2026-11-23
 
 ### Changed

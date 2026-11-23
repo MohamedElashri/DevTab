@@ -26,11 +26,6 @@
   margin: 0;
 }
 
-.devtabAboutSupport {
-  padding-top: 1rem;
-  border-top: 1px solid var(--card-border-color);
-}
-
 .devtabAbout a {
   color: var(--primary-text-color);
   text-decoration: underline;

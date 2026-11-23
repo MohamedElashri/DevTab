@@ -72,6 +72,33 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  flex-shrink: 0;
+}
+.settingsContent .settingsTip {
+  color: var(--primary-text-color);
+  font-size: 0.875rem;
+  font-weight: 600;
+  padding: 6px 10px;
+  border: 1px solid var(--card-border-color);
+  border-radius: 6px;
+  text-decoration: none;
+}
+.settingsContent .settingsTip[data-quiet='false'] {
+  background: color-mix(in srgb, currentColor 8%, transparent);
+  border-color: color-mix(in srgb, currentColor 32%, var(--card-border-color));
+}
+.settingsContent .settingsTip:hover {
+  border-color: currentColor;
+}
+.settingsContent .settingsTip[data-quiet='true']:not(:hover) {
+  color: var(--secondary-text-color);
+  border-color: transparent;
+}
+.settingsContent .settingsTip:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
 }
 
 .settingsContent .settingsHeader {
