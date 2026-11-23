@@ -11,6 +11,7 @@ const { SearchEngineSettings } = lazyImport(
 )
 const { BookmarkSettings } = lazyImport(() => import('src/features/settings'), 'BookmarkSettings')
 const { TopicSettings } = lazyImport(() => import('src/features/settings'), 'TopicSettings')
+const { AboutSettings } = lazyImport(() => import('src/features/settings'), 'AboutSettings')
 
 export const SettingsLayout = () => {
   const location = useLocation()
@@ -36,6 +37,10 @@ export const SettingsLayout = () => {
       name: 'Settings',
       path: '/settings/general',
     },
+    {
+      name: 'About',
+      path: '/settings/about',
+    },
   ]
 
   const renderActiveSetting = () => {
@@ -43,6 +48,7 @@ export const SettingsLayout = () => {
     if (location.pathname.includes('/sources')) return <SourceSettings />
     if (location.pathname.includes('/bookmarks')) return <BookmarkSettings />
     if (location.pathname.includes('/ai-engine')) return <SearchEngineSettings />
+    if (location.pathname === '/settings/about') return <AboutSettings />
     return <GeneralSettings />
   }
 

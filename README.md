@@ -101,6 +101,10 @@ publish. Release ZIPs are generated locally and ignored by Git.
 make dev
 ```
 
+## Support
+
+Visit the [project website](https://melashri.net/soft/devtab/) for downloads and links. [Support on Ko-fi](https://ko-fi.com/melashri) if you’d like to leave an optional tip.
+
 ## License
 
 Apache 2.0. See [LICENSE](/LICENSE).
